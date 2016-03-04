@@ -1,0 +1,5 @@
+CREATE  TABLE "main"."User" ("us_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "us_name" TEXT NOT NULL  UNIQUE )
+
+CREATE  TABLE "main"."Training" ("tr_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "tr_nombre" TEXT NOT NULL )
+
+CREATE TABLE "Statistics" ("st_id" INTEGER NOT NULL , "st_analysis" TEXT, "fk_user" INTEGER NOT NULL , "fk_training" INTEGER NOT NULL , PRIMARY KEY ("st_id", "fk_user", "fk_training"), FOREIGN KEY("fk_user") REFERENCES User("us_id"), FOREIGN KEY("fk_training") REFERENCES Training("tr_id"))

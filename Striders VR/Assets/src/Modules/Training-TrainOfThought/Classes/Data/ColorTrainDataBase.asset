@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3741c2e030131844ca96ec308bf72a52, type: 3}
+  m_Name: ColorTrainDataBase
+  m_EditorClassIdentifier: 
+  colorTrainsList:
+  - trainName: YellowTrain
+    prefab: {fileID: 107134, guid: 3d9a7b303cecdcc409f215b538114483, type: 2}
+    trainDestination:
+      stationName: YellowStation
+      prefab: {fileID: 126772, guid: 8089b9dcc6c04964792a9a54e2f2f24c, type: 2}
+  - trainName: BlueTrain
+    prefab: {fileID: 166402, guid: 8dd13340a1e4ece4f853082e27c7e24d, type: 2}
+    trainDestination:
+      stationName: BlueStation
+      prefab: {fileID: 106484, guid: fa33e486ed797a1498244562cc0d4c31, type: 2}
+  - trainName: PurpleTrain
+    prefab: {fileID: 118084, guid: e0dd6a7007bd93440950836725e19621, type: 2}
+    trainDestination:
+      stationName: PurpleStation
+      prefab: {fileID: 175070, guid: 0738e220bac63004eac05cde5e9c989d, type: 2}
+  - trainName: GreenTrain
+    prefab: {fileID: 160938, guid: 81b0a1fe9bf54f648a57a078bf930047, type: 2}
+    trainDestination:
+      stationName: GreenStation
+      prefab: {fileID: 191130, guid: 7473a0ef3c3cb594bb3b9a84cf5323fa, type: 2}

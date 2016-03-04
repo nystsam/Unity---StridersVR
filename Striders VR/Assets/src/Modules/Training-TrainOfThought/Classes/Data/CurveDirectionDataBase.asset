@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b62c9429e8566194789cdb63a37336b6, type: 3}
+  m_Name: CurveDirectionDataBase
+  m_EditorClassIdentifier: 
+  curveDirectionListEasyMode:
+  - prefab: {fileID: 124752, guid: 882476d08dab98e4dae7f086a34db3ca, type: 2}
+    direction: {x: 0, y: 0, z: 1}
+    position: {x: -14.1099997, y: .100000001, z: -.174999997}
+  - prefab: {fileID: 124752, guid: 882476d08dab98e4dae7f086a34db3ca, type: 2}
+    direction: {x: 0, y: 0, z: -1}
+    position: {x: 18.1000004, y: .100000001, z: -.174999997}
+  - prefab: {fileID: 113598, guid: 2626b7d84efa28444adf6a6c73d3b701, type: 2}
+    direction: {x: -1, y: 0, z: 0}
+    position: {x: 10.8999996, y: .100000001, z: 15.1999998}

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11f952f3a7173424eacb18f8ad965a76, type: 3}
+  m_Name: StationsDataBase
+  m_EditorClassIdentifier: 
+  stationsList:
+  - stationName: BlueStation
+    prefab: {fileID: 106484, guid: fa33e486ed797a1498244562cc0d4c31, type: 2}
+  - stationName: PurpleStation
+    prefab: {fileID: 175070, guid: 0738e220bac63004eac05cde5e9c989d, type: 2}
+  - stationName: GreenStation
+    prefab: {fileID: 191130, guid: 7473a0ef3c3cb594bb3b9a84cf5323fa, type: 2}
+  - stationName: YellowStation
+    prefab: {fileID: 126772, guid: 8089b9dcc6c04964792a9a54e2f2f24c, type: 2}
+  stationSpawnPoints:
+  - stationPosition: {x: -21.2000008, y: .100000001, z: 10.0500002}
+    stationRotation: {x: 0, y: -90, z: 0}
+  - stationPosition: {x: -13.2329998, y: .100000001, z: 26.8400002}
+    stationRotation: {x: 0, y: 0, z: 0}
+  - stationPosition: {x: 17.4400005, y: .100000001, z: -14.7060003}
+    stationRotation: {x: 0, y: 180, z: 0}
+  - stationPosition: {x: 4.39400005, y: .100000001, z: 14.3179998}
+    stationRotation: {x: 0, y: -90, z: 0}
