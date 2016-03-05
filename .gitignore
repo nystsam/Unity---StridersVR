@@ -1,4 +1,4 @@
-/[Ll]ibrary/
+Striders\ VR/Library/*
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
@@ -24,3 +24,4 @@ ExportedObj/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+Striders VR/Library/assetDatabase3
