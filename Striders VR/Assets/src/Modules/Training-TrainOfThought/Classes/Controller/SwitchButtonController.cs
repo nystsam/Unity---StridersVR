@@ -13,6 +13,7 @@ public class SwitchButtonController : MonoBehaviour {
 	private Vector3 resting_position;
 	private Material childMaterial;
 
+
 	#region Script
 	void Start()
 	{
@@ -28,6 +29,7 @@ public class SwitchButtonController : MonoBehaviour {
 		this.checkTrigger ();
 	}
 	#endregion
+
 
 	private void constraintMovement()
 	{
@@ -45,21 +47,21 @@ public class SwitchButtonController : MonoBehaviour {
 	{
 		if (!this.is_pressed) {
 			if (transform.localPosition.y < this.triggerDistance) {
-				this.buttonPressed(1);
+				this.buttonPressedBlur(1);
 				this.is_pressed = true;
+				transform.parent.GetComponent<BoundingBoxButtonController> ().changeDirectionIndex ();
 			}
 		} else if (this.is_pressed) {
 			if (transform.localPosition.y > this.triggerDistance) {
-				this.buttonPressed(0);
+				this.buttonPressedBlur(0);
 				this.is_pressed = false;
 			}
 		}
 	}
 
-	private void buttonPressed(float alpha)
+	private void buttonPressedBlur(float alpha)
 	{
 		childMaterial.color = new Color(childMaterial.color.r,childMaterial.color.g, childMaterial.color.b, alpha);
-
 	}
 
 }

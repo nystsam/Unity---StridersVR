@@ -9,7 +9,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 	{
 		private GameObject gamePlatform;
 		private ColorTrain newColorTrain;
-		private float instantiateTrainTimer = 3;
+		private float instantiateTrainTimer = 5;
 
 		public StrategyTrainGenerationBasic (GameObject gamePlatform)
 		{

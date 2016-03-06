@@ -25,7 +25,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			ColorTrain _trainToStart;
 			ScriptableObjectColorTrain _gameColorStationsData = (ScriptableObjectColorTrain)genericColorTrainData;
 			GameObject _stationContainer = this.gamePlatform.transform.FindChild ("ColorStationContainer").gameObject;
-			float _randomTimer = Random.Range (4, 6);
+			float _randomTimer = Random.Range (5, 7);
 
 			for (int count = 0; count < _stationContainer.transform.childCount; count++) 
 			{
