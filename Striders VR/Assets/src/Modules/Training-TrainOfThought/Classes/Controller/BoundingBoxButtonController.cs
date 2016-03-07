@@ -28,6 +28,9 @@ public class BoundingBoxButtonController : MonoBehaviour {
 	
 	void OnTriggerStay(Collider other)
 	{
+		/*
+		if(other.transform.paren && other.transform.parent.parent && other.transform.parent.parent.GetComponent<HandModel>())
+	 	*/
 		if (other.tag.Equals ("Player")) {
 			if (!isTriggered) {
 				this.isTriggered = true;
@@ -48,6 +51,7 @@ public class BoundingBoxButtonController : MonoBehaviour {
 	#endregion
 
 
+	#region Properties
 	public GameObject AttachedRailroadSwitch
 	{
 		set { this.attachedRailroadSwitch = value; }
@@ -57,6 +61,8 @@ public class BoundingBoxButtonController : MonoBehaviour {
 	{
 		this.attachedRailroadSwitch.GetComponent<RailroadSwitchController> ().changeDirectionIndex ();
 	}
+	#endregion
+
 
 	private void TriggerBoundingBox()
 	{

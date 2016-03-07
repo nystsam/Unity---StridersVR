@@ -9,6 +9,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 	public class StrategyTrainGenerationThreeSeries : IStrategyTrainGeneration
 	{
 		private GameObject gamePlatform;
+		private Vector3 startPoint;
 		private List<ColorTrain> newColorTrainList;
 
 		public StrategyTrainGenerationThreeSeries (GameObject gamePlatform)
@@ -29,6 +30,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			GameObject _stationContainer = this.gamePlatform.transform.FindChild ("ColorStationContainer").gameObject;
 			float _randomTimer = Random.Range (4, 7);
 
+			this.startPoint = _gameColorStationsData.StartPoint;
 			for (int count = 0; count < 3; count++) 
 			{
 				_randomColorStationIndex = Random.Range (0, _stationContainer.transform.childCount);
@@ -59,7 +61,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			ColorTrain _newColorTrain = this.newColorTrainList[0];
 			GameObject _trainContainer = this.gamePlatform.transform.FindChild ("ColorTrainContainer").gameObject;
 
-			_newTrain = (GameObject)GameObject.Instantiate (_newColorTrain.Prefab, _newColorTrain.Prefab.transform.position, _newColorTrain.Prefab.transform.rotation);
+			_newTrain = (GameObject)GameObject.Instantiate (_newColorTrain.Prefab, this.startPoint, Quaternion.Euler(new Vector3(0,0,0)));
 			_newTrain.name = _newColorTrain.TrainName;
 			_newTrain.GetComponent<TrainController> ().ColorTrain = _newColorTrain;
 			_newTrain.transform.parent = _trainContainer.transform;

@@ -75,7 +75,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 				_newButtonSwitch.transform.localPosition = new Vector3(_localHorizontalSeparation, 0, 0);
 				_newButtonSwitch.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
 				_newButtonSwitch.transform.GetChild(0).GetComponent<SpringJoint>().autoConfigureConnectedAnchor = true;
-				_localHorizontalSeparation += 2.5f;
+				_localHorizontalSeparation += 2f;
 			}		
 		}
 		#endregion
