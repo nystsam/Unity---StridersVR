@@ -5,31 +5,48 @@ using StridersVR.Modules.TrainOfThought.Logic.Representatives;
 
 public class ScoresController : MonoBehaviour {
 
+	public GameObject platform;
+	public GameObject startTimeText;
 	public Text timingMin;
 	public Text timingSeg;
 	public Text countingCurrent;
 	public Text countingTotal;
 	public float trainTimeInSeconds;
 
-	private TimeSpan trainTimer;
+	private TimeSpan gameTimer;
 	private RepresentativeTrainScore trainScore;
+	private bool gameBegin = false;
+	private bool gameTimerEnd = false;
+	private float timeToStart = 6;
 
 	#region Script
 	void Awake () 
 	{
 		this.trainScore = new RepresentativeTrainScore (ref this.countingCurrent, ref this.countingTotal);
-		this.trainTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
-		this.timingMin.text = this.trainTimer.Minutes.ToString();
+		this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
+		this.timingMin.text = this.gameTimer.Minutes.ToString();
+		this.startTimeText.GetComponent<TextMesh> ().text = this.timeToStart.ToString("F0");
 	}
 
 	void Update () 
 	{
-		if(this.trainTimer.Seconds == 59)
-			this.timingMin.text = this.trainTimer.Minutes.ToString();
+		this.getReady ();
+		if (this.gameBegin && !this.gameTimerEnd) 
+		{
+			if (this.gameTimer.Seconds == 59)
+				this.timingMin.text = this.gameTimer.Minutes.ToString ();
 		
-		this.trainTimeInSeconds -= Time.deltaTime;
-		this.trainTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
-		this.timingSeg.text = this.trainTimer.Seconds.ToString ("00");
+			this.trainTimeInSeconds -= Time.deltaTime;
+			this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
+			this.timingSeg.text = this.gameTimer.Seconds.ToString ("00");
+		}
+
+		if (this.gameTimer.TotalSeconds <= 0 && !this.gameTimerEnd) 
+		{
+			this.gameTimerEnd = true;
+			this.platform.GetComponent<PlatformController>().AllowToSpawnTrain = false;
+		}
+
 	}
 	#endregion
 
@@ -41,7 +58,34 @@ public class ScoresController : MonoBehaviour {
 
 	public TimeSpan TrainTimer
 	{
-		get { return this.trainTimer; }
+		get { return this.gameTimer; }
 	}
 	#endregion
+
+
+	private void getReady()
+	{
+		if (this.timeToStart > 0) 
+		{
+			this.startTimeText.GetComponent<TextMesh> ().text = this.timeToStart.ToString ("F0");
+			this.timeToStart -= Time.deltaTime;
+		} 
+		else if (!this.gameBegin) 
+		{
+			this.startTimeText.GetComponent<TextMesh> ().text = "...";
+			this.gameBegin = true;
+			this.platform.GetComponent<PlatformController>().AllowToSpawnTrain = true;
+		} 
+		else if (this.timeToStart > -2) 
+		{
+			this.timeToStart -= Time.deltaTime;
+		}
+		else if (Math.Round(this.timeToStart) == -2) 
+		{
+			this.startTimeText.GetComponent<TextMesh> ().text = "";
+			this.timeToStart = -3;
+		}
+
+	}
+
 }

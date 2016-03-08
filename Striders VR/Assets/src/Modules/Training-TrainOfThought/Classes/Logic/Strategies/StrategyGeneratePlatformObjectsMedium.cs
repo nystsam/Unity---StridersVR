@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using StridersVR.Domain.TrainOfThought;
 using StridersVR.ScriptableObjects.TrainOfThought;
@@ -6,13 +6,13 @@ using StridersVR.Modules.TrainOfThought.Logic.StrategyInterfaces;
 
 namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 {
-	public class StrategyGeneratePlatformObjectsEasy : IStrategyGeneratePlatformObjects
+	public class StrategyGeneratePlatformObjectsMedium : IStrategyGeneratePlatformObjects
 	{
-		private int totalStations = 4;
+		private int totalStations = 6;
 		private GameObject gamePlatform;
 		private List<ColorStation> selectedRandomColorStationsList;
 
-		public StrategyGeneratePlatformObjectsEasy (GameObject trainPlatform)
+		public StrategyGeneratePlatformObjectsMedium (GameObject trainPlatform)
 		{
 			this.gamePlatform = trainPlatform;
 			this.selectedRandomColorStationsList = new List<ColorStation> ();
@@ -27,7 +27,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			List<ColorStation> _auxList = this.fillAuxList (_gameColorStationsData.StationsList);
 			int _indexSpawnPoint = 0;
 			GameObject _colorStationsContainer = this.gamePlatform.transform.FindChild ("ColorStationContainer").gameObject;
-	
+			
 			this.selectColorStations (_auxList);
 			foreach (ColorStation _station in this.selectedRandomColorStationsList) 
 			{
@@ -38,14 +38,13 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 				_newStation.transform.parent = _colorStationsContainer.transform;
 				_indexSpawnPoint++;
 			}
-
 		}
 
 		public void generateCurvesDirection(ScriptableObject genericGameCurvesDirectionData)
 		{
 			ScriptableObjectCurveDirection _gameCurvesDirectionData = (ScriptableObjectCurveDirection)genericGameCurvesDirectionData;
 			GameObject _trainTracksContainer = this.gamePlatform.transform.FindChild("TrainTracksContainer").gameObject;
-
+			
 			foreach (CurveDirection _curve in _gameCurvesDirectionData.CurveDirectionListEasyMode) 
 			{
 				GameObject _newCurve = (GameObject)GameObject.Instantiate (_curve.Prefab, _curve.Position, _curve.Prefab.transform.rotation);
@@ -59,9 +58,11 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			float _localHorizontalSeparation = 0;
 			ScriptableObjectRailroadSwitch _gameRailroadSwitchData = (ScriptableObjectRailroadSwitch)genericGameRailroadSwitchData;
 			GameObject _raildroadSwitchContainer = this.gamePlatform.transform.FindChild ("RailroadSwitchContainer").gameObject;
+			GameObject _trainTracksContainer = this.gamePlatform.transform.FindChild ("TrainTracksContainer").gameObject;
 			GameObject _playerPanelButtons = GameObject.FindGameObjectWithTag("PlayerPanelButtons");
 
-			foreach (RailroadSwitch _switch in _gameRailroadSwitchData.RailroadSwitchListEasyMode) 
+			this.adjustPlayerPanel (_playerPanelButtons);
+			foreach (RailroadSwitch _switch in _gameRailroadSwitchData.RailroadSwitchListMediumMode) 
 			{
 				GameObject _newButtonSwitch;
 				GameObject _newRailroadSwitch;
@@ -69,7 +70,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 				_newRailroadSwitch.name = _switch.Name;
 				_newRailroadSwitch.transform.parent = _raildroadSwitchContainer.transform;
 				_newRailroadSwitch.GetComponent<RailroadSwitchController> ().directions = _switch.Directions;
-
+				
 				_newButtonSwitch = (GameObject) GameObject.Instantiate (_gameRailroadSwitchData.PlayerButton, new Vector3(0,0,0), Quaternion.Euler(new Vector3(0,0,0)));
 				_newButtonSwitch.transform.parent = _playerPanelButtons.transform;
 				_newButtonSwitch.GetComponent<BoundingBoxButtonController>().AttachedRailroadSwitch = _newRailroadSwitch;
@@ -77,7 +78,16 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 				_newButtonSwitch.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
 				_newButtonSwitch.transform.GetChild(0).GetComponent<SpringJoint>().autoConfigureConnectedAnchor = true;
 				_localHorizontalSeparation += 2f;
-			}		
+			}
+
+			foreach (Track _track in _gameRailroadSwitchData.TrackListMediumMode) 
+			{
+				GameObject _newTrack;
+				_newTrack = (GameObject)GameObject.Instantiate(_track.Prefab, _track.Position, Quaternion.Euler(_track.EulerRotation));
+				_newTrack.transform.localScale = new Vector3(_newTrack.transform.localScale.x, _newTrack.transform.localScale.y, _track.Scale.z);
+				_newTrack.transform.parent = _trainTracksContainer.transform;
+			}
+
 		}
 		#endregion
 
@@ -91,7 +101,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			}
 			return _auxList;
 		}
-
+		
 		private void selectColorStations(List<ColorStation> auxList)
 		{
 			for (int _index = 0; _index < this.totalStations; _index++) 
@@ -102,7 +112,17 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 				auxList.Remove (_selectedSation);
 			}
 		}
-		#endregion	
+
+		private void adjustPlayerPanel(GameObject playerPanel)
+		{
+			Transform center = playerPanel.transform.FindChild("CenterPanel");
+			Transform right = playerPanel.transform.FindChild("RightPanel");
+
+			center.localScale = new Vector3 (10, center.localScale.y, center.localScale.z);
+			center.localPosition = new Vector3 (4, center.localPosition.y, center.localPosition.z);
+			right.localPosition = new Vector3 (9.85f, right.localPosition.y, right.localPosition.z);
+		}
+		#endregion
 	}
 }
 

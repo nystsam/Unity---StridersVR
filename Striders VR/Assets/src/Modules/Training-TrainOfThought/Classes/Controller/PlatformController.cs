@@ -12,8 +12,9 @@ public class PlatformController : MonoBehaviour {
 
 	private string gameDifficulty = "";
 	private RepresentativeTrainPlatform trainPlatform;
-	private float timeToBegin = 0;
+	private bool allowToSpawn = false;
 	private float timeToSpawnTrain = 0;
+
 
 	#region script
 	void Awake () 
@@ -23,18 +24,11 @@ public class PlatformController : MonoBehaviour {
 		this.trainPlatform.instantiateObjects();
 		this.trainPlatform.createTrainGenerationStrategies ();
 		this.timeToSpawnTrain = this.trainPlatform.SpawnTrainTimer;
-//		this.trainPlatform.setTrainGenerationStrategy ();
-//		this.trainPlatform.instantiateTrain ();
-
 	}
 
 	void Update () 
 	{
-		if (this.timeToBegin < 4) 
-		{
-			this.timeToBegin += Time.deltaTime;
-		} 
-		else 
+		if (this.allowToSpawn)
 		{
 			if (this.timeToSpawnTrain <= 0) 
 			{
@@ -47,16 +41,19 @@ public class PlatformController : MonoBehaviour {
 				this.timeToSpawnTrain -= Time.deltaTime;
 			}
 		}
-//		if(this.contextTrainsFunctions.AllowStartTrain)
-//			StartCoroutine (respawnTimer ());
 
 	}
+	#endregion
 
-//	IEnumerator respawnTimer()
-//	{
-//		this.contextTrainsFunctions.selectTrain ();
-//		yield return new WaitForSeconds (3.0f);
-//		this.contextTrainsFunctions.startTrain ();
-//	}
+	#region Properties
+	/// <summary>
+	/// Sets a value indicating whether this <see cref="PlatformController"/> allow to spawn train. The Score platform's panel set
+	/// this value.
+	/// </summary>
+	/// <value><c>true</c> if allow to spawn train; otherwise, <c>false</c>.</value>
+	public bool AllowToSpawnTrain
+	{
+		set { this.allowToSpawn = value; }
+	}
 	#endregion
 }

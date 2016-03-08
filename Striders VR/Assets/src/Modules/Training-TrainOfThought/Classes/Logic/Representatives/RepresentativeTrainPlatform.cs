@@ -42,7 +42,17 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 			{
 				IStrategyGeneratePlatformObjects _strategyGenerateObjectsEasy = new StrategyGeneratePlatformObjectsEasy (this.platform);
 				this.contextGenerateObjects.StrategyGenerateObjects = _strategyGenerateObjectsEasy;
+			} 
+			else if(gameDifficulty.Equals("Medium"))
+			{
+				IStrategyGeneratePlatformObjects _strategyGenerateObjectsMedium = new StrategyGeneratePlatformObjectsMedium (this.platform);
+				this.contextGenerateObjects.StrategyGenerateObjects = _strategyGenerateObjectsMedium;
 			}
+			else if(gameDifficulty.Equals("Hard"))
+			{
+				IStrategyGeneratePlatformObjects _strategyGenerateObjectsHard = new StrategyGeneratePlatformObjectsHard (this.platform);
+				this.contextGenerateObjects.StrategyGenerateObjects = _strategyGenerateObjectsHard;
+			} 
 		}
 			
 
