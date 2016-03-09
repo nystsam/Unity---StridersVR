@@ -8,12 +8,14 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 	public class RepresentativeTrainScore
 	{
 		private Text currentHit = null;
-		private Text totalHits= null;
+		private Text totalHits = null;
+		private GameObject colorTrainContainer;
 
-		public RepresentativeTrainScore (ref Text currentHit, ref Text totalHits)
+		public RepresentativeTrainScore (ref Text currentHit, ref Text totalHits, GameObject platform)
 		{
 			this.currentHit = currentHit;
 			this.totalHits = totalHits;
+			this.colorTrainContainer = platform.transform.FindChild ("ColorTrainContainer").gameObject;
 		}
 
 
@@ -30,6 +32,17 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 			GameObject.Destroy (inGameTrainColor);
 		}
 
+		public bool remainingTrains()
+		{
+			if (this.colorTrainContainer.transform.childCount <= 0) 
+			{
+				Debug.Log ("No hay mas trenes");
+				return true;
+			}
+			return false;
+		}
+
+		#region Private Methods
 		private void setNewScoreAndTotal(int newScore)
 		{
 			int _current = int.Parse (this.currentHit.text);
@@ -42,6 +55,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 			this.totalHits.text = _total.ToString();
 
 		}
+		#endregion
 	}
 }
 

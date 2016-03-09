@@ -6,12 +6,14 @@ using StridersVR.Modules.Menu.Logic;
 
 public class MenuCamera : MonoBehaviour {
 
-	private ContextMenuCamera menuCamera;
-	private Transform newMount = null;
-
 	public Transform currentMount;
 	public float speedFactor = 0.1f;
 	public Text trainingName;
+	public GameObject loadingScreen;
+
+	private ContextMenuCamera menuCamera;
+	private Transform newMount = null;
+
 
 	#region script	
 	void Start(){
@@ -53,7 +55,10 @@ public class MenuCamera : MonoBehaviour {
 
     	public void startTraining()
 	{
-		Application.LoadLevel (this.menuCamera.getTrainingName);
+		this.loadingScreen.SetActive (true);
+		this.loadingScreen.GetComponent<LoadingScreenController> ().SceneName = this.menuCamera.getTrainingName;
+		this.loadingScreen.GetComponent<LoadingScreenController> ().TurnOnLoadingScreen = true;
+		//Application.LoadLevel (this.menuCamera.getTrainingName);
 		//SceneManager.LoadScene (1);
     	}
 

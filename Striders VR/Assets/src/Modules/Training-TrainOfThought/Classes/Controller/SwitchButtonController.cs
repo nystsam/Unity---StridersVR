@@ -13,6 +13,39 @@ public class SwitchButtonController : MonoBehaviour {
 	private Vector3 resting_position;
 	private Material childMaterial;
 
+	private void constraintMovement()
+	{
+		Vector3 _local_position = transform.localPosition;
+		_local_position.y = Mathf.Clamp (_local_position.y, this.min_distance, this.max_distance);
+		transform.localPosition = _local_position;
+	}
+	
+	private void appliySpring()
+	{
+		transform.GetComponent<Rigidbody> ().AddRelativeForce (-this.spring * (transform.localPosition - this.resting_position));
+	}
+	
+	private void checkTrigger()
+	{
+		if (!this.is_pressed) {
+			if (transform.localPosition.y < this.triggerDistance) {
+				this.buttonPressedBlur(1);
+				this.is_pressed = true;
+				transform.parent.GetComponent<BoundingBoxButtonController> ().changeDirectionIndex ();
+			}
+		} else if (this.is_pressed) {
+			if (transform.localPosition.y > this.triggerDistance) {
+				this.buttonPressedBlur(0);
+				this.is_pressed = false;
+			}
+		}
+	}
+	
+	private void buttonPressedBlur(float alpha)
+	{
+		childMaterial.color = new Color(childMaterial.color.r,childMaterial.color.g, childMaterial.color.b, alpha);
+	}
+
 
 	#region Script
 	void Start()
@@ -29,39 +62,4 @@ public class SwitchButtonController : MonoBehaviour {
 		this.checkTrigger ();
 	}
 	#endregion
-
-
-	private void constraintMovement()
-	{
-		Vector3 _local_position = transform.localPosition;
-		_local_position.y = Mathf.Clamp (_local_position.y, this.min_distance, this.max_distance);
-		transform.localPosition = _local_position;
-	}
-	
-	private void appliySpring()
-	{
-		transform.GetComponent<Rigidbody> ().AddRelativeForce (-this.spring * (transform.localPosition - this.resting_position));
-	}
-
-	private void checkTrigger()
-	{
-		if (!this.is_pressed) {
-			if (transform.localPosition.y < this.triggerDistance) {
-				this.buttonPressedBlur(1);
-				this.is_pressed = true;
-				transform.parent.GetComponent<BoundingBoxButtonController> ().changeDirectionIndex ();
-			}
-		} else if (this.is_pressed) {
-			if (transform.localPosition.y > this.triggerDistance) {
-				this.buttonPressedBlur(0);
-				this.is_pressed = false;
-			}
-		}
-	}
-
-	private void buttonPressedBlur(float alpha)
-	{
-		childMaterial.color = new Color(childMaterial.color.r,childMaterial.color.g, childMaterial.color.b, alpha);
-	}
-
 }

@@ -6,6 +6,7 @@ public class StationController : MonoBehaviour {
 
 	public ColorStation colorStation;
 
+
 	#region Properties
 	public ColorStation ColorStation
 	{

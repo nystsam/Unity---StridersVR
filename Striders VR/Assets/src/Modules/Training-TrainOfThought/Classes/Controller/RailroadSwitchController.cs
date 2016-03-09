@@ -18,6 +18,67 @@ public class RailroadSwitchController : MonoBehaviour {
 	private bool checkOrientation = false;
 	private float orientation = 1;
 
+	public Vector3 getSelectedDitecion
+	{
+		get { return this.directions [this.selectedDirectionIndex]; }
+	}
+	
+	public void changeDirectionIndex()
+	{
+		if (this.selectedDirectionIndex == 1)
+			this.selectedDirectionIndex = 0;
+		else
+			this.selectedDirectionIndex = 1;
+	}
+	
+	private void setRotationAngle(ref float rotationAngle, Vector3 direction)
+	{
+		if (direction.x > 0) {
+			rotationAngle = 180f;
+			this.arrowDirection.transform.localEulerAngles = new Vector3 (-90, 180, 0);
+		} else if (direction.x < 0) {
+			rotationAngle = 0f;
+		} else if( direction.z > 0){
+			rotationAngle = 90f;
+		} else if(direction.z < 0){
+			rotationAngle = 270f;
+		}
+	}
+	
+	private void rotateSwitch(ref bool isOpen)
+	{
+		float _maxAngle = Mathf.Max (this.firstDirectionAngle, this.secondDirectionAngle);
+		
+		if (this.arrowDirection.transform.localEulerAngles.y >= _maxAngle && (_maxAngle != 270 || Mathf.Min (this.firstDirectionAngle, this.secondDirectionAngle) != 0)) {
+			if (!this.checkOrientation) {
+				this.orientation = -this.orientation;
+				this.checkOrientation = true;
+				
+			}	
+		} else if (_maxAngle == 270 && Mathf.Min (this.firstDirectionAngle, this.secondDirectionAngle) == 0) {
+			if (!this.checkOrientation) {
+				if (Mathf.Round(this.arrowDirection.transform.localEulerAngles.y) == 0) {
+					this.orientation = -1f;
+				} else {
+					this.orientation = 1f;
+				}
+				this.checkOrientation = true;
+				this.rotationLimit = 90f;
+				
+			}
+		}
+		this.arrowDirection.transform.localEulerAngles = this.arrowDirection.transform.localEulerAngles + new Vector3(0, this.orientation * this.rotationSpeed, 0);
+		this.anglesRotated += Mathf.Abs(rotationSpeed);
+		if (anglesRotated >= this.rotationLimit) {
+			this.anglesRotated = 0f;
+			isOpen = true;
+			if (this.checkOrientation) {
+				this.orientation = 1f;
+				this.checkOrientation = false;
+			}
+		}
+	}
+
 
 	#region Script
 	void Start () 
@@ -52,70 +113,4 @@ public class RailroadSwitchController : MonoBehaviour {
 		}
 	}
 	#endregion
-
-
-	public Vector3 getSelectedDitecion
-	{
-		get { return this.directions [this.selectedDirectionIndex]; }
-	}
-
-	public void changeDirectionIndex()
-	{
-		if (this.selectedDirectionIndex == 1)
-			this.selectedDirectionIndex = 0;
-		else
-			this.selectedDirectionIndex = 1;
-	}
-
-	private void setRotationAngle(ref float rotationAngle, Vector3 direction)
-	{
-		if (direction.x > 0) {
-			rotationAngle = 180f;
-			this.arrowDirection.transform.localEulerAngles = new Vector3 (-90, 180, 0);
-		} else if (direction.x < 0) {
-			rotationAngle = 0f;
-		} else if( direction.z > 0){
-			rotationAngle = 90f;
-		} else if(direction.z < 0){
-			rotationAngle = 270f;
-		}
-	}
-
-	private void rotateSwitch(ref bool isOpen)
-	{
-		float _maxAngle = Mathf.Max (this.firstDirectionAngle, this.secondDirectionAngle);
-
-		if (this.arrowDirection.transform.localEulerAngles.y >= _maxAngle && (_maxAngle != 270 || Mathf.Min (this.firstDirectionAngle, this.secondDirectionAngle) != 0)) {
-			if (!this.checkOrientation) {
-				this.orientation = -this.orientation;
-				this.checkOrientation = true;
-
-			}	
-		} else if (_maxAngle == 270 && Mathf.Min (this.firstDirectionAngle, this.secondDirectionAngle) == 0) {
-			if (!this.checkOrientation) {
-				if (Mathf.Round(this.arrowDirection.transform.localEulerAngles.y) == 0) {
-					this.orientation = -1f;
-				} else {
-					this.orientation = 1f;
-				}
-				this.checkOrientation = true;
-				this.rotationLimit = 90f;
-
-			}
-		}
-		this.arrowDirection.transform.localEulerAngles = this.arrowDirection.transform.localEulerAngles + new Vector3(0, this.orientation * this.rotationSpeed, 0);
-		this.anglesRotated += Mathf.Abs(rotationSpeed);
-		if (anglesRotated >= this.rotationLimit) {
-			this.anglesRotated = 0f;
-			isOpen = true;
-			if (this.checkOrientation) {
-				this.orientation = 1f;
-				this.checkOrientation = false;
-			}
-		}
-
-
-			
-	}
-
 }

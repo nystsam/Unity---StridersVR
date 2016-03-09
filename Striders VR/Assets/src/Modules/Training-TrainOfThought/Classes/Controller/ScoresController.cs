@@ -19,50 +19,6 @@ public class ScoresController : MonoBehaviour {
 	private bool gameTimerEnd = false;
 	private float timeToStart = 6;
 
-	#region Script
-	void Awake () 
-	{
-		this.trainScore = new RepresentativeTrainScore (ref this.countingCurrent, ref this.countingTotal);
-		this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
-		this.timingMin.text = this.gameTimer.Minutes.ToString();
-		this.startTimeText.GetComponent<TextMesh> ().text = this.timeToStart.ToString("F0");
-	}
-
-	void Update () 
-	{
-		this.getReady ();
-		if (this.gameBegin && !this.gameTimerEnd) 
-		{
-			if (this.gameTimer.Seconds == 59)
-				this.timingMin.text = this.gameTimer.Minutes.ToString ();
-		
-			this.trainTimeInSeconds -= Time.deltaTime;
-			this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
-			this.timingSeg.text = this.gameTimer.Seconds.ToString ("00");
-		}
-
-		if (this.gameTimer.TotalSeconds <= 0 && !this.gameTimerEnd) 
-		{
-			this.gameTimerEnd = true;
-			this.platform.GetComponent<PlatformController>().AllowToSpawnTrain = false;
-		}
-
-	}
-	#endregion
-
-	#region Properties
-	public RepresentativeTrainScore TrainScore
-	{
-		get { return this.trainScore; }
-	}
-
-	public TimeSpan TrainTimer
-	{
-		get { return this.gameTimer; }
-	}
-	#endregion
-
-
 	private void getReady()
 	{
 		if (this.timeToStart > 0) 
@@ -84,8 +40,65 @@ public class ScoresController : MonoBehaviour {
 		{
 			this.startTimeText.GetComponent<TextMesh> ().text = "";
 			this.timeToStart = -3;
+		}	
+	}
+	
+	private void timing()
+	{
+		if (this.gameBegin && !this.gameTimerEnd) 
+		{
+			if (this.gameTimer.Seconds == 59)
+				this.timingMin.text = this.gameTimer.Minutes.ToString ();
+			
+			this.trainTimeInSeconds -= Time.deltaTime;
+			this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
+			this.timingSeg.text = this.gameTimer.Seconds.ToString ("00");
 		}
-
+	}
+	
+	private void timeOut()
+	{
+		if (this.gameTimer.TotalSeconds <= 0 && !this.gameTimerEnd) 
+		{
+			this.gameTimerEnd = true;
+			this.platform.GetComponent<PlatformController>().AllowToSpawnTrain = false;
+		}
+		else if (this.gameTimerEnd) 
+		{
+			if(this.trainScore.remainingTrains())
+			{
+				
+			}
+		}
 	}
 
+
+	#region Script
+	void Awake () 
+	{
+		this.trainScore = new RepresentativeTrainScore (ref this.countingCurrent, ref this.countingTotal, this.platform);
+		this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
+		this.timingMin.text = this.gameTimer.Minutes.ToString();
+		this.startTimeText.GetComponent<TextMesh> ().text = this.timeToStart.ToString("F0");
+	}
+
+	void Update () 
+	{
+		this.getReady ();
+		this.timing ();
+		this.timeOut ();
+	}
+	#endregion
+
+	#region Properties
+	public RepresentativeTrainScore TrainScore
+	{
+		get { return this.trainScore; }
+	}
+
+	public TimeSpan TrainTimer
+	{
+		get { return this.gameTimer; }
+	}
+	#endregion
 }
