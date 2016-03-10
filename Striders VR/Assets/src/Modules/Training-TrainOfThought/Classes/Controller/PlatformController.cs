@@ -19,7 +19,7 @@ public class PlatformController : MonoBehaviour {
 	#region script
 	void Awake () 
 	{
-		this.gameDifficulty = "Easy";
+		this.gameDifficulty = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Difficulty;
 		this.trainPlatform = new RepresentativeTrainPlatform (this.gameDifficulty, this.transform.gameObject);
 		this.trainPlatform.instantiateObjects();
 		this.trainPlatform.createTrainGenerationStrategies ();

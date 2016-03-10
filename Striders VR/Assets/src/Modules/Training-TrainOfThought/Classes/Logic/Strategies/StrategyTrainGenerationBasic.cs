@@ -10,11 +10,18 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 		private GameObject gamePlatform;
 		private Vector3 startPoint;
 		private ColorTrain newColorTrain;
-		private float instantiateTrainTimer = 5;
+		private float instantiateTrainTimer;
 
 		public StrategyTrainGenerationBasic (GameObject gamePlatform)
 		{
+			string _gameDifficulty = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Difficulty;
 			this.gamePlatform = gamePlatform;
+			if (_gameDifficulty.Equals ("Easy"))
+				this.instantiateTrainTimer = 6;
+			else if (_gameDifficulty.Equals ("Medium"))
+				this.instantiateTrainTimer = 5;
+			else if (_gameDifficulty.Equals ("Hard"))
+				this.instantiateTrainTimer = 4;
 		}
 
 

@@ -11,11 +11,29 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 		private GameObject gamePlatform;
 		private Vector3 startPoint;
 		private List<ColorTrain> newColorTrainList;
+		private float minIndexTimer;
+		private float maxIndexTimer;
 
 		public StrategyTrainGenerationThreeSeries (GameObject gamePlatform)
 		{
+			string _gameDifficulty = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Difficulty;
 			this.gamePlatform = gamePlatform;
 			this.newColorTrainList = new List<ColorTrain>();
+			if (_gameDifficulty.Equals ("Easy")) 
+			{
+				this.minIndexTimer = 5;
+				this.maxIndexTimer = 7;
+			}
+			else if (_gameDifficulty.Equals ("Medium"))
+			{
+				this.minIndexTimer = 4;
+				this.maxIndexTimer = 6;
+			}
+			else if (_gameDifficulty.Equals ("Hard"))
+			{
+				this.minIndexTimer = 3;
+				this.maxIndexTimer = 5;
+			}
 		}
 
 
@@ -28,7 +46,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			ColorTrain _previousTrain = null;
 			ScriptableObjectColorTrain _gameColorStationsData = (ScriptableObjectColorTrain)genericColorTrainData;
 			GameObject _stationContainer = this.gamePlatform.transform.FindChild ("ColorStationContainer").gameObject;
-			float _randomTimer = Random.Range (4, 7);
+			float _randomTimer = Random.Range (this.minIndexTimer, this.maxIndexTimer);
 
 			this.startPoint = _gameColorStationsData.StartPoint;
 			for (int count = 0; count < 3; count++) 

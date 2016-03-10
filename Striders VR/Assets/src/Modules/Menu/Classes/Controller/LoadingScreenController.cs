@@ -53,12 +53,6 @@ public class LoadingScreenController : MonoBehaviour {
 		}
 	}
 
- 	IEnumerator displayLoadingScreen()
-	{
-
-		yield return null;
-	}
-
 
 	#region Script
 	void Awake () 
