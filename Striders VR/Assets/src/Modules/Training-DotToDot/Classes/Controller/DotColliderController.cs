@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class pruebaColliderParent : MonoBehaviour {
+public class DotColliderController : MonoBehaviour {
 
 	public Light colliderLight;
 
