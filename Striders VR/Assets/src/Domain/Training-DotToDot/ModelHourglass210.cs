@@ -9,7 +9,7 @@ namespace StridersVR.Domain.DotToDot
 	public class ModelHourglass210 : FigureModel
 	{
 
-		public ModelHourglass210 ()
+		public ModelHourglass210 (string figureName, GameObject prefab) : base(figureName, prefab)
 		{
 		}
 

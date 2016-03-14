@@ -9,7 +9,7 @@ namespace StridersVR.Domain.DotToDot
 	public class ModelTriangleEquilateral : FigureModel
 	{
 
-		public ModelTriangleEquilateral ()
+		public ModelTriangleEquilateral (string figureName, GameObject prefab) : base(figureName, prefab)
 		{
 		}
 

@@ -9,7 +9,7 @@ namespace StridersVR.Domain.DotToDot
 	public class ModelLine : FigureModel
 	{
 
-		public ModelLine ()
+		public ModelLine (string figureName, GameObject prefab) : base(figureName, prefab)
 		{
 		}
 

@@ -22,12 +22,15 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 
 		public void createFigure()
 		{
-			FigureModel _figure;
+			FigureModel _figure = this.figureModelData.getTriangleEquilateral();
 
-			_figure = this.figureModelData.obtainModels() [0];
+			_figure.initializeVertexPoints ();
 			this.contextCreateModel.StrategyCreateModel = _figure.generator (this.figureContainer);
 
-			this.contextCreateModel.createModelFigure (_figure);
+
+//			this.contextCreateModel.createModelFigure (_figure);
+//			this.contextCreateModel.createModelFigure (_figure);
+//			this.contextCreateModel.createModelFigure (_figure);
 
 		}
 

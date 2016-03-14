@@ -7,28 +7,26 @@ namespace StridersVR.Domain.DotToDot
 	[System.Serializable]
 	public abstract class FigureModel 
 	{
-		private Vector3 minVectorToSpawn;
-		private Vector3 maxVectorToSpawn;
-
 		[SerializeField] protected string figureName;
 		[SerializeField] protected GameObject prefab;
+		protected List<VertexPoint> listVertexPoint;
 
-		public FigureModel()
+		public FigureModel(string figureName, GameObject prefab)
 		{
-		
+			this.figureName = figureName;
+			this.prefab = prefab;
 		}
 
 
-		public List<Transform> getStripes()
+		public void initializeVertexPoints()
 		{
-			List<Transform> _list = new List<Transform>();
+			this.listVertexPoint = new List<VertexPoint> ();
 			
 			for (int _index = 0; _index < this.prefab.transform.childCount; _index++) 
 			{
-				_list.Add(this.prefab.transform.GetChild(_index));
+				Transform _child = this.prefab.transform.GetChild(_index);
+				this.listVertexPoint.Add(new VertexPoint(_child.localPosition));
 			}
-			
-			return _list;
 		}
 
 		public abstract bool isResizableFigure();
@@ -48,16 +46,9 @@ namespace StridersVR.Domain.DotToDot
 			set { this.prefab = value; }
 		}
 
-		public Vector3 MinVectorToSpawn
+		public List<VertexPoint> ListVertexPoint
 		{
-			get { return this.minVectorToSpawn; }
-			set { this.minVectorToSpawn = value; }
-		}
-
-		public Vector3 MaxVectorToSpawn
-		{
-			get { return this.maxVectorToSpawn; }
-			set { this.maxVectorToSpawn = value; }
+			get { return this.listVertexPoint; }
 		}
 		#endregion
 	}
