@@ -6,12 +6,12 @@ namespace StridersVR.Domain.DotToDot
 	public class VertexPoint
 	{
 		private Vector3 vertexPointPosition;
-		private List<GameObject> listGameFigureModel;
+		private List<Vector3> neighbourVectorList;
 
 		public VertexPoint (Vector3 vertexPointPosition)
 		{
 			this.vertexPointPosition = vertexPointPosition;
-			this.listGameFigureModel = new List<GameObject>();
+			this.neighbourVectorList = new List<Vector3>();
 		}
 
 
@@ -21,10 +21,10 @@ namespace StridersVR.Domain.DotToDot
 			get { return this.vertexPointPosition; }
 			set { this.vertexPointPosition = value; }
 		}
-		public List<GameObject> ListGameFigureModel
+		public List<Vector3> NeighbourVectorList
 		{
-			get { return this.listGameFigureModel; }
-			set { this.listGameFigureModel = value; }
+			get { return this.neighbourVectorList; }
+			set { this.neighbourVectorList = value; }
 		}
 		#endregion
 	}

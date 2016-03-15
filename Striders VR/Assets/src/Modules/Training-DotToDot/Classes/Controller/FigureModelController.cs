@@ -1,24 +1,16 @@
 ﻿using UnityEngine;
-using StridersVR.ScriptableObjects.DotToDot;
-using StridersVR.Modules.DotToDot.Logic.Representatives;
+using System.Collections;
+using StridersVR.Domain.DotToDot;
 
-public class FigureModelController : MonoBehaviour 
-{
-	public ScriptableObjectFigureModel figureModelData;
+public class FigureModelController : MonoBehaviour {
 
-	private RepresentativeModelFigure modelFigure;
+	private FigureModel figureModel = null;
 
-
-	#region Script
-	void Awake () 
+	#region Properties
+	public FigureModel FigureModel
 	{
-		this.modelFigure = new RepresentativeModelFigure (this.gameObject);
-		this.modelFigure.createFigure ();
-	}
-	
-	void Update () 
-	{
-		
+		get { return this.figureModel; }
+		set { this.figureModel = value; }
 	}
 	#endregion
 }

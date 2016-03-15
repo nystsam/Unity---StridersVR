@@ -1,7 +1,5 @@
 using UnityEngine;
-using StridersVR.Domain.DotToDot;
-using StridersVR.Modules.DotToDot.Logic.StrategyInterfaces;
-using StridersVR.Modules.DotToDot.Logic.Strategies;
+using System.Collections.Generic;
 
 namespace StridersVR.Domain.DotToDot
 {
@@ -13,15 +11,42 @@ namespace StridersVR.Domain.DotToDot
 		{
 		}
 
-
-		public override bool isResizableFigure()
+		private void assignParent(ref Transform vertex, ref Transform firstNeighbour, ref Transform secondNeighbour, GameObject container)
 		{
-			return false;
+			vertex.parent = container.transform;
+			firstNeighbour.parent = container.transform;
+			secondNeighbour.parent = container.transform;
 		}
-
-		public override IStrategyCreateModel generator(GameObject container)
+		
+		public override void updateNeighbourVectorList(GameObject containerLocal, GameObject gameFigureGame)
 		{
-			return new StrategyCreateModelTriangleEquilateral(container);
+			Transform _vertex, _firstNeighbour, _secondNeighbour;
+			GameObject _cloneFigure = this.setStripesList (gameFigureGame);
+			this.vertexPointList = new List<VertexPoint> ();
+			
+			_vertex = this.stripesList [0];
+			_firstNeighbour = this.stripesList [1];
+			_secondNeighbour = this.stripesList [2];
+			this.assignParent (ref _vertex, ref _firstNeighbour, ref _secondNeighbour, containerLocal);
+			this.vertexWithTwoChild (_vertex, _firstNeighbour, _secondNeighbour);
+			this.assignParent (ref _vertex, ref _firstNeighbour, ref _secondNeighbour, _cloneFigure);
+			
+			_vertex = this.stripesList [1];
+			_firstNeighbour = this.stripesList [0];
+			_secondNeighbour = this.stripesList [2];
+			this.assignParent (ref _vertex, ref _firstNeighbour, ref _secondNeighbour, containerLocal);
+			this.vertexWithTwoChild (_vertex, _firstNeighbour, _secondNeighbour);
+			this.assignParent (ref _vertex, ref _firstNeighbour, ref _secondNeighbour, _cloneFigure);
+			
+			_vertex = this.stripesList [2];
+			_firstNeighbour = this.stripesList [0];
+			_secondNeighbour = this.stripesList [1];
+			this.assignParent (ref _vertex, ref _firstNeighbour, ref _secondNeighbour, containerLocal);
+			this.vertexWithTwoChild (_vertex, _firstNeighbour, _secondNeighbour);
+			this.assignParent (ref _vertex, ref _firstNeighbour, ref _secondNeighbour, _cloneFigure);
+			
+			_cloneFigure.transform.parent = null;
+			GameObject.Destroy (_cloneFigure);
 		}
 	}
 }

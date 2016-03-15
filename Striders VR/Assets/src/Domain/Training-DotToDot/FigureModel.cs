@@ -9,29 +9,46 @@ namespace StridersVR.Domain.DotToDot
 	{
 		[SerializeField] protected string figureName;
 		[SerializeField] protected GameObject prefab;
-		protected List<VertexPoint> listVertexPoint;
+		protected List<Transform> stripesList;
+		protected List<VertexPoint> vertexPointList;
 
 		public FigureModel(string figureName, GameObject prefab)
 		{
 			this.figureName = figureName;
 			this.prefab = prefab;
+			this.stripesList = new List<Transform>();
 		}
 
-
-		public void initializeVertexPoints()
+		protected void vertexWithTwoChild(Transform vertex, Transform firstNeighbour, Transform secondNeighbour)
 		{
-			this.listVertexPoint = new List<VertexPoint> ();
-			
-			for (int _index = 0; _index < this.prefab.transform.childCount; _index++) 
-			{
-				Transform _child = this.prefab.transform.GetChild(_index);
-				this.listVertexPoint.Add(new VertexPoint(_child.localPosition));
-			}
+			VertexPoint _newVertexPoint = new VertexPoint (vertex.localPosition);
+
+			_newVertexPoint.NeighbourVectorList.Add (firstNeighbour.localPosition);
+			_newVertexPoint.NeighbourVectorList.Add (secondNeighbour.localPosition);
+
+			this.vertexPointList.Add (_newVertexPoint);
 		}
 
-		public abstract bool isResizableFigure();
+		public GameObject setStripesList(GameObject gameFigureModel)
+		{
+			Transform _child;
+			GameObject _cloneFigure = (GameObject)GameObject.Instantiate(this.prefab, 
+			                                                             Vector3.zero,
+			                                                             gameFigureModel.transform.localRotation);
+			_cloneFigure.SetActive (false);
+			_cloneFigure.transform.parent = gameFigureModel.transform.parent;
+			_cloneFigure.transform.localPosition = gameFigureModel.transform.localPosition;
+			
+			for (int _index = 0; _index < _cloneFigure.transform.childCount; _index++) 
+			{
+				_child = _cloneFigure.transform.GetChild(_index);
+				this.stripesList.Add(_child);
+			}
+			
+			return _cloneFigure;
+		}
 
-		public abstract IStrategyCreateModel generator(GameObject container);
+		public abstract void updateNeighbourVectorList(GameObject containerLocal,  GameObject gameFigureGame);
 
 		#region Properties
 		public string FigureName
@@ -46,9 +63,14 @@ namespace StridersVR.Domain.DotToDot
 			set { this.prefab = value; }
 		}
 
-		public List<VertexPoint> ListVertexPoint
+		public List<Transform> StripesList
 		{
-			get { return this.listVertexPoint; }
+			get { return this.stripesList; }
+		}
+		public List<VertexPoint> VertexPointList
+		{
+			get { return this.vertexPointList; }
+			set { this.vertexPointList = value; }
 		}
 		#endregion
 	}
