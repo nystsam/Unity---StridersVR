@@ -16,6 +16,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Contexts
 
 
 		#region Service methods
+		public void selectGameFigure(ScriptableObject figureData)
+		{
+			this.strategyCreateModel.selectGameFigure (figureData);
+		}
+
 		public void createModelFigure()
 		{
 			this.strategyCreateModel.createModelFigure ();

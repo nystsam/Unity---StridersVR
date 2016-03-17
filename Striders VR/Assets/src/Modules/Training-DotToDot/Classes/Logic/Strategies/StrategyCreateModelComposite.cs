@@ -5,7 +5,7 @@ using StridersVR.Domain.DotToDot;
 
 namespace StridersVR.Modules.DotToDot.Logic.Strategies
 {
-	public class StrategyCreateModelComposite : IStrategyCreateModel
+	public class StrategyCreateModelComposite
 	{
 		private int selectedStrategyIndex = 0;
 		private List<IStrategyCreateModel> childStategyCreateModelList;

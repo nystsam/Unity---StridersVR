@@ -16,7 +16,6 @@ namespace StridersVR.Domain.DotToDot
 		{
 			this.figureName = figureName;
 			this.prefab = prefab;
-			this.stripesList = new List<Transform>();
 		}
 
 		protected void vertexWithTwoChild(Transform vertex, Transform firstNeighbour, Transform secondNeighbour)
@@ -32,6 +31,7 @@ namespace StridersVR.Domain.DotToDot
 		public GameObject setStripesList(GameObject gameFigureModel)
 		{
 			Transform _child;
+			this.stripesList = new List<Transform>();
 			GameObject _cloneFigure = (GameObject)GameObject.Instantiate(this.prefab, 
 			                                                             Vector3.zero,
 			                                                             gameFigureModel.transform.localRotation);

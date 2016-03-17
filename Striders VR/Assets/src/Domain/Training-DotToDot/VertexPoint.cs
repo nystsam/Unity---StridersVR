@@ -14,6 +14,13 @@ namespace StridersVR.Domain.DotToDot
 			this.neighbourVectorList = new List<Vector3>();
 		}
 
+		public void addNewNeighbour(List<Vector3> newNeighbourList)
+		{
+			foreach (Vector3 _neighbourList in newNeighbourList) 
+			{
+				this.neighbourVectorList.Add(_neighbourList);
+			}
+		}
 
 		#region Properties
 		public Vector3 VertexPointPosition

@@ -13,8 +13,8 @@ namespace StridersVR.ScriptableObjects.DotToDot
 		{
 			List<FigureModel> _list = new List<FigureModel>();
 
-			_list.Add (this.triangleEquilateralModel);
-			_list.Add (this.hourglass210Model);
+			_list.Add (new ModelTriangleEquilateral (this.triangleEquilateralModel.FigureName, this.triangleEquilateralModel.Prefab));
+			_list.Add (new ModelHourglass210 (this.hourglass210Model.FigureName, this.hourglass210Model.Prefab));
 
 			return _list;
 		}

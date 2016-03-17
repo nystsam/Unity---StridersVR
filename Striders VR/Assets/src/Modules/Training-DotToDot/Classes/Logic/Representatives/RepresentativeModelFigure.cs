@@ -12,7 +12,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 	{
 		private GameObject figureContainer;
 		private ContextCreateModel contextCreateModel;
-		private StrategyCreateModelComposite compositeStrategy;
+		//private StrategyCreateModelComposite compositeStrategy;
 		private ScriptableObjectFigureModel figureModelData;
 		private List<VertexPoint> myList;
 
@@ -27,18 +27,22 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 
 		public void createFigure()
 		{
-			FigureModel _figure = this.figureModelData.getHourglass210();
 
-			//_figure.initializeVertexPoints ();
-			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelBase (this.figureContainer, _figure);
+			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelBase (this.figureContainer);
+			this.contextCreateModel.selectGameFigure (this.figureModelData);
 			this.contextCreateModel.createModelFigure ();
 			this.contextCreateModel.gameVertexPoint (ref this.myList);
 
-			_figure = this.figureModelData.getTriangleEquilateral();
-			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelTwoTrianglesEq (this.figureContainer, _figure);
+			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelTwoTrianglesEq (this.figureContainer);
+			this.contextCreateModel.selectGameFigure (this.figureModelData);
 			this.contextCreateModel.createModelFigure ();
 			this.contextCreateModel.gameVertexPoint (ref this.myList);
-			Debug.Log (this.myList.Count);
+
+			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelTwoTrianglesEq (this.figureContainer);
+			this.contextCreateModel.selectGameFigure (this.figureModelData);
+			this.contextCreateModel.createModelFigure ();
+			this.contextCreateModel.gameVertexPoint (ref this.myList);
+
 //			foreach (VertexPoint asd in this.myList) 
 //			{
 //				Debug.Log(asd.VertexPointPosition);
