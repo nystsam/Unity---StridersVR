@@ -16,7 +16,6 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		private float figureRotationY;
 		private List<VertexPoint> vertexPointList;
 
-
 		public StrategyCreateModelTwoTrianglesEq(GameObject figureContainer)
 		{
 			this.figureContainer = figureContainer;
@@ -37,7 +36,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		{
 			this.vertexPointList = new List<VertexPoint> ();
 
-			this.figureRotationX = Random.Range (-90, -100);
+			this.figureRotationX = Random.Range (-45, -75);
 			this.figureRotationY = Random.Range (100, 150);
 			this.instantiateFigure ();
 
@@ -46,28 +45,23 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			else	
 				this.selectBase ();
 
-			this.figureRotationY = Random.Range (200, 250);
+			this.figureRotationY = Random.Range (-100, -150);
 			this.instantiateFigure ();
 			
 		}
 
 		public void gameVertexPoint(ref List<VertexPoint> currentVertexPointList)
 		{
-			int _indexInList;
+			int _currentListIndex;
 			foreach(VertexPoint vertexPoint in this.vertexPointList)
 			{
-				_indexInList = currentVertexPointList.FindIndex(x => x.VertexPointPosition == vertexPoint.VertexPointPosition);
-				if(_indexInList > -1)
+				_currentListIndex = currentVertexPointList.FindIndex(x => x.VertexPointPosition == vertexPoint.VertexPointPosition);
+				if(_currentListIndex < 0)
 				{
-					foreach(Vector3 neighbour in vertexPoint.NeighbourVectorList)
-					{
-						currentVertexPointList[_indexInList].NeighbourVectorList.Add(neighbour);
-					}
-				}
-				else
-				{
+					//currentVertexPointList[_currentListIndex].addNewNeighbour(vertexPoint.NeighbourVectorList);
 					currentVertexPointList.Add(vertexPoint);
 				}
+
 			}
 		}
 		#endregion
@@ -135,7 +129,6 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 				if(_neighbourVertexCount < 4)
 					_available = true;
 			}
-			Debug.Log ("Consigui vertice");
 			this.stripeIndex = _randomStripeIndex;
 			return true;
 		}
