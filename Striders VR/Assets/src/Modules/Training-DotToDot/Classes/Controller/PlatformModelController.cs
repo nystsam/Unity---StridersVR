@@ -16,7 +16,7 @@ public class PlatformModelController : MonoBehaviour
 		this.modelFigure = new RepresentativeModelFigure (this.gameObject);
 		this.modelFigure.createFigure ();
 		this.dotPlatform.GetComponent<PlatformDotController> ().VertexPointList = this.modelFigure.VertexPointList;
-		this.dotPlatform.GetComponent<PlatformDotController> ().AllowToDrawDots = true;
+		//this.dotPlatform.GetComponent<PlatformDotController> ().AllowToDrawDots = true;
 	}
 	
 	void Update () 

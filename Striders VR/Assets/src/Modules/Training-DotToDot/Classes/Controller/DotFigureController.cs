@@ -7,12 +7,13 @@ public class DotFigureController : MonoBehaviour {
 	public float sizeSpeed;
 	public float rotationSpeed;
 
+	private bool placed = false;
 	private bool isTrigger = false;
+	private bool allowToResize = false;
+	private bool allowToRotate = false;
 	private Collider triggerCollider;
 	private Transform triggerColliderParent;
 	private Vector3 triggerPosition;
-	private bool allowToResize = false;
-	private bool allowToRotate = false;
 	private GameObject handleObject;
 
 
@@ -68,6 +69,14 @@ public class DotFigureController : MonoBehaviour {
 		}
 	}
 
+	public void turnOffDot()
+	{
+		this.isTrigger = false;
+		this.allowToRotate = false;
+		this.allowToResize = false;
+	}
+
+
 	#region Script
 	void Start()
 	{
@@ -84,9 +93,12 @@ public class DotFigureController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
+		// ****************************************
+		// aplicar regla para reconocer leap motion
+		// ****************************************
 		if (other.name.Equals ("CubeTrigger")) 
 		{
-			if (!isTrigger) 
+			if (!isTrigger && !placed) 
 			{
 				this.isTrigger = true;
 				this.triggerPosition = other.transform.localPosition;
@@ -96,11 +108,17 @@ public class DotFigureController : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerExit(Collider other)
+	void OnTriggerExit()
 	{
-		this.isTrigger = false;
-		this.allowToRotate = false;
-		this.allowToResize = false;
+		this.turnOffDot ();
+	}
+	#endregion
+
+	#region Properties
+	public bool Placed
+	{
+		get { return this.placed; }
+		set { this.placed = value; }
 	}
 	#endregion
 

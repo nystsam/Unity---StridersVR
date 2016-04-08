@@ -5,12 +5,16 @@ using StridersVR.Domain.DotToDot;
 public class DotColliderController : MonoBehaviour {
 
 	public Light colliderLight;
+	public GameObject dotFigure;
+	public GameObject placedCollider;
 
 	private bool turnOn = false;
 	private bool setupChildList = false;
+	private bool isHolding = false;
 	private Vector3 parentCurrentRotation;
 	private VertexPoint vertexPointLocal = null;
 	private GameObject dotContainer;
+	private GameObject dotReferee;
 	private List<GameObject> childColliderList;
 
 	private GameObject getChildcollider(Vector3 childPosition)
@@ -43,11 +47,41 @@ public class DotColliderController : MonoBehaviour {
 		}
 	}
 
+	private bool availableDotCollider(Collider other)
+	{
+		if (other.tag.Equals ("DotCollider") && !this.dotFigure.GetComponent<DotFigureController> ().Placed) 
+		{
+			return true;
+//			if(!other.GetComponent<DotColliderController>().isPlaced())
+//			{
+//				return true;
+//			}
+		}
+
+		return false;
+	}
+
+	public bool isPlaced()
+	{
+		return this.dotFigure.GetComponent<DotFigureController> ().Placed;
+	}
+
+	public void placeDot()
+	{
+		this.dotFigure.GetComponent<DotFigureController>().Placed = true;
+		this.dotFigure.GetComponent<DotFigureController>().enabled = false;
+
+		this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
+		this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
+	}
+
+
 	#region Script
 	void Awake()
 	{
 		this.childColliderList = new List<GameObject> ();
 		this.dotContainer = GameObject.FindGameObjectWithTag ("DotContainer");
+		this.dotReferee = GameObject.FindGameObjectWithTag("DotReferee");
 		this.parentCurrentRotation = transform.parent.localEulerAngles;
 	}
 
@@ -65,17 +99,83 @@ public class DotColliderController : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter(Collider other)
+//	void OnTriggerEnter(Collider other)
+//	{
+//		// ****************************************
+//		// aplicar regla para reconocer leap motion
+//		// ****************************************
+//
+//		this.turnOn = true;
+//		if (!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot) 
+//		{
+//			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = true;	
+//			this.dotReferee.GetComponent<RefereeController> ().CurrentDot = this.gameObject;
+//		} 
+//		else if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && other.name.Equals ("CubeTrigger"))
+//		{
+//			GameObject _holdedDot = this.dotReferee.GetComponent<RefereeController> ().CurrentDot;
+//			Debug.Log ("Llego");
+//			_holdedDot.GetComponent<DotColliderController>().placeDot();
+//		}
+//
+//
+//	}
+//
+//	void OnTriggerExit()
+//	{
+//		this.turnOn = false;
+//		if (this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot) 
+//		{
+//			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
+//			this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
+//		}
+//
+//		if (!this.dotFigure.GetComponent<DotFigureController> ().Placed) 
+//		{
+//			transform.parent.localEulerAngles = this.parentCurrentRotation;
+//			transform.parent.localScale = new Vector3 (1, 1, 1);
+//		}
+//	}
+
+	void OnCollisionEnter(Collision other)
 	{
-		this.turnOn = true;
-		Debug.Log (this.childColliderList.Count);
+		if (other.collider.name.Equals ("CubeTrigger")) 
+		{
+			this.turnOn = true;
+			if (!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot) 
+			{
+				this.isHolding = true;
+				this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = true;	
+			} 
+		} 
+		else if (this.availableDotCollider(other.collider) && this.isHolding) 
+		{
+			this.placeDot();
+			this.isHolding = false;
+
+			this.GetComponent<BoxCollider>().enabled = false;
+			this.placedCollider.GetComponent<BoxCollider>().enabled = true;
+			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
+			this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
+		}
 	}
 
-	void OnTriggerExit()
+	void OnCollisionExit(Collision other)
 	{
-		this.turnOn = false;
-		transform.parent.localEulerAngles = this.parentCurrentRotation;
-		transform.parent.localScale = new Vector3 (1, 1, 1);
+		if (other.collider.name.Equals ("CubeTrigger")) 
+		{
+			this.turnOn = false;
+			if (this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot) 
+			{
+				this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
+				this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
+			}
+			if (!this.dotFigure.GetComponent<DotFigureController> ().Placed) 
+			{
+				transform.parent.localEulerAngles = this.parentCurrentRotation;
+				transform.parent.localScale = new Vector3 (1, 1, 1);
+			}
+		}
 	}
 	#endregion
 

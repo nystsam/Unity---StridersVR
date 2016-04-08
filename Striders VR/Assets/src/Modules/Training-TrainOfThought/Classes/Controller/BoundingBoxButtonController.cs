@@ -61,7 +61,7 @@ public class BoundingBoxButtonController : MonoBehaviour {
 	void OnTriggerStay(Collider other)
 	{
 		/*
-		if(other.transform.paren && other.transform.parent.parent && other.transform.parent.parent.GetComponent<HandModel>())
+		if(other.transform.parent && other.transform.parent.parent && other.transform.parent.parent.GetComponent<HandModel>())
 	 	*/
 		if (other.tag.Equals ("Player")) {
 			if (!isTriggered) {
