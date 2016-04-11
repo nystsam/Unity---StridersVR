@@ -27,8 +27,8 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 				_newDot.transform.parent = this.dotContainer.transform;
 				_newDot.transform.localPosition = _vertexPoint.VertexPointPosition;
 
-				_dotCollider = _newDot.transform.FindChild("Resizable").FindChild("DotCollider").gameObject;
-				_dotCollider.GetComponent<DotColliderController>().VertexPointLocal = _vertexPoint;
+				_dotCollider = _newDot.transform.FindChild("PointCollider").gameObject;
+				_dotCollider.GetComponent<PointController>().VertexPointLocal = _vertexPoint;
 			}
 		}
 

@@ -72,7 +72,7 @@ public class DotColliderController : MonoBehaviour {
 		this.dotFigure.GetComponent<DotFigureController>().enabled = false;
 
 		this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
-		this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
+		//this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
 	}
 
 
@@ -99,44 +99,6 @@ public class DotColliderController : MonoBehaviour {
 		}
 	}
 
-//	void OnTriggerEnter(Collider other)
-//	{
-//		// ****************************************
-//		// aplicar regla para reconocer leap motion
-//		// ****************************************
-//
-//		this.turnOn = true;
-//		if (!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot) 
-//		{
-//			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = true;	
-//			this.dotReferee.GetComponent<RefereeController> ().CurrentDot = this.gameObject;
-//		} 
-//		else if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && other.name.Equals ("CubeTrigger"))
-//		{
-//			GameObject _holdedDot = this.dotReferee.GetComponent<RefereeController> ().CurrentDot;
-//			Debug.Log ("Llego");
-//			_holdedDot.GetComponent<DotColliderController>().placeDot();
-//		}
-//
-//
-//	}
-//
-//	void OnTriggerExit()
-//	{
-//		this.turnOn = false;
-//		if (this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot) 
-//		{
-//			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
-//			this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
-//		}
-//
-//		if (!this.dotFigure.GetComponent<DotFigureController> ().Placed) 
-//		{
-//			transform.parent.localEulerAngles = this.parentCurrentRotation;
-//			transform.parent.localScale = new Vector3 (1, 1, 1);
-//		}
-//	}
-
 	void OnCollisionEnter(Collision other)
 	{
 		if (other.collider.name.Equals ("CubeTrigger")) 
@@ -156,7 +118,7 @@ public class DotColliderController : MonoBehaviour {
 			this.GetComponent<BoxCollider>().enabled = false;
 			this.placedCollider.GetComponent<BoxCollider>().enabled = true;
 			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
-			this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
+			//this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
 		}
 	}
 
@@ -168,7 +130,7 @@ public class DotColliderController : MonoBehaviour {
 			if (this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot) 
 			{
 				this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;	
-				this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
+				//this.dotReferee.GetComponent<RefereeController> ().CurrentDot = null;
 			}
 			if (!this.dotFigure.GetComponent<DotFigureController> ().Placed) 
 			{
