@@ -11,15 +11,22 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 	public class RepresentativeModelFigure
 	{
 		private GameObject figureContainer;
+
 		private ContextCreateModel contextCreateModel;
+
 		//private StrategyCreateModelComposite compositeStrategy;
+
 		private ScriptableObjectFigureModel figureModelData;
-		public static List<VertexPoint> inGameVertexPointList;
+
+		private List<VertexPoint> inGameVertexPointList;
+
+		private int numberOfPoints;
 
 		public RepresentativeModelFigure(GameObject figureContainer)
 		{
 			this.contextCreateModel = new ContextCreateModel ();
-			inGameVertexPointList = new List<VertexPoint> ();
+			this.inGameVertexPointList = new List<VertexPoint> ();
+			this.numberOfPoints = 0;
 			this.figureContainer = figureContainer;
 			this.assignObjtectData ();
 		}
@@ -31,7 +38,8 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelBase (this.figureContainer);
 			this.contextCreateModel.selectGameFigure (this.figureModelData);
 			this.contextCreateModel.createModelFigure ();
-			this.contextCreateModel.gameVertexPoint (ref inGameVertexPointList);
+			this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
+			this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
 
 //			foreach (VertexPoint asd in inGameVertexPointList) 
 //			{
@@ -47,7 +55,8 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelTwoTrianglesEq (this.figureContainer);
 			this.contextCreateModel.selectGameFigure (this.figureModelData);
 			this.contextCreateModel.createModelFigure ();
-			this.contextCreateModel.gameVertexPoint (ref inGameVertexPointList);
+			this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
+			this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
 
 //			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelTwoTrianglesEq (this.figureContainer);
 //			this.contextCreateModel.selectGameFigure (this.figureModelData);
@@ -75,7 +84,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 		#region Properties
 		public List<VertexPoint> VertexPointList
 		{
-			get { return inGameVertexPointList; }
+			get { return this.inGameVertexPointList; }
 		}
 		#endregion
 	}

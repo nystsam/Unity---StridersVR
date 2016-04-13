@@ -30,6 +30,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Contexts
 		{
 			this.strategyCreateModel.gameVertexPoint(ref currentVertexPointList);
 		}
+
+		public int numberOfPoints()
+		{
+			return this.strategyCreateModel.numberOfPoints ();
+		}
 		#endregion
 
 		#region Properties

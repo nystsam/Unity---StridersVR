@@ -10,15 +10,21 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 	{
 		private GameObject figureContainer;
 		private GameObject gameFigureBase;
+
 		private FigureModel figureModel;
+
 		private int stripeIndex;
+		private int numberOfPointsUsed;
+
 		private float figureRotationX;
 		private float figureRotationY;
+
 		private List<VertexPoint> vertexPointList;
 
 		public StrategyCreateModelTwoTrianglesEq(GameObject figureContainer)
 		{
 			this.figureContainer = figureContainer;
+			this.numberOfPointsUsed = 0;
 		}
 
 
@@ -64,6 +70,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 
 			}
 		}
+
+		public int numberOfPoints()
+		{
+			return this.numberOfPointsUsed;
+		}
 		#endregion
 
 		#region Private methods
@@ -83,8 +94,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			_gameNewFigure.transform.localRotation = Quaternion.Euler(new Vector3(this.figureRotationX, this.figureRotationY, 0));
 
 			this.figureModel.updateNeighbourVectorList (this.figureContainer, _gameNewFigure);
+			this.numberOfPointsUsed += this.figureModel.StripesList.Count;
+
 			_gameNewFigure.GetComponent<FigureModelController> ().FigureModel = this.figureModel;
 			_gameNewFigure.GetComponent<FigureModelController> ().setFigureVertexCount ();
+
 			this.gameFigureBase.GetComponent<FigureModelController> ().addNewNeighbour (this.stripeIndex, this.figureModel);
 			this.gameFigureBase.GetComponent<FigureModelController> ().NumberFiguresSupported ++;
 			this.iterateListUpdated ();

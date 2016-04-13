@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using StridersVR.Domain.DotToDot;
+using StridersVR.Modules.DotToDot.Logic.Representatives;
 
 public class PointController : MonoBehaviour {
 
@@ -13,42 +14,11 @@ public class PointController : MonoBehaviour {
 
 	private VertexPoint vertexPointLocal;
 
+	private RepresentativePoint pointLogic;
+
 	private GameObject newDrawlableFigure;
 	private GameObject dotReferee;
 	private GameObject dotContainer;
-
-	private List<GameObject> childColliderList;
-
-
-	private GameObject getChildcollider(Vector3 childPosition)
-	{
-		GameObject childDotcollider = null;
-		
-		for (int i = 0; i < this.dotContainer.transform.childCount; i++) 
-		{
-			childDotcollider = this.dotContainer.transform.GetChild(i).FindChild("PointCollider").gameObject;
-			if(childDotcollider.GetComponent<PointController>().VertexPointLocal.VertexPointPosition == childPosition)
-				break;
-		}
-		
-		return childDotcollider;
-	}
-	
-	private void setNeighbourDots()
-	{
-		if (this.vertexPointLocal != null && !this.setupChildList) 
-		{
-			foreach (Vector3 childPosition in this.vertexPointLocal.NeighbourVectorList) 
-			{
-				GameObject childCollider = this.getChildcollider(childPosition);
-				if(childCollider != null)
-				{
-					this.childColliderList.Add(childCollider);
-				}
-			}
-			this.setupChildList = true;
-		}
-	}
 
 
 	private void starDragging(Collider other)
@@ -68,10 +38,9 @@ public class PointController : MonoBehaviour {
 			this.newDrawlableFigure = _newClone;
 			this.isAlredyCloned = true;
 		}
-
 	}
 
-	public void resetDrawlableFigure()
+	private void resetDrawlableFigure()
 	{
 		if (!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && this.newDrawlableFigure != null) 
 		{
@@ -81,6 +50,11 @@ public class PointController : MonoBehaviour {
 			this.newDrawlableFigure = null;
 			this.isAlredyCloned = false;
 		}
+	}
+
+	public void validateNeighbour(Vector3 endPoint)
+	{
+		this.pointLogic.validateNeighbour (endPoint);
 	}
 
 
@@ -94,12 +68,19 @@ public class PointController : MonoBehaviour {
 		this.newDrawlableFigure = null;
 		this.dotReferee = GameObject.FindGameObjectWithTag("DotReferee");
 		this.dotContainer = GameObject.FindGameObjectWithTag ("DotContainer");
-		this.childColliderList = new List<GameObject> ();
+
+		this.pointLogic = new RepresentativePoint (this.dotContainer);
 	}
 
 	void Update () 
 	{
-		//this.setNeighbourDots ();
+		if (!this.setupChildList) 
+		{
+			this.setupChildList = this.pointLogic.setNeighbourDots(this.vertexPointLocal);
+
+		}
+		this.transform.localPosition = Vector3.zero;
+
 		this.resetDrawlableFigure ();
 
 		if (turnOn && this.pointLight.intensity < 2) 
@@ -122,7 +103,17 @@ public class PointController : MonoBehaviour {
 			this.turnOn = true;
 			if(!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot)
 			{
-				this.starDragging(other.collider);
+				if(this.dotReferee.GetComponent<RefereeController> ().IsFirstStripe)
+				{
+					this.starDragging(other.collider);
+				}
+				else
+				{
+					if(this.dotReferee.GetComponent<RefereeController> ().checkLastVertexPosition(this.vertexPointLocal.VertexPointPosition))
+					{
+						this.starDragging(other.collider);
+					}
+				}
 			}
 			else if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && !this.isAlredyCloned)
 			{
@@ -132,11 +123,12 @@ public class PointController : MonoBehaviour {
 				{
 					_startingPoint.GetComponent<PointController>().DrawlableFigure = null;
 					_startingPoint.GetComponent<PointController>().isAlredyCloned = false;
+					_startingPoint.GetComponent<PointController>().validateNeighbour(this.vertexPointLocal.VertexPointPosition);
 
 					this.dotReferee.GetComponent<RefereeController> ().PointBoundingBoxCenter = this.GetComponent<SphereCollider>().bounds.center;
 					this.dotReferee.GetComponent<RefereeController> ().CurrentDotFigure = null;
 					this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
-					this.dotReferee.GetComponent<RefereeController> ().placeDotFigure();
+					this.dotReferee.GetComponent<RefereeController> ().placeDotFigure(this.vertexPointLocal.VertexPointPosition);
 				}
 			}
 		} 

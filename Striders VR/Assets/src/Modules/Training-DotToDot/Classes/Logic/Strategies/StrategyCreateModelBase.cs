@@ -9,9 +9,14 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 	public class StrategyCreateModelBase : IStrategyCreateModel
 	{
 		private GameObject figureContainer;
+
 		private FigureModel figureModel;
+
 		private float figureRotationX;
 		private float figureRotationY;
+
+		private int numberOfPointsUsed;
+
 		private List<VertexPoint> vertexPointList;
 
 		public StrategyCreateModelBase (GameObject figureContainer)
@@ -19,6 +24,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			this.figureContainer = figureContainer;
 			this.figureRotationX = Random.Range (0, -45);
 			this.figureRotationY = Random.Range (0, 360);
+			this.numberOfPointsUsed = 0;
 		}
 
 
@@ -43,6 +49,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			_gameNewFigure.transform.localRotation = Quaternion.Euler(new Vector3(this.figureRotationX, this.figureRotationY, 0));
 
 			this.figureModel.updateNeighbourVectorList (this.figureContainer, _gameNewFigure);
+			this.numberOfPointsUsed += this.figureModel.StripesList.Count;
 			this.vertexPointList = this.figureModel.VertexPointList;
 
 			_gameNewFigure.GetComponent<FigureModelController> ().FigureModel = this.figureModel;
@@ -56,6 +63,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			{
 				currentVertexPointList.Add(vertexPoint);
 			}
+		}
+
+		public int numberOfPoints()
+		{
+			return this.numberOfPointsUsed;
 		}
 		#endregion
 	}
