@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using StridersVR.Modules.DotToDot.Logic.StrategyInterfaces;
 
 namespace StridersVR.Domain.DotToDot
 {
@@ -16,6 +15,15 @@ namespace StridersVR.Domain.DotToDot
 		{
 			this.figureName = figureName;
 			this.prefab = prefab;
+		}
+
+		protected void vertexWithOneChild(Transform vertex, Transform firstNeighbour)
+		{
+			VertexPoint _newVertexPoint = new VertexPoint (vertex.localPosition);
+			
+			_newVertexPoint.NeighbourVectorList.Add (firstNeighbour.localPosition);
+			
+			this.vertexPointList.Add (_newVertexPoint);
 		}
 
 		protected void vertexWithTwoChild(Transform vertex, Transform firstNeighbour, Transform secondNeighbour)
@@ -47,6 +55,8 @@ namespace StridersVR.Domain.DotToDot
 			
 			return _cloneFigure;
 		}
+
+		public abstract bool isLine();
 
 		public abstract void updateNeighbourVectorList(GameObject containerLocal,  GameObject gameFigureGame);
 

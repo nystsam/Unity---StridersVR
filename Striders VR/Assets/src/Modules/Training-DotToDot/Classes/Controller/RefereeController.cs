@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using StridersVR.Modules.DotToDot.Logic.Representatives;
 
 public class RefereeController : MonoBehaviour {
 
+	public GameObject dotContainer;
 	public GameObject endPointsContainer;
 	public GameObject endPointStripe;
 
@@ -16,6 +18,8 @@ public class RefereeController : MonoBehaviour {
 
 	private Vector3 pointBoundingBoxCenter;
 	private Vector3 lastVertexPosition = Vector3.zero;
+
+	private RepresentativeReferee refereeLogic = new RepresentativeReferee ();
 
 	private bool overideEndPoint()
 	{
@@ -71,6 +75,11 @@ public class RefereeController : MonoBehaviour {
 			this.createEndPoint();
 			this.dotFigure.GetComponentInChildren<DotFigureController>().Placed = true;
 			this.dotFigure = null;
+
+			if(this.refereeLogic.pointPlaced(this.dotContainer))
+			{
+				this.refereeLogic.removeCurrentFigureModel(this.dotContainer, this.endPointsContainer);
+			}
 		}
 	}
 
@@ -82,6 +91,16 @@ public class RefereeController : MonoBehaviour {
 		}
 		return false;
 	}
+
+	public void setNumberOfPoitns(int number)
+	{
+		this.refereeLogic.setNumberOfPoints (number);
+	}
+
+
+	#region Script
+
+	#endregion
 
 	#region Properties
 	public bool IsHoldingDot
@@ -116,6 +135,12 @@ public class RefereeController : MonoBehaviour {
 	{
 		get { return this.pointBoundingBoxCenter; }
 		set { this.pointBoundingBoxCenter = value; }
+	}
+
+	public bool ChangeFigureModel
+	{
+		get { return this.refereeLogic.ChangeFigureModel; }
+		set { this.refereeLogic.ChangeFigureModel = value; }
 	}
 	#endregion
 }

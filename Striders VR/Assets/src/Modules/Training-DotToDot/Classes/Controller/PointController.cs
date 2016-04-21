@@ -57,6 +57,10 @@ public class PointController : MonoBehaviour {
 		this.pointLogic.validateNeighbour (endPoint);
 	}
 
+	public int numberOfErrors()
+	{
+		return this.pointLogic.ErrorCount;
+	}
 
 	#region Script
 	void Awake () 

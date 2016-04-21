@@ -22,8 +22,8 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		public StrategyCreateModelBase (GameObject figureContainer)
 		{
 			this.figureContainer = figureContainer;
-			this.figureRotationX = Random.Range (0, -45);
-			this.figureRotationY = Random.Range (0, 360);
+			this.figureRotationX = Random.Range (45, -45);
+			this.figureRotationY = Random.Range (0, 45);
 			this.numberOfPointsUsed = 0;
 		}
 
@@ -33,8 +33,16 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		{
 			ScriptableObjectFigureModel _scriptableObjectFigureModel = (ScriptableObjectFigureModel)figureData;
 			List<FigureModel> _listBase = _scriptableObjectFigureModel.obtainModels ();
-			
-			this.figureModel = _listBase[Random.Range(0,_listBase.Count)];
+
+			while (true) 
+			{
+				this.figureModel = _listBase[Random.Range(0,_listBase.Count)];
+				if(!this.figureModel.isLine())
+				{
+					break;
+				}
+			}
+
 			this.vertexPointList = new List<VertexPoint> ();
 		}
 

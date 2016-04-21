@@ -21,21 +21,6 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			this.childColliderList = new List<GameObject> ();
 		}
 
-
-		private GameObject getChildcollider(Vector3 childPosition)
-		{
-			GameObject childDotcollider = null;
-			
-			for (int i = 0; i < this.dotContainer.transform.childCount; i++) 
-			{
-				childDotcollider = this.dotContainer.transform.GetChild(i).FindChild("PointCollider").gameObject;
-				if(childDotcollider.GetComponent<PointController>().VertexPointLocal.VertexPointPosition == childPosition)
-					break;
-			}
-			
-			return childDotcollider;
-		}
-		
 		public bool setNeighbourDots(VertexPoint vertexPointLocal)
 		{
 			if (vertexPointLocal != null) 
@@ -72,6 +57,20 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			{
 				this.errorCount++;
 			}
+		}
+
+		private GameObject getChildcollider(Vector3 childPosition)
+		{
+			GameObject childDotcollider = null;
+			
+			for (int i = 0; i < this.dotContainer.transform.childCount; i++) 
+			{
+				childDotcollider = this.dotContainer.transform.GetChild(i).FindChild("PointCollider").gameObject;
+				if(childDotcollider.GetComponent<PointController>().VertexPointLocal.VertexPointPosition == childPosition)
+					break;
+			}
+			
+			return childDotcollider;
 		}
 
 		#region Properties

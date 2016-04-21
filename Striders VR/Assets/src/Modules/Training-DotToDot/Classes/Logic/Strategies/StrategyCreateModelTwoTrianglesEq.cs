@@ -51,6 +51,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			else	
 				this.selectBase ();
 
+			this.figureRotationX = Random.Range (45, 75);
 			this.figureRotationY = Random.Range (-100, -150);
 			this.instantiateFigure ();
 			

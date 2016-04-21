@@ -11,10 +11,9 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 	public class RepresentativeModelFigure
 	{
 		private GameObject figureContainer;
+		private GameObject playerFigureContainer;
 
 		private ContextCreateModel contextCreateModel;
-
-		//private StrategyCreateModelComposite compositeStrategy;
 
 		private ScriptableObjectFigureModel figureModelData;
 
@@ -22,24 +21,36 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 
 		private int numberOfPoints;
 
-		public RepresentativeModelFigure(GameObject figureContainer)
+		private StrategyCreateModelComposite compositeStrategyAbstract1;
+
+		public RepresentativeModelFigure(GameObject figureContainer, GameObject playerFigureContainer)
 		{
 			this.contextCreateModel = new ContextCreateModel ();
 			this.inGameVertexPointList = new List<VertexPoint> ();
 			this.numberOfPoints = 0;
 			this.figureContainer = figureContainer;
+			this.playerFigureContainer = playerFigureContainer;
 			this.assignObjtectData ();
+
+			this.compositeStrategyAbstract1 = new StrategyCreateModelComposite ();
+			this.instantiateComposite ();
 		}
-		
+
 
 		public void createFigure()
 		{
+			foreach (IStrategyCreateModel _strategy in this.compositeStrategyAbstract1.StategyCreateModelList) 
+			{
+				this.contextCreateModel.StrategyCreateModel = _strategy;
+				this.contextCreateModel.selectGameFigure (this.figureModelData);
+				this.contextCreateModel.createModelFigure ();
+				this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
+				this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
+			}
+			this.reduceSizeFigurePlatform ();
+			this.addParentToPlayerContainer ();
+			//this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelBase (this.figureContainer);
 
-			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelBase (this.figureContainer);
-			this.contextCreateModel.selectGameFigure (this.figureModelData);
-			this.contextCreateModel.createModelFigure ();
-			this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
-			this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
 
 //			foreach (VertexPoint asd in inGameVertexPointList) 
 //			{
@@ -52,28 +63,45 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 //				Debug.Log ("-----------------------");
 //			}
 
-			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelTwoTrianglesEq (this.figureContainer);
-			this.contextCreateModel.selectGameFigure (this.figureModelData);
-			this.contextCreateModel.createModelFigure ();
-			this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
-			this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
-
 //			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelTwoTrianglesEq (this.figureContainer);
 //			this.contextCreateModel.selectGameFigure (this.figureModelData);
 //			this.contextCreateModel.createModelFigure ();
-//			this.contextCreateModel.gameVertexPoint (ref this.vertexPointList);
+//			this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
+//			this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
+		}
 
+		private void instantiateComposite()
+		{
+			IStrategyCreateModel _strategy;
 
-//			this.contextCreateModel.createModelFigure (_figure);
-//			this.contextCreateModel.createModelFigure (_figure);
-//			this.contextCreateModel.createModelFigure (_figure);
+			_strategy = new StrategyCreateModelBase (this.figureContainer);
+			this.compositeStrategyAbstract1.addStrategy (_strategy);
+
+			_strategy= new StrategyCreateModelTwoTrianglesEq (this.figureContainer);
+			this.compositeStrategyAbstract1.addStrategy (_strategy);
 
 		}
 
-		private void initializeStrategies()
+		private void reduceSizeFigurePlatform()
 		{
+			this.figureContainer.transform.parent.localScale = new Vector3 (0.05f, 0.05f, 0.05f);
+		}
 
+		private void increaseSizeFigurePlatform()
+		{
+			this.figureContainer.transform.parent.localScale = new Vector3 (1, 1, 1);
+		}
 
+		private void addParentToPlayerContainer()
+		{
+			this.figureContainer.transform.parent = this.playerFigureContainer.transform;
+			this.figureContainer.transform.localPosition = Vector3.zero;
+		}
+
+		private void removeParentFromPlayerContainer()
+		{
+			this.figureContainer.transform.parent = null;
+			this.figureContainer.transform.localPosition = new Vector3 (100, 0, 0);
 		}
 
 		private void assignObjtectData()
@@ -85,6 +113,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 		public List<VertexPoint> VertexPointList
 		{
 			get { return this.inGameVertexPointList; }
+		}
+
+		public int NumberOfPoints
+		{
+			get { return this.numberOfPoints; }
 		}
 		#endregion
 	}

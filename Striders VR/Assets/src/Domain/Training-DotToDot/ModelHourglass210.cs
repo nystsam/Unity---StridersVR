@@ -12,11 +12,9 @@ namespace StridersVR.Domain.DotToDot
 		}
 
 
-		private void assignParent(ref Transform vertex, ref Transform firstNeighbour, ref Transform secondNeighbour, GameObject container)
+		public override bool isLine()
 		{
-			vertex.parent = container.transform;
-			firstNeighbour.parent = container.transform;
-			secondNeighbour.parent = container.transform;
+			return false;
 		}
 
 		public override void updateNeighbourVectorList(GameObject containerLocal, GameObject gameFigureGame)
@@ -55,6 +53,13 @@ namespace StridersVR.Domain.DotToDot
 
 			_cloneFigure.transform.parent = null;
 			GameObject.Destroy (_cloneFigure);
+		}
+
+		private void assignParent(ref Transform vertex, ref Transform firstNeighbour, ref Transform secondNeighbour, GameObject container)
+		{
+			vertex.parent = container.transform;
+			firstNeighbour.parent = container.transform;
+			secondNeighbour.parent = container.transform;
 		}
 	}
 }
