@@ -78,7 +78,8 @@ public class RefereeController : MonoBehaviour {
 
 			if(this.refereeLogic.pointPlaced(this.dotContainer))
 			{
-				this.refereeLogic.removeCurrentFigureModel(this.dotContainer, this.endPointsContainer);
+				this.refereeLogic.ChangeFigureModel = true;
+				this.isHoldingDot = true;
 			}
 		}
 	}

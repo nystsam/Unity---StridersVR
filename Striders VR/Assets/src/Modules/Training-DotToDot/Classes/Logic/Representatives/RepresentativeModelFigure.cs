@@ -12,6 +12,8 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 	{
 		private GameObject figureContainer;
 		private GameObject playerFigureContainer;
+		private GameObject dotContainer;
+		private GameObject endPointsContainer;
 
 		private ContextCreateModel contextCreateModel;
 
@@ -46,6 +48,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 				this.contextCreateModel.createModelFigure ();
 				this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
 				this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
+				break;
 			}
 			this.reduceSizeFigurePlatform ();
 			this.addParentToPlayerContainer ();
@@ -68,6 +71,19 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 //			this.contextCreateModel.createModelFigure ();
 //			this.contextCreateModel.gameVertexPoint (ref this.inGameVertexPointList);
 //			this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
+		}
+
+		public void removeCurrentFigureModel()
+		{
+			for (int i = 0; i < this.dotContainer.transform.childCount; i++) {
+				Transform _child = this.dotContainer.transform.GetChild (i);
+				GameObject.Destroy (_child.gameObject);
+			}
+			
+			for (int i = 0; i < this.endPointsContainer.transform.childCount; i++) {
+				Transform _child = this.endPointsContainer.transform.GetChild (i);
+				GameObject.Destroy (_child.gameObject);
+			}
 		}
 
 		private void instantiateComposite()
@@ -118,6 +134,16 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 		public int NumberOfPoints
 		{
 			get { return this.numberOfPoints; }
+		}
+
+		public GameObject DotContainer
+		{
+			set { this.dotContainer = value; }
+		}
+
+		public GameObject EndPointContainer
+		{
+			set { this.endPointsContainer = value; }
 		}
 		#endregion
 	}

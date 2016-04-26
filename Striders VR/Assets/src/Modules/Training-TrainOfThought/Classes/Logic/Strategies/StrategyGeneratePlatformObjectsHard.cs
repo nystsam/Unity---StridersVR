@@ -59,7 +59,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			GameObject _trainTracksContainer = this.gamePlatform.transform.FindChild ("TrainTracksContainer").gameObject;
 			GameObject _playerPanelButtons = GameObject.FindGameObjectWithTag("PlayerPanelButtons");
 
-			_playerPanelButtons.transform.localPosition = new Vector3 (-6, -6, 8);
+			_playerPanelButtons.transform.localPosition = new Vector3 (-6, -3, 4.5f);
 			this.adjustPlayerPanel (_playerPanelButtons);
 			foreach (RailroadSwitch _switch in _gameRailroadSwitchData.RailroadSwitchListHardMode) 
 			{

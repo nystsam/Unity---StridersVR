@@ -44,6 +44,16 @@ public class BoundingBoxButtonController : MonoBehaviour {
 			light.range += valueIncrement;
 	}
 
+	private bool isHandController(Collider other)
+	{
+		if (other.transform.parent.GetComponentInParent<HandModel> ()) 
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 
 	#region Script
 	void Start () 
@@ -60,10 +70,12 @@ public class BoundingBoxButtonController : MonoBehaviour {
 	
 	void OnTriggerStay(Collider other)
 	{
-		/*
-		if(other.transform.parent && other.transform.parent.parent && other.transform.parent.parent.GetComponent<HandModel>())
-	 	*/
+
+		if(this.isHandController(other))
+		{
+/*
 		if (other.tag.Equals ("Player")) {
+*/
 			if (!isTriggered) {
 				this.isTriggered = true;
 				changeColorDone = false;
@@ -73,7 +85,11 @@ public class BoundingBoxButtonController : MonoBehaviour {
 	
 	void OnTriggerExit(Collider other)
 	{
+		if(this.isHandController(other))
+		{
+		/*
 		if (other.tag.Equals ("Player")) {
+		*/
 			if (isTriggered) {
 				this.isTriggered = false;
 				changeColorDone = false;

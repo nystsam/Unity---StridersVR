@@ -6,13 +6,20 @@ public class CheckInController : MonoBehaviour {
 	public GameObject firstPart;
 	public GameObject secondPart;
 
+	private GameObject figureContainer;
+
 	private Animator anim;
 
 	private int stateFirstPartHash;
+	private int stateSecondPartHash;
 	private int allowToFirstHash;
 	private int allowToSecondHash;
 
-	private bool alreadySized;
+	private float fadeOutTimer;
+
+	private bool firstPartDone;
+	private bool secondPartDone;
+	private bool animationDone;
 
 	private void animateSecondPart ()
 	{
@@ -22,13 +29,30 @@ public class CheckInController : MonoBehaviour {
 
 	private void animateFirstPart()
 	{
-		if (!alreadySized) 
+		if (!firstPartDone) 
 		{
 			AnimatorStateInfo stateInfo = this.anim.GetCurrentAnimatorStateInfo (0);
 			if (stateInfo.shortNameHash == this.stateFirstPartHash) 
 			{
-				this.alreadySized = true;
-				this.animateSecondPart();
+				this.firstPartDone = true;
+				this.animateSecondPart ();
+			}
+		} 
+		else if (this.firstPartDone && !this.secondPartDone) 
+		{
+			AnimatorStateInfo stateInfo = this.anim.GetCurrentAnimatorStateInfo (0);
+			if (stateInfo.shortNameHash == this.stateFirstPartHash) 
+			{
+				this.secondPartDone = true;
+			}
+		} 
+		else if (this.secondPartDone) 
+		{
+			this.fadeOutTimer += Time.deltaTime;
+			if(this.fadeOutTimer > 0.3f)
+			{
+				this.figureContainer.GetComponent<PlatformModelController>().CheckInDone = true;
+				GameObject.Destroy(this.gameObject);
 			}
 		}
 	}
@@ -36,10 +60,14 @@ public class CheckInController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.alreadySized = false;
+		this.firstPartDone = false;
+		this.secondPartDone = false;
+		this.animationDone = false;
+		this.fadeOutTimer = 0;
 
 		this.anim = this.GetComponent<Animator> ();
 		this.stateFirstPartHash = Animator.StringToHash("AnimFirstPart");
+		this.stateSecondPartHash = Animator.StringToHash("AnimSecondPart");
 		this.allowToFirstHash = Animator.StringToHash("AllowToFirst");
 		this.allowToSecondHash = Animator.StringToHash("AllowToSecond");
 
@@ -49,6 +77,13 @@ public class CheckInController : MonoBehaviour {
 	void Update () 
 	{
 		this.animateFirstPart ();
+	}
+	#endregion
+
+	#region Properties
+	public GameObject FigureContainer
+	{
+		set { this.figureContainer = value; }
 	}
 	#endregion
 }
