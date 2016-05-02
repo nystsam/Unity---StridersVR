@@ -10,9 +10,8 @@ public class PointController : MonoBehaviour {
 
 	private bool turnOn;
 	private bool isAlredyCloned;
-	private bool setupChildList;
 
-	private VertexPoint vertexPointLocal;
+	private PointDot localPointDot;
 
 	private RepresentativePoint pointLogic;
 
@@ -32,7 +31,6 @@ public class PointController : MonoBehaviour {
 			_newClone.transform.localPosition = Vector3.zero;
 
 			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = true;
-			this.dotReferee.GetComponent<RefereeController> ().CurrentDotFigure = _newClone;
 			this.dotReferee.GetComponent<RefereeController> ().StartingPoint = this.gameObject;
 			this.dotReferee.GetComponent<RefereeController> ().DotFigure = _newClone;
 			this.newDrawlableFigure = _newClone;
@@ -41,20 +39,25 @@ public class PointController : MonoBehaviour {
 	}
 
 	private void resetDrawlableFigure()
-	{
+	{	
 		if (!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && this.newDrawlableFigure != null) 
 		{
 			GameObject.Destroy(this.newDrawlableFigure);
-			this.dotReferee.GetComponent<RefereeController> ().CurrentDotFigure = null;
 			this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
 			this.newDrawlableFigure = null;
 			this.isAlredyCloned = false;
 		}
 	}
 
-	public void validateNeighbour(Vector3 endPoint)
+	public void setLocalPointDot(PointDot localPointDot)
 	{
-		this.pointLogic.validateNeighbour (endPoint);
+		this.localPointDot = localPointDot;
+		this.pointLogic.LocalPointDot = this.localPointDot;
+	}
+
+	public void validateNeighbour(PointDot possibleNeighbourPoint)
+	{
+		this.pointLogic.validateNeighbour (possibleNeighbourPoint);
 	}
 
 	public int numberOfErrors()
@@ -67,22 +70,20 @@ public class PointController : MonoBehaviour {
 	{
 		this.turnOn = false;
 		this.isAlredyCloned = false;
-		this.setupChildList = false;
-		this.vertexPointLocal = null;
 		this.newDrawlableFigure = null;
 		this.dotReferee = GameObject.FindGameObjectWithTag("DotReferee");
 		this.dotContainer = GameObject.FindGameObjectWithTag ("DotContainer");
 
-		this.pointLogic = new RepresentativePoint (this.dotContainer);
+		this.pointLogic = new RepresentativePoint ();
 	}
 
 	void Update () 
 	{
-		if (!this.setupChildList) 
-		{
-			this.setupChildList = this.pointLogic.setNeighbourDots(this.vertexPointLocal);
-
-		}
+//		if (!this.setupChildList) 
+//		{
+//			this.setupChildList = this.pointLogic.setNeighbourDots(this.vertexPointLocal);
+//
+//		}
 		this.transform.localPosition = Vector3.zero;
 
 		this.resetDrawlableFigure ();
@@ -105,6 +106,7 @@ public class PointController : MonoBehaviour {
 		if (other.collider.name.Equals ("CubeTrigger")) 
 		{
 			this.turnOn = true;
+
 			if(!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot)
 			{
 				if(this.dotReferee.GetComponent<RefereeController> ().IsFirstStripe)
@@ -113,7 +115,7 @@ public class PointController : MonoBehaviour {
 				}
 				else
 				{
-					if(this.dotReferee.GetComponent<RefereeController> ().checkLastVertexPosition(this.vertexPointLocal.VertexPointPosition))
+					if(this.dotReferee.GetComponent<RefereeController> ().checkLastPointPosition(this.localPointDot.PointPosition))
 					{
 						this.starDragging(other.collider);
 					}
@@ -121,20 +123,59 @@ public class PointController : MonoBehaviour {
 			}
 			else if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && !this.isAlredyCloned)
 			{
-				GameObject _startingPoint = this.dotReferee.GetComponent<RefereeController> ().StartingPoint;
-
-				if(_startingPoint != null)
+				if(this.dotReferee.GetComponent<RefereeController> ().EndingPoint == null)
 				{
-					_startingPoint.GetComponent<PointController>().DrawlableFigure = null;
-					_startingPoint.GetComponent<PointController>().isAlredyCloned = false;
-					_startingPoint.GetComponent<PointController>().validateNeighbour(this.vertexPointLocal.VertexPointPosition);
+					this.dotReferee.GetComponent<RefereeController> ().EndingPoint = this.gameObject;
+					this.dotReferee.GetComponent<RefereeController> ().newEndingPointDiscover();
+				}
 
-					this.dotReferee.GetComponent<RefereeController> ().PointBoundingBoxCenter = this.GetComponent<SphereCollider>().bounds.center;
-					this.dotReferee.GetComponent<RefereeController> ().CurrentDotFigure = null;
-					this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
-					this.dotReferee.GetComponent<RefereeController> ().placeDotFigure(this.vertexPointLocal.VertexPointPosition);
+				if(this.dotReferee.GetComponent<RefereeController> ().isHandleIntersecting())
+				{
+					GameObject _startingPoint = this.dotReferee.GetComponent<RefereeController> ().StartingPoint;
+
+					if(_startingPoint != null)
+					{
+						_startingPoint.GetComponent<PointController>().DrawlableFigure = null;
+						_startingPoint.GetComponent<PointController>().isAlredyCloned = false;
+						_startingPoint.GetComponent<PointController>().validateNeighbour(this.localPointDot);
+
+						this.dotReferee.GetComponent<RefereeController> ().EndingPoint = this.gameObject;
+						this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
+						this.dotReferee.GetComponent<RefereeController> ().placeDotFigure(this.localPointDot.PointPosition);
+					}
 				}
 			}
+
+//			if(!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot)
+//			{
+//				if(this.dotReferee.GetComponent<RefereeController> ().IsFirstStripe)
+//				{
+//					this.starDragging(other.collider);
+//				}
+//				else
+//				{
+//					if(this.dotReferee.GetComponent<RefereeController> ().checkLastVertexPosition(this.vertexPointLocal.VertexPointPosition))
+//					{
+//						this.starDragging(other.collider);
+//					}
+//				}
+//			}
+//			else if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && !this.isAlredyCloned)
+//			{
+//				GameObject _startingPoint = this.dotReferee.GetComponent<RefereeController> ().StartingPoint;
+//
+//				if(_startingPoint != null)
+//				{
+//					_startingPoint.GetComponent<PointController>().DrawlableFigure = null;
+//					_startingPoint.GetComponent<PointController>().isAlredyCloned = false;
+//					_startingPoint.GetComponent<PointController>().validateNeighbour(this.vertexPointLocal.VertexPointPosition);
+//
+//					this.dotReferee.GetComponent<RefereeController> ().EndingPoint = this.gameObject;
+//					this.dotReferee.GetComponent<RefereeController> ().CurrentDotFigure = null;
+//					this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
+//					this.dotReferee.GetComponent<RefereeController> ().placeDotFigure(this.vertexPointLocal.VertexPointPosition);
+//				}
+//			}
 		} 
 	}
 	
@@ -146,6 +187,12 @@ public class PointController : MonoBehaviour {
 		if (other.collider.name.Equals ("CubeTrigger")) 
 		{
 			this.turnOn = false;
+
+			if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && !this.isAlredyCloned)
+			{
+				this.dotReferee.GetComponent<RefereeController> ().exitFromDiscoveredPoint();
+			}
+
 			this.resetDrawlableFigure();
 
 		}
@@ -153,10 +200,9 @@ public class PointController : MonoBehaviour {
 	#endregion
 
 	#region Properties
-	public VertexPoint VertexPointLocal
+	public PointDot LocalPointDot
 	{
-		get { return this.vertexPointLocal; }
-		set { this.vertexPointLocal = value; }
+		get { return this.localPointDot; }
 	}
 
 	public GameObject DrawlableFigure

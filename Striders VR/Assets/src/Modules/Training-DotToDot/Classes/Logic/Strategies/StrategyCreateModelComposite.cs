@@ -5,7 +5,7 @@ using StridersVR.Domain.DotToDot;
 
 namespace StridersVR.Modules.DotToDot.Logic.Strategies
 {
-	public class StrategyCreateModelComposite : IStrategyCreateModel
+	public class StrategyCreateModelComposite
 	{
 		private int selectedStrategyIndex = 0;
 		private List<IStrategyCreateModel> stategyCreateModelList;
@@ -17,25 +17,25 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 
 
 		#region IStrategyCreateModel
-		public void selectGameFigure(ScriptableObject figureData)
-		{
-			this.stategyCreateModelList [this.selectedStrategyIndex].selectGameFigure (figureData);
-		}
-
-		public void createModelFigure()
-		{
-			this.stategyCreateModelList [this.selectedStrategyIndex].createModelFigure ();
-		}
-
-		public void gameVertexPoint(ref List<VertexPoint> currentVertexPointList)
-		{
-			this.stategyCreateModelList [this.selectedStrategyIndex].gameVertexPoint (ref currentVertexPointList);
-		}
-
-		public int numberOfPoints()
-		{
-			return 	this.stategyCreateModelList [this.selectedStrategyIndex].numberOfPoints ();
-		}
+//		public void selectGameFigure(ScriptableObject figureData)
+//		{
+//			this.stategyCreateModelList [this.selectedStrategyIndex].selectGameFigure (figureData);
+//		}
+//
+//		public void createModelFigure()
+//		{
+//			this.stategyCreateModelList [this.selectedStrategyIndex].createModelFigure ();
+//		}
+//
+//		public void gameVertexPoint(ref List<VertexPoint> currentVertexPointList)
+//		{
+//			this.stategyCreateModelList [this.selectedStrategyIndex].gameVertexPoint (ref currentVertexPointList);
+//		}
+//
+//		public int numberOfPoints()
+//		{
+//			return 	this.stategyCreateModelList [this.selectedStrategyIndex].numberOfPoints ();
+//		}
 		#endregion
 
 		public void addStrategy(IStrategyCreateModel strategy)

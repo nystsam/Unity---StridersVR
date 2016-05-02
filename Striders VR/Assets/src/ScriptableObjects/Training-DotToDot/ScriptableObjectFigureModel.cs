@@ -6,6 +6,7 @@ namespace StridersVR.ScriptableObjects.DotToDot
 {
 	public class ScriptableObjectFigureModel : ScriptableObject
 	{
+		[SerializeField] private GameObject stripeContainerPrefab;
 		[SerializeField] private ModelTriangleEquilateral triangleEquilateralModel;
 		[SerializeField] private ModelHourglass210 hourglass210Model;
 		[SerializeField] private ModelLine lineModel;
@@ -25,6 +26,11 @@ namespace StridersVR.ScriptableObjects.DotToDot
 			_list.Add (new ModelRay (this.rayModel.FigureName, this.rayModel.Prefab));
 
 			return _list;
+		}
+
+		public GameObject stripeContainer()
+		{
+			return this.stripeContainerPrefab;
 		}
 
 		public FigureModel getTriangleEquilateral()

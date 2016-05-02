@@ -6,18 +6,29 @@ using StridersVR.ScriptableObjects.DotToDot;
 
 public class PlatformDotController : MonoBehaviour 
 {
+	public GameObject platformModel;
+
 	public ScriptableObjectDot dotData;
 
 	private bool allowToDrawDots = false;
-	private List<VertexPoint> vertexPointList;
+
+	private PointsContainer pointsContainer;
+
 	private RepresentativeDotPlatform dotPlatform;
 
 
 	#region Script
 	void Awake()
 	{
-		this.dotPlatform = new RepresentativeDotPlatform (this.gameObject);
-		this.dotPlatform.setDotData (this.dotData);
+		this.dotPlatform = new RepresentativeDotPlatform (this.gameObject, this.dotData.DotPrefab);
+//		this.dotPlatform.setDotData (this.dotData);
+		this.pointsContainer = this.dotPlatform.drawDots();
+	}
+
+	void Start()
+	{
+		this.platformModel.GetComponent<PlatformModelController> ().AllowToCreateModel = true;
+		this.platformModel.GetComponent<PlatformModelController> ().SetPoints = this.pointsContainer;
 	}
 
 	void Update()
@@ -25,7 +36,8 @@ public class PlatformDotController : MonoBehaviour
 		if (this.allowToDrawDots) 
 		{
 			this.allowToDrawDots = false;
-			this.dotPlatform.drawDots(this.vertexPointList);
+			//this.dotPlatform.drawDots(this.vertexPointList);
+
 		}
 	}
 	#endregion
@@ -35,11 +47,6 @@ public class PlatformDotController : MonoBehaviour
 	{
 		get { return this.allowToDrawDots; }
 		set { this.allowToDrawDots = value; }
-	}
-
-	public List<VertexPoint> VertexPointList
-	{
-		set { this.vertexPointList = value; }
 	}
 	#endregion
 }

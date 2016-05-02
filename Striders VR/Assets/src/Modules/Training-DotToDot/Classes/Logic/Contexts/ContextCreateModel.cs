@@ -16,25 +16,30 @@ namespace StridersVR.Modules.DotToDot.Logic.Contexts
 
 
 		#region Service methods
-		public void selectGameFigure(ScriptableObject figureData)
+		public void createModel(PointsContainer pointsFromController)
 		{
-			this.strategyCreateModel.selectGameFigure (figureData);
+			this.strategyCreateModel.createModel (pointsFromController);
 		}
 
-		public void createModelFigure()
-		{
-			this.strategyCreateModel.createModelFigure ();
-		}
-
-		public void gameVertexPoint(ref List<VertexPoint> currentVertexPointList)
-		{
-			this.strategyCreateModel.gameVertexPoint(ref currentVertexPointList);
-		}
-
-		public int numberOfPoints()
-		{
-			return this.strategyCreateModel.numberOfPoints ();
-		}
+//		public void selectGameFigure(ScriptableObject figureData)
+//		{
+//			this.strategyCreateModel.selectGameFigure (figureData);
+//		}
+//
+//		public void createModelFigure()
+//		{
+//			this.strategyCreateModel.createModelFigure ();
+//		}
+//
+//		public void gameVertexPoint(ref List<VertexPoint> currentVertexPointList)
+//		{
+//			this.strategyCreateModel.gameVertexPoint(ref currentVertexPointList);
+//		}
+//
+//		public int numberOfPoints()
+//		{
+//			return this.strategyCreateModel.numberOfPoints ();
+//		}
 		#endregion
 
 		#region Properties

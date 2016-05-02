@@ -8,6 +8,8 @@ public class DotFigureController : MonoBehaviour {
 	public float rotationSpeed;
 
 	private bool placed = false;
+	private bool isIntersecting = false;
+	private bool nearlyPoint = false;
 	private bool turnedOff = false;
 	private bool isTrigger = false;
 	private bool intersectToResize = false;
@@ -19,8 +21,8 @@ public class DotFigureController : MonoBehaviour {
 	private Transform figureParentResizable;
 
 	private Vector3 triggerPosition;
-	private Vector3 placedEdgePosition;
 
+	private GameObject attachedPoint;
 	private GameObject handleObject;
 	private GameObject dotReferee;
 
@@ -110,8 +112,7 @@ public class DotFigureController : MonoBehaviour {
 			{
 				Vector3 _resize = this.figureParentResizable.localScale;
 
-				this.placedEdgePosition = this.dotReferee.GetComponent<RefereeController> ().PointBoundingBoxCenter;
-				_resize.z = Vector3.Distance(this.placedEdgePosition, this.figureParentResizable.position)*5;
+				_resize.z = Vector3.Distance(this.attachedPoint.GetComponent<SphereCollider>().bounds.center, this.figureParentResizable.position)*5;
 
 				this.figureParentResizable.transform.localScale = _resize;
 			}
@@ -133,13 +134,34 @@ public class DotFigureController : MonoBehaviour {
 		this.changeRotation ();
 		this.changeSize ();
 
-		if (this.placed) {
+		if (this.placed && this.isIntersecting) 
+		{
 			this.turnOffDot ();
-			Vector3 _direction = (this.placedEdgePosition - this.figureParentResizable.position).normalized;
+			Vector3 _direction = (this.attachedPoint.GetComponent<SphereCollider>().bounds.center - this.figureParentResizable.position).normalized;
 			Quaternion _lookDirection = Quaternion.LookRotation(_direction);
 			this.figureParentResizable.rotation = Quaternion.Slerp(this.figureParentResizable.rotation, _lookDirection, 
-			                                                       Time.deltaTime * 30);
+		        	                                               Time.deltaTime * 30);
 		}
+
+		if (this.nearlyPoint) 
+		{
+			if (this.attachedPoint == null) {
+				this.attachedPoint = this.dotReferee.GetComponent<RefereeController> ().EndingPoint;
+			}
+			
+			if (this.attachedPoint.GetComponent<SphereCollider> ().bounds.Contains (this.handleObject.GetComponent<BoxCollider> ().bounds.center)) {
+				this.isIntersecting = true;
+				this.nearlyPoint = false;
+			}
+		} 
+		else if(!this.isIntersecting &&!this.placed)
+		{
+			if (this.attachedPoint != null) 
+			{
+				this.attachedPoint = null;
+			}
+		}
+		
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -181,6 +203,16 @@ public class DotFigureController : MonoBehaviour {
 	{
 		get { return this.placed; }
 		set { this.placed = value; }
+	}
+
+	public bool NearlyPoint
+	{
+		set { this.nearlyPoint = value; }
+	}
+
+	public bool IsIntersecting
+	{
+		get { return this.isIntersecting; }
 	}
 	#endregion
 

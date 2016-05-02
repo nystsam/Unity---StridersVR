@@ -11,49 +11,67 @@ public class RefereeController : MonoBehaviour {
 	private bool isHoldingDot = false;
 	private bool isFirstStripe = true;
 
-	private GameObject currentDotFigure = null;
 	private GameObject startingPoint = null;
+	private GameObject endingPoint = null;
 	private GameObject dotFigure = null;
-	private GameObject previousEndPoint = null;
+	private GameObject previousEndPointBall = null;
 
-	private Vector3 pointBoundingBoxCenter;
-	private Vector3 lastVertexPosition = Vector3.zero;
+	private Vector3 lastPointPosition = Vector3.zero;
 
 	private RepresentativeReferee refereeLogic = new RepresentativeReferee ();
 
-	private bool overideEndPoint()
+	private bool overideEndPointBall()
 	{
 		for (int i = 0; i < this.endPointsContainer.transform.childCount; i++) 
 		{
 			Transform _child = this.endPointsContainer.transform.GetChild(i);
 
-			if(_child.localPosition == this.lastVertexPosition)
+			if(_child.localPosition == this.lastPointPosition)
 			{
-				this.previousEndPoint = _child.gameObject;
+				this.previousEndPointBall = _child.gameObject;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private void createEndPoint()
+	private void createEndPointBall()
 	{
 		GameObject _newClone; 
 		Material _newMat = Resources.Load("Materials/Training-DotToDot/MatCurrentStripe", typeof(Material)) as Material;
 
-		if (!this.overideEndPoint ()) 
+		if (!this.overideEndPointBall ()) 
 		{
 			_newClone = (GameObject)GameObject.Instantiate (this.endPointStripe, Vector3.zero, Quaternion.Euler (Vector3.zero));
 		
 			_newClone.transform.parent = this.endPointsContainer.transform;
-			_newClone.transform.localPosition = this.lastVertexPosition;
+			_newClone.transform.localPosition = this.lastPointPosition;
 			_newClone.GetComponent<MeshRenderer> ().material = _newMat;
-			this.previousEndPoint = _newClone;
+			this.previousEndPointBall = _newClone;
 		} 
 		else 
 		{
-			this.previousEndPoint.GetComponent<MeshRenderer> ().material = _newMat;
+			this.previousEndPointBall.GetComponent<MeshRenderer> ().material = _newMat;
 		}
+	}
+
+	public void newEndingPointDiscover()
+	{
+		this.dotFigure.GetComponentInChildren<DotFigureController> ().NearlyPoint = true;
+	}
+
+	public void exitFromDiscoveredPoint()
+	{
+		if (this.dotFigure != null) 
+		{
+			this.endingPoint = null;
+			this.dotFigure.GetComponentInChildren<DotFigureController> ().NearlyPoint = false;
+		}
+	}
+
+	public bool isHandleIntersecting()
+	{
+		return this.dotFigure.GetComponentInChildren<DotFigureController> ().IsIntersecting;
 	}
 
 	public void placeDotFigure(Vector3 lastPosition)
@@ -65,35 +83,36 @@ public class RefereeController : MonoBehaviour {
 				this.isFirstStripe = false;
 			}
 
-			if(this.lastVertexPosition != Vector3.zero)
+			if(this.lastPointPosition != Vector3.zero)
 			{
 				Material _newMat = Resources.Load("Materials/Training-DotToDot/MatEndPoint", typeof(Material)) as Material;
-				this.previousEndPoint.GetComponent<MeshRenderer> ().material = _newMat;
+				this.previousEndPointBall.GetComponent<MeshRenderer> ().material = _newMat;
 			}
 
-			this.lastVertexPosition = lastPosition;
-			this.createEndPoint();
+			this.lastPointPosition = lastPosition;
+			this.createEndPointBall();
 			this.dotFigure.GetComponentInChildren<DotFigureController>().Placed = true;
 			this.dotFigure = null;
+			this.endingPoint = null;
 
-			if(this.refereeLogic.pointPlaced(this.dotContainer))
+			if(this.refereeLogic.pointPlaced())
 			{
 				this.refereeLogic.ChangeFigureModel = true;
-				this.isHoldingDot = true;
+				this.isHoldingDot = false;
 			}
 		}
 	}
 
-	public bool checkLastVertexPosition(Vector3 currentPosition)
+	public bool checkLastPointPosition(Vector3 currentPosition)
 	{
-		if (this.lastVertexPosition == currentPosition) 
+		if (this.lastPointPosition == currentPosition) 
 		{
 			return true;
 		}
 		return false;
 	}
 
-	public void setNumberOfPoitns(int number)
+	public void setNumberOfStripes(int number)
 	{
 		this.refereeLogic.setNumberOfPoints (number);
 	}
@@ -115,12 +134,6 @@ public class RefereeController : MonoBehaviour {
 		get { return this.isFirstStripe; }
 	}
 
-	public GameObject CurrentDotFigure
-	{
-		get { return this.currentDotFigure; }
-		set { this.currentDotFigure = value; }
-	}
-
 	public GameObject StartingPoint
 	{
 		get { return this.startingPoint; }
@@ -132,10 +145,10 @@ public class RefereeController : MonoBehaviour {
 		set { this.dotFigure = value; }
 	}
 
-	public Vector3 PointBoundingBoxCenter
+	public GameObject EndingPoint
 	{
-		get { return this.pointBoundingBoxCenter; }
-		set { this.pointBoundingBoxCenter = value; }
+		get { return this.endingPoint; }
+		set { this.endingPoint = value; }
 	}
 
 	public bool ChangeFigureModel

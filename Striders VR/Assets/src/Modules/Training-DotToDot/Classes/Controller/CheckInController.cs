@@ -19,7 +19,6 @@ public class CheckInController : MonoBehaviour {
 
 	private bool firstPartDone;
 	private bool secondPartDone;
-	private bool animationDone;
 
 	private void animateSecondPart ()
 	{
@@ -41,7 +40,7 @@ public class CheckInController : MonoBehaviour {
 		else if (this.firstPartDone && !this.secondPartDone) 
 		{
 			AnimatorStateInfo stateInfo = this.anim.GetCurrentAnimatorStateInfo (0);
-			if (stateInfo.shortNameHash == this.stateFirstPartHash) 
+			if (stateInfo.shortNameHash == this.stateSecondPartHash) 
 			{
 				this.secondPartDone = true;
 			}
@@ -62,7 +61,6 @@ public class CheckInController : MonoBehaviour {
 	{
 		this.firstPartDone = false;
 		this.secondPartDone = false;
-		this.animationDone = false;
 		this.fadeOutTimer = 0;
 
 		this.anim = this.GetComponent<Animator> ();

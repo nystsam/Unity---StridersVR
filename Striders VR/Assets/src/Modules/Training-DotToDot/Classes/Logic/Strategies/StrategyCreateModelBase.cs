@@ -6,7 +6,7 @@ using StridersVR.Domain.DotToDot;
 
 namespace StridersVR.Modules.DotToDot.Logic.Strategies
 {
-	public class StrategyCreateModelBase : IStrategyCreateModel
+	public class StrategyCreateModelBase
 	{
 		private GameObject figureContainer;
 

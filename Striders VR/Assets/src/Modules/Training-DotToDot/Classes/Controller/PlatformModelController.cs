@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using StridersVR.ScriptableObjects.DotToDot;
 using StridersVR.Modules.DotToDot.Logic.Representatives;
+using StridersVR.Domain.DotToDot;
 
 public class PlatformModelController : MonoBehaviour 
 {
@@ -13,6 +14,7 @@ public class PlatformModelController : MonoBehaviour
 
 	private bool checkInInstatiated;
 	private bool checkInDone;
+	private bool allowToCreateModel;
 
 	private RepresentativeModelFigure modelFigure;
 
@@ -41,23 +43,37 @@ public class PlatformModelController : MonoBehaviour
 		}
 	}
 
+	private void createModelFigure()
+	{
+		if (this.allowToCreateModel) 
+		{
+			this.allowToCreateModel = false;
+			this.modelFigure.createModel();
+			this.dotReferee.GetComponent<RefereeController> ().setNumberOfStripes(this.modelFigure.NumberOfStripesAssigned); 
+		}
+
+	}
+
 
 	#region Script
 	void Awake () 
 	{
 		this.checkInInstatiated = false;
 		this.checkInDone = false;
+		this.allowToCreateModel = false;
 
 		this.modelFigure = new RepresentativeModelFigure (this.gameObject, this.playerModelFigureContainer);
-		this.modelFigure.createFigure ();
-		this.dotPlatform.GetComponent<PlatformDotController> ().VertexPointList = this.modelFigure.VertexPointList;
-		this.dotPlatform.GetComponent<PlatformDotController> ().AllowToDrawDots = true;
-		this.dotReferee.GetComponent<RefereeController> ().setNumberOfPoitns (this.modelFigure.NumberOfPoints);
+//		this.modelFigure.createFigure ();
+//		this.dotPlatform.GetComponent<PlatformDotController> ().VertexPointList = this.modelFigure.VertexPointList;
+//		this.dotPlatform.GetComponent<PlatformDotController> ().AllowToDrawDots = true;
+//		this.dotReferee.GetComponent<RefereeController> ().setNumberOfPoitns (this.modelFigure.NumberOfPoints);
 
 	}
 
 	void Update()
 	{
+		this.createModelFigure ();
+
 		if (this.dotReferee.GetComponent<RefereeController> ().ChangeFigureModel) 
 		{
 			this.checkIn();
@@ -69,6 +85,16 @@ public class PlatformModelController : MonoBehaviour
 	public bool CheckInDone
 	{
 		set { this.checkInDone = value; }
+	}
+
+	public bool AllowToCreateModel
+	{
+		set { this.allowToCreateModel = value; }
+	}
+
+	public PointsContainer SetPoints
+	{
+		set { this.modelFigure.PointsFromController = value; }
 	}
 	#endregion
 }
