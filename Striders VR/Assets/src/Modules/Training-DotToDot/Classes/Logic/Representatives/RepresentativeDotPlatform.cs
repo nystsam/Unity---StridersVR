@@ -49,6 +49,20 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 		{
 			return this.ContextPoints.createPoints ();
 		}
+
+
+		public void removeCurrentFigureModel(GameObject endPointsContainer)
+		{
+			for (int i = 0; i < this.dotContainer.transform.childCount; i++) {
+				Transform _child = this.dotContainer.transform.GetChild (i);
+				GameObject.Destroy (_child.gameObject);
+			}
+			
+			for (int i = 0; i < endPointsContainer.transform.childCount; i++) {
+				Transform _child = endPointsContainer.transform.GetChild (i);
+				GameObject.Destroy (_child.gameObject);
+			}
+		}
 	}
 }
 

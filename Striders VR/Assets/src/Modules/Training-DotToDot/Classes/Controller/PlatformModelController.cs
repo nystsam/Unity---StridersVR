@@ -10,38 +10,10 @@ public class PlatformModelController : MonoBehaviour
 	public GameObject dotPlatform;
 	public GameObject dotReferee;
 	public GameObject playerModelFigureContainer;
-	public GameObject checkInPrefab;
 
-	private bool checkInInstatiated;
-	private bool checkInDone;
 	private bool allowToCreateModel;
 
 	private RepresentativeModelFigure modelFigure;
-
-	private void checkIn()
-	{
-		if (!this.checkInInstatiated) 
-		{
-			GameObject _checkinClone; 
-
-			_checkinClone = (GameObject)GameObject.Instantiate (this.checkInPrefab, Vector3.zero, Quaternion.Euler (new Vector3(350,270,0)));
-			_checkinClone.transform.parent = this.playerModelFigureContainer.transform;
-			_checkinClone.transform.localPosition = new Vector3 (3, -0.5f, 3);
-			_checkinClone.GetComponent<CheckInController>().FigureContainer = this.gameObject;
-			this.checkInInstatiated = true;
-		} 
-		else if (this.checkInInstatiated && this.checkInDone) 
-		{
-			this.modelFigure.DotContainer = this.dotReferee.GetComponent<RefereeController> ().dotContainer;
-			this.modelFigure.EndPointContainer = this.dotReferee.GetComponent<RefereeController> ().endPointsContainer;
-			this.modelFigure.removeCurrentFigureModel();
-
-			this.dotReferee.GetComponent<RefereeController> ().ChangeFigureModel = false;
-			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = false;
-			this.checkInDone = false;
-			this.checkInInstatiated = false;
-		}
-	}
 
 	private void createModelFigure()
 	{
@@ -58,8 +30,6 @@ public class PlatformModelController : MonoBehaviour
 	#region Script
 	void Awake () 
 	{
-		this.checkInInstatiated = false;
-		this.checkInDone = false;
 		this.allowToCreateModel = false;
 
 		this.modelFigure = new RepresentativeModelFigure (this.gameObject, this.playerModelFigureContainer);
@@ -72,21 +42,11 @@ public class PlatformModelController : MonoBehaviour
 
 	void Update()
 	{
-		this.createModelFigure ();
-
-		if (this.dotReferee.GetComponent<RefereeController> ().ChangeFigureModel) 
-		{
-			this.checkIn();
-		}
+		this.createModelFigure ();	
 	}
 	#endregion
 
 	#region Properties
-	public bool CheckInDone
-	{
-		set { this.checkInDone = value; }
-	}
-
 	public bool AllowToCreateModel
 	{
 		set { this.allowToCreateModel = value; }

@@ -42,6 +42,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			}
 
 			this.instatiateStripeModel (this.previousPoint, this.basePoint);
+			pointsFromController.newStripe ();
 		}
 		#endregion
 

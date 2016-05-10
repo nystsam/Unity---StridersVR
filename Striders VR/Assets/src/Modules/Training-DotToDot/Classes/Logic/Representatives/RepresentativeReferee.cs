@@ -20,7 +20,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 
 		public void setNumberOfPoints(int number)
 		{
-			this.numberOfPoints = number;
+			this.numberOfPoints = 1;
 		}
 
 		public bool pointPlaced()
@@ -35,11 +35,10 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			return false;
 		}
 
-		public void validateErrors(GameObject dotContainer)
+		public bool validateErrors(GameObject dotContainer)
 		{
 			bool _foundError = false;
 
-			Debug.Log ("Completo todos los puntos, se procede a verificar validez...");
 			for(int i = 0; i < dotContainer.transform.childCount; i++)
 			{
 				Transform _child = dotContainer.transform.GetChild(i);
@@ -54,11 +53,15 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			if(!_foundError)
 			{
 				Debug.Log ("No consiguio errores");
+				this.pointsComplete = 0;
+				return true;
 			}
 			else
 			{
 				Debug.Log ("MAL!");
 			}
+
+			return false;
 		}
 
 

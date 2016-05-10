@@ -97,9 +97,15 @@ public class RefereeController : MonoBehaviour {
 
 			if(this.refereeLogic.pointPlaced())
 			{
-				this.refereeLogic.ChangeFigureModel = true;
-				this.isHoldingDot = false;
+				if(this.refereeLogic.validateErrors(this.dotContainer))
+				{
+					this.refereeLogic.ChangeFigureModel = true;
+					this.isHoldingDot = false;
+					this.isFirstStripe = true;
+					this.lastPointPosition = Vector3.zero;
+				}
 			}
+
 		}
 	}
 

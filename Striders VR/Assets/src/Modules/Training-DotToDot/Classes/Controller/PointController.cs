@@ -20,6 +20,13 @@ public class PointController : MonoBehaviour {
 	private GameObject dotContainer;
 
 
+	private bool isHand(Collider other)
+	{
+		if (other.GetComponentInParent<HandController> ())
+			return true;
+		return false;
+	}
+
 	private void starDragging(Collider other)
 	{
 		GameObject _newClone;
@@ -103,7 +110,8 @@ public class PointController : MonoBehaviour {
 		// ****************************************
 		// aplicar regla para reconocer leap motion
 		// ****************************************
-		if (other.collider.name.Equals ("CubeTrigger")) 
+//		if (other.collider.name.Equals ("CubeTrigger") && !this.dotReferee.GetComponent<RefereeController> ().ChangeFigureModel) 
+		if (this.isHand(other.collider) && !this.dotReferee.GetComponent<RefereeController> ().ChangeFigureModel) 
 		{
 			this.turnOn = true;
 
@@ -184,7 +192,8 @@ public class PointController : MonoBehaviour {
 		// ****************************************
 		// aplicar regla para reconocer leap motion
 		// ****************************************
-		if (other.collider.name.Equals ("CubeTrigger")) 
+//		if (other.collider.name.Equals ("CubeTrigger"))
+		if(this.isHand(other.collider))
 		{
 			this.turnOn = false;
 

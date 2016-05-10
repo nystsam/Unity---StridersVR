@@ -27,6 +27,19 @@ public class DotFigureController : MonoBehaviour {
 	private GameObject dotReferee;
 
 
+	private bool isHand(Collider other)
+	{
+		if (other.GetComponentInParent<HandController> ()) 
+		{
+			Transform physicHand = other.GetComponentInParent<HandController> ().transform.FindChild("RigidRoundHand(Clone)");
+			Collider indexBone3 = physicHand.FindChild("index").GetChild(2).GetComponent<CapsuleCollider>();
+			this.triggerCollider = indexBone3;
+
+			return true;
+		}
+		return false;
+	}
+
 	private bool triggerDistance()
 	{
 		float _currentDistance = Vector3.Distance (this.triggerPosition, transform.localPosition);
@@ -112,7 +125,7 @@ public class DotFigureController : MonoBehaviour {
 			{
 				Vector3 _resize = this.figureParentResizable.localScale;
 
-				_resize.z = Vector3.Distance(this.attachedPoint.GetComponent<SphereCollider>().bounds.center, this.figureParentResizable.position)*5;
+				_resize.z = Vector3.Distance(this.attachedPoint.GetComponent<SphereCollider>().bounds.center, this.figureParentResizable.position)*25;
 
 				this.figureParentResizable.transform.localScale = _resize;
 			}
@@ -130,9 +143,12 @@ public class DotFigureController : MonoBehaviour {
 
 	void Update()
 	{
-		this.resizeParent ();
-		this.changeRotation ();
-		this.changeSize ();
+		if (this.triggerCollider != null) 
+		{
+			this.resizeParent ();
+			this.changeRotation ();
+			this.changeSize ();
+		}
 
 		if (this.placed && this.isIntersecting) 
 		{
@@ -169,13 +185,14 @@ public class DotFigureController : MonoBehaviour {
 		// ****************************************
 		// aplicar regla para reconocer leap motion
 		// ****************************************
-		if (other.name.Equals ("CubeTrigger")) 
+//		if (other.name.Equals ("CubeTrigger")) 
+		if(this.isHand(other))
 		{
 			if (!isTrigger && !placed) 
 			{
 				this.isTrigger = true;
-				this.triggerPosition = other.transform.localPosition;
-				this.triggerCollider = other;
+				//this.triggerCollider = other;
+				this.triggerPosition = this.triggerCollider.transform.localPosition;
 				this.allowToRotate = true;
 			}
 		}
@@ -186,7 +203,8 @@ public class DotFigureController : MonoBehaviour {
 		// ****************************************
 		// aplicar regla para reconocer leap motion
 		// ****************************************
-		if (other.name.Equals ("CubeTrigger")) 
+//		if (other.name.Equals ("CubeTrigger")) 
+		if(this.isHand(other))
 		{
 			if(!other.bounds.Contains(this.GetComponent<CapsuleCollider>().bounds.max) 
 			   && !other.bounds.Contains(this.handleObject.GetComponent<BoxCollider>().bounds.center)

@@ -12,14 +12,14 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 	{
 		private GameObject figureContainer;
 		private GameObject playerFigureContainer;
-		private GameObject dotContainer;
-		private GameObject endPointsContainer;
 
 		private ContextCreateModel contextCreateModel;
 
 		private ScriptableObjectFigureModel figureModelData;
 		
 		private PointsContainer pointsFromController;
+
+		private bool refreshPosition;
 
 		private StrategyCreateModelComposite compositeStrategyAbstract1;
 
@@ -28,19 +28,33 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			this.contextCreateModel = new ContextCreateModel ();
 			this.figureContainer = figureContainer;
 			this.playerFigureContainer = playerFigureContainer;
+			this.refreshPosition = false;
+
 			this.assignObjtectData ();
 
 			this.compositeStrategyAbstract1 = new StrategyCreateModelComposite ();
 			this.instantiateComposite ();
 		}
 
-
 		public void createModel()
 		{
+			if (this.refreshPosition) 
+			{
+				this.removeParentFromPlayerContainer();
+				this.increaseSizeFigurePlatform();
+
+				for (int i = 0; i < this.figureContainer.transform.childCount; i++) 
+				{
+					Transform _child = this.figureContainer.transform.GetChild (i);
+					GameObject.Destroy (_child.gameObject);
+				}
+			}
+
 			this.contextCreateModel.StrategyCreateModel = new StrategyCreateModelAbstractEasy (this.figureContainer, figureModelData.stripeContainer ());
 			this.contextCreateModel.createModel (this.pointsFromController);
 			this.reduceSizeFigurePlatform ();
 			this.addParentToPlayerContainer ();
+			this.refreshPosition = true;
 		}
 
 		public void createFigure()
@@ -77,19 +91,6 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 //			this.numberOfPoints += this.contextCreateModel.numberOfPoints ();
 		}
 
-		public void removeCurrentFigureModel()
-		{
-			for (int i = 0; i < this.dotContainer.transform.childCount; i++) {
-				Transform _child = this.dotContainer.transform.GetChild (i);
-				GameObject.Destroy (_child.gameObject);
-			}
-			
-			for (int i = 0; i < this.endPointsContainer.transform.childCount; i++) {
-				Transform _child = this.endPointsContainer.transform.GetChild (i);
-				GameObject.Destroy (_child.gameObject);
-			}
-		}
-
 		private void instantiateComposite()
 		{
 //			IStrategyCreateModel _strategy;
@@ -104,7 +105,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 
 		private void reduceSizeFigurePlatform()
 		{
-			this.figureContainer.transform.parent.localScale = new Vector3 (0.05f, 0.05f, 0.05f);
+			this.figureContainer.transform.parent.localScale = new Vector3 (0.02f, 0.02f, 0.02f);
 		}
 
 		private void increaseSizeFigurePlatform()
@@ -114,14 +115,16 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 
 		private void addParentToPlayerContainer()
 		{
-			this.figureContainer.transform.parent = this.playerFigureContainer.transform;
-			this.figureContainer.transform.localPosition = Vector3.zero;
+			this.figureContainer.transform.parent.parent = this.playerFigureContainer.transform;
+			this.figureContainer.transform.parent.localPosition = Vector3.zero;
+			this.playerFigureContainer.transform.localRotation = Quaternion.Euler (new Vector3 (0, -45, 0)); 
 		}
 
 		private void removeParentFromPlayerContainer()
 		{
-			this.figureContainer.transform.parent = null;
-			this.figureContainer.transform.localPosition = new Vector3 (100, 0, 0);
+			this.figureContainer.transform.parent.parent = null;
+			this.figureContainer.transform.parent.localPosition = new Vector3 (100, 0, 0);
+			this.playerFigureContainer.transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 0)); 
 		}
 
 		private void assignObjtectData()
@@ -133,16 +136,6 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 		public PointsContainer PointsFromController
 		{
 			set { this.pointsFromController = value; }
-		}
-
-		public GameObject DotContainer
-		{
-			set { this.dotContainer = value; }
-		}
-
-		public GameObject EndPointContainer
-		{
-			set { this.endPointsContainer = value; }
 		}
 
 		public int NumberOfStripesAssigned
