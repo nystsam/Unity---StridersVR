@@ -27,18 +27,95 @@ namespace StridersVR.Domain.SpeedPack
 		}
 
 
-		public void placeItem(Item newItem)
+		public void findSpotMatrixIndex(Spot spot, ref int xIndex, ref int yIndex)
 		{
-			int _xAxis, _yAxis;
+			bool _flag = false;
 
-			_xAxis = Random.Range (0, this.spotMatrix.GetLength (0));
-			_yAxis = Random.Range (0, this.spotMatrix.GetLength (1));
-
-			if (newItem.Spacing == 2) 
+			for (int x = 0; x < this.spotMatrix.GetLength(0); x ++) 
 			{
-				int axisRotation = Random.Range(0,2);
-				//spotMatrix.
+				for (int y = 0; y < this.spotMatrix.GetLength(1); y ++)
+				{
+					if(this.spotMatrix[x,y].SpotId == spot.SpotId )
+					{
+						xIndex = x;
+						yIndex = y;
+						_flag = true;
+						break;
+					}
+				}
+				if(_flag)
+				{
+					break;
+				}
 			}
+		}
+
+		public Spot getSpotAtIndex(int indexX, int indexY)
+		{
+			return this.spotMatrix [indexX, indexY];
+		}
+
+		public List<Spot> getUsedSpots()
+		{
+			List<Spot> _newSpotList = new List<Spot> ();
+
+			foreach (Spot usedSpot in this.spotMatrix) 
+			{
+				if(!usedSpot.IsAvailableSpot)
+				{
+					_newSpotList.Add(usedSpot);
+				}
+			}
+
+			return _newSpotList;
+		}		
+
+		public bool placeItem(Item newItem)
+		{
+			int _xAxis = 0, _yAxis = 0;
+
+			if (this.getSpotIndex (ref _xAxis, ref _yAxis)) 
+			{
+				this.spotMatrix [_xAxis, _yAxis].setItem (newItem);
+				return true;
+			}
+
+
+//			if (newItem.Spacing == 2) 
+//			{
+//				int _axisRotation = Random.Range (0, 2);
+//				int _newPos;
+//
+//				// Eje x
+//				if (_axisRotation == 0) 
+//				{
+//					_newPos = this.rotateItem (this.spotMatrix.GetLength (0), _xAxis);
+//					if (this.spotMatrix [_newPos, _yAxis].IsAvailableSpot) {
+//						this.spotMatrix [_xAxis, _yAxis].setItem (newItem);
+//						this.spotMatrix [_newPos, _yAxis].setItem (newItem);
+//					} else {
+//						return false;
+//					}
+//
+//				}
+//				// Eje y
+//				else 
+//				{
+//					_newPos = this.rotateItem (this.spotMatrix.GetLength (1), _yAxis);
+//					if (this.spotMatrix [_xAxis, _newPos].IsAvailableSpot) {
+//						this.spotMatrix [_xAxis, _yAxis].setItem (newItem);
+//						this.spotMatrix [_xAxis, _newPos].setItem (newItem);
+//					} else {
+//						return false;
+//					}
+//				}
+//			} 
+//			else 
+//			{
+//				this.spotMatrix [_xAxis, _yAxis].setItem (newItem);
+//			}
+
+			return false;
 		}
 
 		public void activeOrientationPoint(int index)
@@ -67,9 +144,8 @@ namespace StridersVR.Domain.SpeedPack
 		public void setMainPart()
 		{
 			this.isMainPart = true;
-			/* CAMBIAR COLOR DEL FONDO */
 		}
-		
+
 		public void setSpotsFromData(int dimesionX, int dimensionY)
 		{
 			int _xIndex = 0, _yIndex = 0;
@@ -85,8 +161,9 @@ namespace StridersVR.Domain.SpeedPack
 				_xPosition = _spotsFromPrefab.GetChild(_indexGameSpot).localPosition.x;
 				_zPosition = _spotsFromPrefab.GetChild(_indexGameSpot).localPosition.z;
 
-				this.spotMatrix[_xIndex, _yIndex] = new Spot(_spotsFromPrefab.GetChild(_indexGameSpot).gameObject
-				                                             ,new Vector3(_xPosition, 0.1f, _zPosition));
+				this.spotMatrix[_xIndex, _yIndex] = new Spot(_indexGameSpot,
+				                                             _spotsFromPrefab.GetChild(_indexGameSpot).gameObject,
+				                                             new Vector3(_xPosition, 0.1f, _zPosition));
 
 				_xIndex ++;
 
@@ -119,6 +196,34 @@ namespace StridersVR.Domain.SpeedPack
 			}
 		}
 
+		private bool getSpotIndex(ref int xAxis, ref int yAxis)
+		{
+			int _constraint = 0;
+
+			while (true) 
+			{
+				xAxis = Random.Range (0, this.spotMatrix.GetLength (0));
+				yAxis = Random.Range (0, this.spotMatrix.GetLength (1));
+				
+				if(this.spotMatrix[xAxis, yAxis].IsAvailableSpot)
+					return true;
+				else if(_constraint >= this.spotMatrix.Length*2)
+					return false;
+
+				_constraint ++;
+			}
+		}
+
+//		private int rotateItem(int max, int currentPos)
+//		{
+//			int _direction = 1;
+//
+//			if (max - currentPos <= max / 2)
+//				_direction = -_direction;
+//
+//			return currentPos + _direction;
+//		}
+		
 		#region Properties
 		public bool IsMainPart
 		{
@@ -138,6 +243,16 @@ namespace StridersVR.Domain.SpeedPack
 		public int OrientationPointsCount
 		{
 			get { return this.orientationPoints.Count; }
+		}
+
+		public int MatrixMaxLengthX
+		{
+			get { return this.spotMatrix.GetLength(0); }
+		}
+
+		public int MatrixMaxLengthY
+		{
+			get { return this.spotMatrix.GetLength(1); }
 		}
 		#endregion
 	}

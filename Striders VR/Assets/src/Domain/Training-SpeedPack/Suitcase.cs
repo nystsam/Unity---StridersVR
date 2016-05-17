@@ -47,6 +47,11 @@ namespace StridersVR.Domain.SpeedPack
 			return null;
 		}
 
+		public SuitcasePart getPartAtIndex(int index)
+		{
+			return this.suitcasePartList [index];
+		}
+
 		#region Properties
 		public List<SuitcasePart> SuitcasePartList 
 		{

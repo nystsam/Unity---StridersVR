@@ -5,29 +5,40 @@ namespace StridersVR.Domain.SpeedPack
 {
 	public class Item
 	{
-		private GameObject itemPrefab;
-	
-		private int spacing;
+		private int itemId;
 
-		public Item (GameObject prefab, int spacing)
+		private GameObject itemPrefab;
+
+		private bool isCreated;
+
+		public Item (GameObject prefab)
 		{
 			this.itemPrefab = prefab;
-			this.spacing = spacing;
+			this.isCreated = false;
 		}
 
 
 		#region Properties
+		public int ItemId {
+			get {
+				return itemId;
+			}
+			set {
+				itemId = value;
+			}
+		}
 		public GameObject ItemPrefab 
 		{
 			get {
 				return itemPrefab;
 			}
 		}
-
-		public int Spacing 
-		{
+		public bool IsCreated {
 			get {
-				return spacing;
+				return isCreated;
+			}
+			set {
+				isCreated = value;
 			}
 		}
 		#endregion

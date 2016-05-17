@@ -5,6 +5,8 @@ namespace StridersVR.Domain.SpeedPack
 {
 	public class Spot
 	{
+		private int spotId;
+
 		private GameObject spotPrefab;
 
 		private Vector3 spotPosition;
@@ -14,8 +16,9 @@ namespace StridersVR.Domain.SpeedPack
 		private bool isAvailableSpot;
 
 		
-		public Spot (GameObject prefab, Vector3 position)
+		public Spot (int spotId,GameObject prefab, Vector3 position)
 		{
+			this.spotId = spotId;
 			this.spotPrefab = prefab;
 			this.spotPosition = position;
 
@@ -25,7 +28,17 @@ namespace StridersVR.Domain.SpeedPack
 		}
 
 
+		public void setItem(Item newItem)
+		{
+			this.currentItem = newItem;
+			this.isAvailableSpot = false;
+		}
+
 		#region Properties
+		public int SpotId
+		{
+			get { return this.spotId; }
+		}
 		public GameObject SpotPrefab
 		{
 			get { return this.spotPrefab; }
@@ -37,7 +50,10 @@ namespace StridersVR.Domain.SpeedPack
 		public bool IsAvailableSpot 
 		{
 			get { return this.isAvailableSpot;}
-			set { this.isAvailableSpot = value;}
+		}
+		public Item CurrentItem
+		{
+			get { return this.currentItem; }
 		}
 		#endregion
 	}

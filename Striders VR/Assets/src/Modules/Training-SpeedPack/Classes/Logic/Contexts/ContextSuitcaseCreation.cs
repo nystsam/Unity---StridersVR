@@ -18,6 +18,16 @@ namespace StridersVR.Modules.SpeedPack.Logic.Contexts
 		{
 			return this.strategySuitcaseCreation.createSuitcase(genericSuitcasePartData);
 		}
+
+		public void assignItemsMain(ScriptableObject genericItemsData, Suitcase currentSuitcase)
+		{
+			this.strategySuitcaseCreation.assignItemsMain (genericItemsData, currentSuitcase);
+		}
+
+		public void createItem (Suitcase currentSuitcase)
+		{
+			this.strategySuitcaseCreation.createItem (currentSuitcase);
+		}
 		#endregion
 		
 		#region Properties
