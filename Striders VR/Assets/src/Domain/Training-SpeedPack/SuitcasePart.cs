@@ -10,6 +10,7 @@ namespace StridersVR.Domain.SpeedPack
 		private GameObject suitcasePartPrefab;
 
 		private Spot[,] spotMatrix;
+		private List<Spot> mainSpotList;
 
 		private SuitcasePart attachedPart;
 
@@ -22,7 +23,7 @@ namespace StridersVR.Domain.SpeedPack
 			this.suitcasePartPrefab = prefab;
 			this.attachedPart = null;
 			this.isMainPart = false;
-
+		
 			this.orientationPoints = new List<OrientationPoint> ();
 		}
 
@@ -53,6 +54,11 @@ namespace StridersVR.Domain.SpeedPack
 		public Spot getSpotAtIndex(int indexX, int indexY)
 		{
 			return this.spotMatrix [indexX, indexY];
+		}
+
+		public Spot getSpotAtIndex(int index)
+		{
+			return this.mainSpotList[index];
 		}
 
 		public List<Spot> getUsedSpots()
@@ -144,6 +150,16 @@ namespace StridersVR.Domain.SpeedPack
 		public void setMainPart()
 		{
 			this.isMainPart = true;
+			this.mainSpotList = new List<Spot>();
+
+			for (int y = 0; y < this.spotMatrix.GetLength(1); y ++)
+			{
+				for(int x = 0; x < this.spotMatrix.GetLength(0); x ++)
+				{
+					this.spotMatrix[x,y].setMainSpot();
+					this.mainSpotList.Add(this.spotMatrix[x,y]);
+				}
+			}
 		}
 
 		public void setSpotsFromData(int dimesionX, int dimensionY)

@@ -38,11 +38,8 @@ public class GrabController : MonoBehaviour {
 	{
 		Vector3 indexPosition = this.handModel.fingers [1].GetBoneCenter (3);
 		Vector3 thumbPosition = this.handModel.fingers [0].GetBoneCenter (3);
-//		float distance = (indexPosition - thumbPosition).magnitude;
-//		float normalizedDistance = (distance - this.grabMinDistance) / (this.grabMaxDistance - this.grabMinDistance);
-//		float pinch = 1.0f - Mathf.Clamp01 (normalizedDistance);
 		float grab = this.handModel.GetLeapHand ().PinchStrength;
-		
+
 		if (!this.isGrabbing && grab > this.grabStart) 
 		{
 			this.isGrabbing = true;

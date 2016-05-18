@@ -92,7 +92,6 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 				}
 
 				_totalItems -= _itemsInThisPart;
-				Debug.Log ("En esta hay: " + _itemsInThisPart+" y sobran: "+_totalItems);
 				_currentPart = currentSuitcase.getPartAtIndex(partIndex);
 				this.getInGameSuitcasePart(_currentPart);
 				this.itemsInPart(_currentPart, _itemsInThisPart);

@@ -14,6 +14,7 @@ namespace StridersVR.Domain.SpeedPack
 		private Item currentItem;
 
 		private bool isAvailableSpot;
+		private bool isMainSpot;
 
 		
 		public Spot (int spotId,GameObject prefab, Vector3 position)
@@ -24,7 +25,7 @@ namespace StridersVR.Domain.SpeedPack
 
 			this.currentItem = null;
 			this.isAvailableSpot = true;
-
+			this.isMainSpot = false;
 		}
 
 
@@ -32,6 +33,11 @@ namespace StridersVR.Domain.SpeedPack
 		{
 			this.currentItem = newItem;
 			this.isAvailableSpot = false;
+		}
+
+		public void setMainSpot()
+		{
+			this.isMainSpot = true;
 		}
 
 		#region Properties
@@ -54,6 +60,10 @@ namespace StridersVR.Domain.SpeedPack
 		public Item CurrentItem
 		{
 			get { return this.currentItem; }
+		}
+		public bool IsMainSpot
+		{
+			get { return this.isMainSpot; }
 		}
 		#endregion
 	}
