@@ -4,31 +4,36 @@ using Leap;
 
 public class GrabController : MonoBehaviour {
 
-//	public float grabMinDistance;
-//	public float grabMaxDistance;
 	public float grabStart;
 	public float grabContinue;
+	public float grabbingTime;
 
 	private bool isGrabbing;
+	private bool isTouching;
 
 	private HandModel handModel;
 
 	private GameObject playerItem;
 
 	private Vector3 itemStartingPosition;
+
 	private Quaternion itemStartingRotation;
+
+	private bool smoothTime()
+	{
+		this.grabbingTime += Time.deltaTime;
+		if(this.grabbingTime > 0.35f)
+			return true;
+
+		return false;
+	}
+
 
 	#region Sript
 	void Start () 
 	{
+		this.grabbingTime = 0f;
 		this.playerItem = GameObject.FindGameObjectWithTag("DraggableItem");
-		this.itemStartingPosition = new Vector3(this.playerItem.transform.localPosition.x, 
-		                                        this.playerItem.transform.localPosition.y, 
-		                                        this.playerItem.transform.localPosition.z);
-		this.itemStartingRotation = new Quaternion (this.playerItem.transform.localRotation.x, 
-		                                            this.playerItem.transform.localRotation.y, 
-		                                            this.playerItem.transform.localRotation.z, 
-		                                            this.playerItem.transform.localRotation.w);
 
 		this.isGrabbing = false;
 		this.handModel = this.transform.GetComponent<HandModel> ();
@@ -43,18 +48,20 @@ public class GrabController : MonoBehaviour {
 		if (!this.isGrabbing && grab > this.grabStart) 
 		{
 			this.isGrabbing = true;
+			this.grabbingTime = 0f;
 		} 
 		else if (this.isGrabbing && grab < this.grabContinue) 
 		{
-			this.isGrabbing = false;
-			this.playerItem.transform.localPosition = this.itemStartingPosition;
-			this.playerItem.transform.localRotation = this.itemStartingRotation;
+			if(this.smoothTime())
+				this.isGrabbing = false;
+//			this.playerItem.transform.localPosition = this.itemStartingPosition;
+//			this.playerItem.transform.localRotation = this.itemStartingRotation;
 		}
 
-		if (this.isGrabbing) 
+		if (this.isGrabbing && this.isTouching) 
 		{
-			this.playerItem.transform.localPosition = (indexPosition + thumbPosition)/2;
-			this.playerItem.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
+			this.playerItem.transform.localPosition = (indexPosition + thumbPosition) / 2;
+			this.playerItem.transform.localRotation = Quaternion.Euler(new Vector3(315,340,300));
 		}
 	}
 	#endregion
@@ -63,6 +70,11 @@ public class GrabController : MonoBehaviour {
 	public bool IsGrabbing
 	{
 		get { return this.isGrabbing; }
+	}
+	public bool IsTouching
+	{
+		get { return this.isTouching; }
+		set { this.isTouching = value; }
 	}
 	#endregion
 }

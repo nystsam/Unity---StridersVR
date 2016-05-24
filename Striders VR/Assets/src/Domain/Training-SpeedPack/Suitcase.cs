@@ -28,9 +28,10 @@ namespace StridersVR.Domain.SpeedPack
 		{
 			if (this.suitcasePartList.Count > 0) 
 			{
-				int _randomIndex = Random.Range(0, this.suitcasePartList.Count);
-
-				this.suitcasePartList[_randomIndex].setMainPart();
+				this.suitcasePartList[0].setMainPart();
+//				int _randomIndex = Random.Range(0, this.suitcasePartList.Count);
+//
+//				this.suitcasePartList[_randomIndex].setMainPart();
 			}
 		}
 

@@ -12,6 +12,17 @@ public class SuitcaseController : MonoBehaviour {
 
 	private RepresentativeSuitcase suitcaseLogic;
 
+	public void placePlayerItem(Spot currentSpot)
+	{
+		GameObject _draggableItem = GameObject.FindGameObjectWithTag ("DraggableItem");
+
+		_draggableItem.GetComponent<ItemDraggableController> ().stopDragging ();
+		_draggableItem.GetComponent<BoxCollider> ().enabled = false;
+		_draggableItem.transform.parent = this.transform.GetChild(0).Find ("SuitcasePart").Find ("Items");
+		_draggableItem.transform.localPosition = currentSpot.SpotPosition;
+	}
+
+
 	#region Script
 	void Awake () 
 	{
@@ -25,11 +36,6 @@ public class SuitcaseController : MonoBehaviour {
 	{
 		this.suitcaseLogic.spawnItems (this.currentSuitcase);
 		this.suitcaseLogic.spawnPlayerItem ();
-	}
-
-	void Update () 
-	{
-	
 	}
 	#endregion
 }

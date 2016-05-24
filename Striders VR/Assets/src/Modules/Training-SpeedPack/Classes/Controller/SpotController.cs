@@ -37,7 +37,7 @@ public class SpotController : MonoBehaviour {
 		}
 	}
 
-	public void changeColor(bool hitting)
+	public void hoverColor(bool hitting)
 	{
 		this.colorChange = true;
 		if (hitting) 
@@ -66,31 +66,24 @@ public class SpotController : MonoBehaviour {
 		{
 			this.originalColor = this.GetComponent<MeshRenderer> ().material;
 			this.isActive = true;
+			if(this.localSpot.IsMainSpot)
+			{
+				this.GetComponent<BoxCollider>().size = Vector3.zero;
+			}
 		}
 		this.rayHittingColor ();
-	}
-
-	void OnTriggerEnter(Collider other)
-	{
-		if (this.isHandController (other) && this.isActive) 
-		{
-
-		}
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		if (this.isHandController (other) && this.isActive) 
-		{
-
-		}
 	}
 	#endregion
 
 	#region Properties
 	public Spot LocalSpot
 	{
+		get { return this.localSpot; }
 		set { this.localSpot = value; }
+	}
+	public bool IsActive
+	{
+		get { return this.isActive; }
 	}
 	#endregion
 

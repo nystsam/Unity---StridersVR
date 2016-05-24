@@ -156,7 +156,6 @@ namespace StridersVR.Domain.SpeedPack
 			{
 				for(int x = 0; x < this.spotMatrix.GetLength(0); x ++)
 				{
-					this.spotMatrix[x,y].setMainSpot();
 					this.mainSpotList.Add(this.spotMatrix[x,y]);
 				}
 			}

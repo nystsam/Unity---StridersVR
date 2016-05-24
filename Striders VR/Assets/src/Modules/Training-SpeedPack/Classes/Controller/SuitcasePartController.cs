@@ -16,8 +16,7 @@ public class SuitcasePartController : MonoBehaviour {
 			OrientationPoint _myNewOrientation = localPart.getActivePoint();
 
 			this.transform.localPosition += _myNewOrientation.AttachedPosition;
-			this.transform.Find("SuitcasePart").localPosition += _myNewOrientation.AttachedPosition;
-
+			this.transform.Find("SuitcasePart").localPosition += _myNewOrientation.AttachedPosition; 
 //			if(_myNewOrientation.AttachedRotation.z != 0)
 //			{
 //				this.transform.Find("SuitcasePart").localPosition += -_myNewOrientation.AttachedPosition;

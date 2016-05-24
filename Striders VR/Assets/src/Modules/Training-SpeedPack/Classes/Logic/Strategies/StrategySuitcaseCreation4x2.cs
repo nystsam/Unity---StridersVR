@@ -137,9 +137,14 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 					currentY = (currentPart.MatrixMaxLengthY - 1) - currentY;
 				}
 			}
-			
+
 			_newSpot = currentPart.getSpotAtIndex (currentX, currentY);
 
+			if (currentPart.IsMainPart) 
+			{
+				_newSpot.setMainSpot();
+			}
+		
 			_currentPosition.y = currentSpot.SpotPosition.y;
 			_currentPosition.x = _newSpot.SpotPosition.x;
                 	_currentPosition.z = _newSpot.SpotPosition.z;
