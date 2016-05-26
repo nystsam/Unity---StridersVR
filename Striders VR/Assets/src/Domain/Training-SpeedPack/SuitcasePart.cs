@@ -10,7 +10,7 @@ namespace StridersVR.Domain.SpeedPack
 		private GameObject suitcasePartPrefab;
 
 		private Spot[,] spotMatrix;
-		private List<Spot> mainSpotList;
+		private List<Spot> spotList;
 
 		private SuitcasePart attachedPart;
 
@@ -26,7 +26,7 @@ namespace StridersVR.Domain.SpeedPack
 		
 			this.orientationPoints = new List<OrientationPoint> ();
 		}
-
+		
 
 		public void findSpotMatrixIndex(Spot spot, ref int xIndex, ref int yIndex)
 		{
@@ -51,6 +51,24 @@ namespace StridersVR.Domain.SpeedPack
 			}
 		}
 
+		public Spot getOppositeSpot(int currentX, int currentY)
+		{
+			OrientationPoint _orientationPoint = this.getActivePoint();
+			if(_orientationPoint.AttachedPosition.x != 0)
+			{
+				// izquierda o derecha
+				currentX =  (this.MatrixMaxLengthX - 1) - currentX;
+				
+			}
+			else
+			{
+				// arriba o abajo
+				currentY = (this.MatrixMaxLengthY - 1) - currentY;
+			}
+
+			return this.spotMatrix [currentX, currentY];
+		}
+
 		public Spot getSpotAtIndex(int indexX, int indexY)
 		{
 			return this.spotMatrix [indexX, indexY];
@@ -58,7 +76,7 @@ namespace StridersVR.Domain.SpeedPack
 
 		public Spot getSpotAtIndex(int index)
 		{
-			return this.mainSpotList[index];
+			return this.spotList[index];
 		}
 
 		public List<Spot> getUsedSpots()
@@ -150,15 +168,6 @@ namespace StridersVR.Domain.SpeedPack
 		public void setMainPart()
 		{
 			this.isMainPart = true;
-			this.mainSpotList = new List<Spot>();
-
-			for (int y = 0; y < this.spotMatrix.GetLength(1); y ++)
-			{
-				for(int x = 0; x < this.spotMatrix.GetLength(0); x ++)
-				{
-					this.mainSpotList.Add(this.spotMatrix[x,y]);
-				}
-			}
 		}
 
 		public void setSpotsFromData(int dimesionX, int dimensionY)
@@ -168,6 +177,7 @@ namespace StridersVR.Domain.SpeedPack
 			Transform _spotsFromPrefab;
 
 			this.spotMatrix = new Spot[dimesionX, dimensionY];
+			this.spotList = new List<Spot>();
 
 			_spotsFromPrefab = this.suitcasePartPrefab.transform.GetChild(0).FindChild("Spots");
 
@@ -180,6 +190,7 @@ namespace StridersVR.Domain.SpeedPack
 				                                             _spotsFromPrefab.GetChild(_indexGameSpot).gameObject,
 				                                             new Vector3(_xPosition, 0.1f, _zPosition));
 
+				this.spotList.Add(this.spotMatrix[_xIndex,_yIndex]);
 				_xIndex ++;
 
 				if(_xIndex >= dimesionX)

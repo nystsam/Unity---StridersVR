@@ -17,6 +17,21 @@ namespace StridersVR.Domain.SpeedPack
 			this.isActive = false;
 		}
 
+		public int getAnimHash()
+		{
+			int _hash = 0;
+
+			if(this.attachedPosition == new Vector3(1,0,0))
+				_hash = Animator.StringToHash("RotateLeft");
+			else if(this.attachedPosition == new Vector3(-1,0,0))
+				_hash = Animator.StringToHash("RotateRight");
+			else if(this.attachedPosition == new Vector3(0,-0.5f,0))
+				_hash = Animator.StringToHash("RotateBottom");
+			else if(this.attachedPosition == new Vector3(0,0.5f,0))
+				_hash = Animator.StringToHash("RotateTop");
+
+			return _hash;
+		}
 
 		public void activePoint()
 		{

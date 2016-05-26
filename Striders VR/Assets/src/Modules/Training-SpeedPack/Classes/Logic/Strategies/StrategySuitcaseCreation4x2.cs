@@ -153,6 +153,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			                                            Quaternion.Euler (Vector3.zero));
 			_clone.transform.parent = this.inGameSuitcasePart.transform.Find ("SuitcasePart").Find ("Items");
 			_clone.transform.localPosition = _currentPosition;
+			_newSpot.setItem(currentSpot.CurrentItem);
 
 //			if (currentSpot.CurrentItem.Spacing == 2) 
 //			{
@@ -238,6 +239,8 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 				{
 					_clone.GetComponent<SuitcasePartController>().changeMainPartColor();
 				}
+				else
+					_clone.GetComponent<SuitcasePartController>().assignSpots();
 			}
 
 		}
