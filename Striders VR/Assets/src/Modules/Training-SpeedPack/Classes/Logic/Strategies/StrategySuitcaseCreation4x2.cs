@@ -68,7 +68,6 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			}
 
 			this.selectedSpots = _mainPart.getUsedSpots ();
-
 		}
 
 		public void createItem (Suitcase currentSuitcase)
@@ -108,7 +107,8 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			for(int counter = 0; counter < itemsInThisPart; counter ++)
 			{
 				_spot = this.selectedSpots.Last();
-				this.mainPart.findSpotMatrixIndex(_spot, ref _currentX, ref _currentY);
+				currentPart.findSpotMatrixIndex(_spot, ref _currentX, ref _currentY);
+//				this.mainPart.findSpotMatrixIndex(_spot, ref _currentX, ref _currentY);
 				this.instantiateItem(currentPart, _spot, _currentX, _currentY);
 				this.selectedSpots.Remove(_spot);
 			}
@@ -122,21 +122,25 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			Vector3 _gamePosition;
 			GameObject _clone;
 
-			if(currentPart.AttachedPart != null)
+			if (currentPart.AttachedPart != null) 
 			{
-				_orientationPoint = currentPart.getActivePoint();
-				if(_orientationPoint.AttachedPosition.x != 0)
-				{
-					// izquierda o derecha
-					currentX =  (currentPart.MatrixMaxLengthX - 1) - currentX;
-					
-				}
-				else
-				{
-					// arriba o abajo
-					currentY = (currentPart.MatrixMaxLengthY - 1) - currentY;
-				}
-			}
+				currentPart.AttachedPart.getOppositeIndex (currentPart.getActivePoint (), ref currentX, ref currentY);
+			} 
+//			if(currentPart.AttachedPart != null)
+//			{
+//				_orientationPoint = currentPart.getActivePoint();
+//				if(_orientationPoint.AttachedPosition.x != 0)
+//				{
+//					// izquierda o derecha
+//					currentX =  (currentPart.MatrixMaxLengthX - 1) - currentX;
+//					
+//				}
+//				else
+//				{
+//					// arriba o abajo
+//					currentY = (currentPart.MatrixMaxLengthY - 1) - currentY;
+//				}
+//			}
 
 			_newSpot = currentPart.getSpotAtIndex (currentX, currentY);
 

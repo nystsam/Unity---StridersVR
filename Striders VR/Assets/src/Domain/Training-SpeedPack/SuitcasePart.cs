@@ -51,10 +51,9 @@ namespace StridersVR.Domain.SpeedPack
 			}
 		}
 
-		public Spot getOppositeSpot(int currentX, int currentY)
+		public void calculateIndex(OrientationPoint orientation, ref  int currentX, ref int currentY)
 		{
-			OrientationPoint _orientationPoint = this.getActivePoint();
-			if(_orientationPoint.AttachedPosition.x != 0)
+			if(orientation.AttachedPosition.x != 0)
 			{
 				// izquierda o derecha
 				currentX =  (this.MatrixMaxLengthX - 1) - currentX;
@@ -65,8 +64,20 @@ namespace StridersVR.Domain.SpeedPack
 				// arriba o abajo
 				currentY = (this.MatrixMaxLengthY - 1) - currentY;
 			}
+		}
 
-			return this.spotMatrix [currentX, currentY];
+		public void getOppositeIndex(OrientationPoint orientation, ref int currentX, ref int currentY)
+		{
+			if (this.attachedPart != null) 
+			{
+
+				this.attachedPart.getOppositeIndex(this.getActivePoint(), ref currentX, ref currentY);
+				this.calculateIndex(orientation, ref currentX, ref currentY);
+			}
+			else
+			{
+				this.calculateIndex(orientation, ref currentX, ref currentY);
+			}
 		}
 
 		public Spot getSpotAtIndex(int indexX, int indexY)

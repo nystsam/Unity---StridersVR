@@ -57,6 +57,11 @@ public class FingerIndexRayController : MonoBehaviour {
 				this.placeButton.GetComponent<PlaceButtonController>().buttonActivation(false);
 				this.placeButton.GetComponent<PlaceButtonController>().CurrentSpot = null;
 			}
+			else if(!this.GetComponentInParent<GrabController>().IsTouching)
+			{
+				this.placeButton.GetComponent<PlaceButtonController>().buttonActivation(false);
+				this.placeButton.GetComponent<PlaceButtonController>().CurrentSpot = null;
+			}
 			else if(currentRayDistance > 0.75f && hit.collider.tag.Equals ("PlayerPanelButtons"))
 			{
 				this.hitting = false;

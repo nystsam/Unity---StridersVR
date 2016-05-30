@@ -7,7 +7,7 @@ public class SuitcasePartController : MonoBehaviour {
 	public GameObject spotsContainer;
 	public GameObject bgPart;
 
-	private Animator partAnimation;
+	private Animator partAnimator;
 
 	private int hashAnim;
 
@@ -18,10 +18,10 @@ public class SuitcasePartController : MonoBehaviour {
 
 	private void displayAnimation()
 	{
-		if(!this.partAnimation.GetBool(this.hashAnim))
-			this.partAnimation.SetBool (this.hashAnim, true);
+		if(!this.partAnimator.GetBool(this.hashAnim))
+			this.partAnimator.SetBool (this.hashAnim, true);
 
-		if (this.partAnimation.GetCurrentAnimatorStateInfo (0).normalizedTime > 1.3f) 
+		if (this.partAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime > 2.5f && !this.partAnimator.IsInTransition(0)) 
 		{
 			this.allowToAnimate = false;
 			this.isAnimationDone = true;
@@ -53,21 +53,32 @@ public class SuitcasePartController : MonoBehaviour {
 		}
 	}
 
-	public void reflectItems(GameObject previousPart)
+	public void reflectItems(GameObject nextPart)
 	{
-//		SuitcasePart _previousSuitcasePart = previousPart.GetComponent<SuitcasePartController> ().localPart;
-//		Spot _previousSpot;
-//		int _localX = 0, _localY = 0;
-//
-//		for (int index = 0; index < this.spotsContainer.transform.childCount; index ++) 
-//		{
-//			if(this.spotsContainer.transform.GetChild(index).GetComponent<SpotController>().LocalSpot.CurrentItem != null)
-//			{
-//				this.localPart.findSpotMatrixIndex(this.spotsContainer.transform.GetChild(index).GetComponent<SpotController>().LocalSpot,
-//				                                   _localX, _localY);
-//				_previousSpot = _previousSuitcasePart.getOppositeSpot(_localX, _localY);
-//			}
-//		}
+		GameObject _clone;
+		Vector3 _nextItemPosition;
+		SuitcasePart _nextSuitcasePart = nextPart.GetComponent<SuitcasePartController> ().localPart;
+		Spot _previousSpot;
+		int _localX = 0, _localY = 0;
+
+		for (int index = 0; index < this.spotsContainer.transform.childCount; index ++) 
+		{
+			if(this.spotsContainer.transform.GetChild(index).GetComponent<SpotController>().LocalSpot.CurrentItem != null)
+			{
+				_previousSpot = this.spotsContainer.transform.GetChild(index).GetComponent<SpotController>().LocalSpot;
+
+				this.localPart.findSpotMatrixIndex(_previousSpot, ref _localX, ref _localY);
+
+				_nextSuitcasePart.getOppositeIndex(this.localPart.getActivePoint(), ref _localX, ref _localY);
+				_nextItemPosition = _nextSuitcasePart.getSpotAtIndex(_localX,_localY).SpotPosition;
+
+				_clone = (GameObject)GameObject.Instantiate (_previousSpot.CurrentItem.ItemPrefab,
+				                                             Vector3.zero,
+				                                             Quaternion.Euler (Vector3.zero));
+				_clone.transform.parent = nextPart.transform.Find ("SuitcasePart").Find ("Items");
+				_clone.transform.localPosition = _nextItemPosition;
+			}
+		}
 	}
 
 	public void changeMainPartColor()
@@ -101,7 +112,7 @@ public class SuitcasePartController : MonoBehaviour {
 	#region Script
 	void Awake()
 	{
-		this.partAnimation = this.GetComponent<Animator> ();
+		this.partAnimator = this.GetComponent<Animator> ();
 	}
 
 	void Start () 

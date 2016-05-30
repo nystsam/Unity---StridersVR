@@ -90,6 +90,8 @@ public class PlaceButtonController : MonoBehaviour {
 			this.transform.GetChild(0).GetChild(0).GetComponent<TextMesh>().color = _textColor;
 			this.isDisable = true;
 		}
+
+		this.transform.GetChild (0).rotation = Quaternion.Euler (Vector3.zero);
 	}
 
 	#region Script

@@ -8,7 +8,8 @@ public class SuitcaseController : MonoBehaviour {
 	public ScriptableObject suitcasePartData;
 	public ScriptableObject itemData;
 
-	private GameObject part;
+	private GameObject currentPartAnimating;
+	private GameObject verifier;
 
 	private bool allowStartAnimation = false;
 	private bool partSelected = false;
@@ -17,31 +18,53 @@ public class SuitcaseController : MonoBehaviour {
 
 	private Suitcase currentSuitcase;
 
+	private Spot playerSpot;
+
 	private RepresentativeSuitcase suitcaseLogic;
+
+	private void instatiateVerifier(bool isCorrect)
+	{
+		GameObject _verifierPrefab = Resources.Load("Prefabs/Training-SpeedPack/Verifier", typeof(GameObject)) as GameObject;
+		Vector3 _position = this.playerSpot.SpotPosition;
+
+		_position.y = 0.3f;
+		this.verifier = (GameObject)GameObject.Instantiate (_verifierPrefab, Vector3.zero, _verifierPrefab.transform.rotation);
+		this.verifier.transform.parent = this.transform.GetChild(0).Find ("SuitcasePart").Find ("Items");
+		this.verifier.transform.localPosition = _position;
+		this.verifier.GetComponent<VerifierController> ().setAnimation (isCorrect);
+	}
 
 	private void animateParts()
 	{
 		if (!this.partSelected) 
 		{
-			this.part = this.transform.GetChild(this.currentPartIndex).gameObject;
+			this.currentPartAnimating = this.transform.GetChild(this.currentPartIndex).gameObject;
 			this.partSelected = true;
-			this.part.GetComponent<SuitcasePartController>().allowAnimation();
+			this.currentPartAnimating.GetComponent<SuitcasePartController>().allowAnimation();
 		}
 
-		if (this.part != null && this.part.GetComponent<SuitcasePartController>().IsAnimationDone) 
+		if (this.currentPartAnimating != null && this.currentPartAnimating.GetComponent<SuitcasePartController>().IsAnimationDone) 
 		{
 			this.currentPartIndex --;
 			if(this.currentPartIndex > 0)
 			{
 				this.partSelected = false;
-				/* Pintar objetos en la siguiente parte */
 			}
 			else
 			{
 				this.allowStartAnimation = false;
+				if(this.playerSpot.IsAvailableSpot)
+				{
+					this.instatiateVerifier(true);
+				}
+				else
+				{
+					this.instatiateVerifier(false);
+				}
 			}
-			this.part.GetComponent<SuitcasePartController>().reflectItems(this.transform.GetChild(this.currentPartIndex).gameObject);
-			this.part = null;
+			this.currentPartAnimating.GetComponent<SuitcasePartController>().reflectItems(this.transform.GetChild(this.currentPartIndex).gameObject);
+			//GameObject.Destroy(this.transform.GetChild(this.currentPartIndex + 1).gameObject);
+			this.currentPartAnimating = null;
 		}
 	}
 
@@ -56,6 +79,7 @@ public class SuitcaseController : MonoBehaviour {
 
 		this.currentPartIndex = this.transform.childCount - 1;
 		this.allowStartAnimation = true;
+		this.playerSpot = currentSpot;		
 	}
 
 
