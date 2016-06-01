@@ -63,6 +63,11 @@ public class GrabController : MonoBehaviour {
 			this.playerItem.transform.localPosition = (indexPosition + thumbPosition) / 2;
 			this.playerItem.transform.localRotation = Quaternion.Euler(new Vector3(315,340,300));
 		}
+
+		if (this.playerItem == null) 
+		{
+			this.playerItem = GameObject.FindGameObjectWithTag("DraggableItem");
+		}
 	}
 	#endregion
 

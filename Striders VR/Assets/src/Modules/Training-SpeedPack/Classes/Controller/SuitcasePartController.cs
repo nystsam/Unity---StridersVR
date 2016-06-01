@@ -9,7 +9,8 @@ public class SuitcasePartController : MonoBehaviour {
 
 	private Animator partAnimator;
 
-	private int hashAnim;
+	private int hashParam;
+	private int hashAnim = 0;
 
 	private bool allowToAnimate = false;
 	private bool isAnimationDone = false;
@@ -18,13 +19,16 @@ public class SuitcasePartController : MonoBehaviour {
 
 	private void displayAnimation()
 	{
-		if(!this.partAnimator.GetBool(this.hashAnim))
-			this.partAnimator.SetBool (this.hashAnim, true);
+		if(!this.partAnimator.GetBool(this.hashParam))
+			this.partAnimator.SetBool (this.hashParam, true);
 
-		if (this.partAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime > 2.5f && !this.partAnimator.IsInTransition(0)) 
+		if (this.partAnimator.GetCurrentAnimatorStateInfo (0).shortNameHash == this.hashAnim) 
 		{
-			this.allowToAnimate = false;
-			this.isAnimationDone = true;
+			if (this.partAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime > 1 && !this.partAnimator.IsInTransition (0)) 
+			{
+				this.allowToAnimate = false;
+				this.isAnimationDone = true;
+			}
 		}
 	}
 
@@ -32,24 +36,18 @@ public class SuitcasePartController : MonoBehaviour {
 	{
 		if (localPart != null && localPart.AttachedPart != null) 
 		{
-			OrientationPoint _myNewOrientation = localPart.getActivePoint();
+			this.transform.localPosition = localPart.AttachedPart.getGamePosition(this.transform.localPosition);
+			OrientationPoint _myNewOrientation = localPart.AttachedPart.getActivePoint();
 
 			this.transform.localPosition += _myNewOrientation.AttachedPosition;
 			this.transform.Find("SuitcasePart").localPosition += _myNewOrientation.AttachedPosition; 
-//			if(_myNewOrientation.AttachedRotation.z != 0)
-//			{
-//				this.transform.Find("SuitcasePart").localPosition += -_myNewOrientation.AttachedPosition;
-//
-//			}
-//			else
-//			{
-//				this.transform.Find("SuitcasePart").localPosition += _myNewOrientation.AttachedPosition;
-//			}
-//
-//			this.transform.rotation = Quaternion.Euler(_myNewOrientation.AttachedRotation);
+			this.hashParam = _myNewOrientation.getAnimHash(ref this.hashAnim);
 
-			/* COLOCAR LA ANIMACION CORRESPONDIENTE */
-			this.hashAnim = _myNewOrientation.getAnimHash();
+			this.localPart.GamePosition = this.transform.localPosition * 2;
+		}
+		else if(localPart != null && localPart.AttachedPart == null)
+		{
+			this.localPart.GamePosition = this.transform.localPosition;
 		}
 	}
 

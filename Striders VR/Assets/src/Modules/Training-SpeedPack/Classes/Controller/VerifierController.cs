@@ -7,16 +7,23 @@ public class VerifierController : MonoBehaviour {
 
 	private int animCorrectHash;
 	private int animIncorrectHash;
+	private int animHashName = 0;
 
 	private bool animationDone = false;
 	private bool startAnimation = false;
 
 	public void setAnimation(bool isCorrect)
 	{
-		if (isCorrect)
+		if (isCorrect) 
+		{
+			this.animHashName = Animator.StringToHash("AnimVerifyCorrect");
 			this.verifierAnimator.SetBool (this.animCorrectHash, true);
+		}
 		else
+		{
+			this.animHashName = Animator.StringToHash("AnimVerifyIncorrect");
 			this.verifierAnimator.SetBool (this.animIncorrectHash, true);
+		}
 
 		this.startAnimation = true;
 	}
@@ -34,7 +41,9 @@ public class VerifierController : MonoBehaviour {
 	{
 		if (this.startAnimation) 
 		{
-			if(this.verifierAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !this.verifierAnimator.IsInTransition(0))
+			if(this.verifierAnimator.GetCurrentAnimatorStateInfo(0).shortNameHash == this.animHashName
+			   && this.verifierAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 
+			   && !this.verifierAnimator.IsInTransition(0))
 			{
 				this.animationDone = true;
 				this.startAnimation = false;

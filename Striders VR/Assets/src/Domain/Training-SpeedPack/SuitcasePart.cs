@@ -9,11 +9,14 @@ namespace StridersVR.Domain.SpeedPack
 		[SerializeField]
 		private GameObject suitcasePartPrefab;
 
+		private Vector3 gamePosition;
+
 		private Spot[,] spotMatrix;
 		private List<Spot> spotList;
 
 		private SuitcasePart attachedPart;
 
+		private OrientationPoint currentOrientationPoint;
 		private List<OrientationPoint> orientationPoints;
 
 		private bool isMainPart;
@@ -115,47 +118,13 @@ namespace StridersVR.Domain.SpeedPack
 				return true;
 			}
 
-
-//			if (newItem.Spacing == 2) 
-//			{
-//				int _axisRotation = Random.Range (0, 2);
-//				int _newPos;
-//
-//				// Eje x
-//				if (_axisRotation == 0) 
-//				{
-//					_newPos = this.rotateItem (this.spotMatrix.GetLength (0), _xAxis);
-//					if (this.spotMatrix [_newPos, _yAxis].IsAvailableSpot) {
-//						this.spotMatrix [_xAxis, _yAxis].setItem (newItem);
-//						this.spotMatrix [_newPos, _yAxis].setItem (newItem);
-//					} else {
-//						return false;
-//					}
-//
-//				}
-//				// Eje y
-//				else 
-//				{
-//					_newPos = this.rotateItem (this.spotMatrix.GetLength (1), _yAxis);
-//					if (this.spotMatrix [_xAxis, _newPos].IsAvailableSpot) {
-//						this.spotMatrix [_xAxis, _yAxis].setItem (newItem);
-//						this.spotMatrix [_xAxis, _newPos].setItem (newItem);
-//					} else {
-//						return false;
-//					}
-//				}
-//			} 
-//			else 
-//			{
-//				this.spotMatrix [_xAxis, _yAxis].setItem (newItem);
-//			}
-
 			return false;
 		}
 
 		public void activeOrientationPoint(int index)
 		{
 			this.orientationPoints [index].activePoint ();
+			this.orientationPoints [index].changeAvailability ();
 		}
 
 		public OrientationPoint getActivePoint()
@@ -169,6 +138,24 @@ namespace StridersVR.Domain.SpeedPack
 			}
 
 			return null;
+		}
+
+		public bool getPointAvailability(int index)
+		{
+			return this.orientationPoints [index].IsAvailable;
+		}
+
+		public Vector3 getGamePosition(Vector3 position)
+		{
+			if (this.attachedPart != null) 
+			{
+				position += this.attachedPart.getGamePosition (position);
+				return this.gamePosition + position;
+			} 
+			else
+			{
+				return this.gamePosition;
+			}
 		}
 
 		public void setAttachedPart(SuitcasePart part)
@@ -227,7 +214,7 @@ namespace StridersVR.Domain.SpeedPack
 				_pointPosition = _points.GetChild(_indexGameSpot).localPosition;
 				_pointRotation = _points.GetChild(_indexGameSpot).rotation.eulerAngles;
 
-				_newPoint = new OrientationPoint(_pointPosition, _pointRotation);
+				_newPoint = new OrientationPoint(_indexGameSpot + 1, _pointPosition, _pointRotation);
 
 				this.orientationPoints.Add(_newPoint);
 			}
@@ -251,17 +238,13 @@ namespace StridersVR.Domain.SpeedPack
 			}
 		}
 
-//		private int rotateItem(int max, int currentPos)
-//		{
-//			int _direction = 1;
-//
-//			if (max - currentPos <= max / 2)
-//				_direction = -_direction;
-//
-//			return currentPos + _direction;
-//		}
-		
 		#region Properties
+		public Vector3 GamePosition
+		{
+			get { return this.gamePosition; }
+			set { this.gamePosition = value; }
+		}
+
 		public bool IsMainPart
 		{
 			get { return this.isMainPart; }
@@ -275,6 +258,12 @@ namespace StridersVR.Domain.SpeedPack
 		public SuitcasePart AttachedPart
 		{
 			get { return this.attachedPart; }
+		}
+
+		public OrientationPoint CurrentOrientationPoint
+		{
+			get { return this.currentOrientationPoint; }
+			set { this.currentOrientationPoint = value; }
 		}
 
 		public int OrientationPointsCount

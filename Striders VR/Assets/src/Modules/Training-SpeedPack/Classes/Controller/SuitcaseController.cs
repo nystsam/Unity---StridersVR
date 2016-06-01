@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using StridersVR.Domain.SpeedPack;
 using StridersVR.Modules.SpeedPack.Logic.Representatives;
@@ -13,6 +14,7 @@ public class SuitcaseController : MonoBehaviour {
 
 	private bool allowStartAnimation = false;
 	private bool partSelected = false;
+	private bool createParts = false;
 
 	private int currentPartIndex;
 
@@ -46,28 +48,41 @@ public class SuitcaseController : MonoBehaviour {
 		if (this.currentPartAnimating != null && this.currentPartAnimating.GetComponent<SuitcasePartController>().IsAnimationDone) 
 		{
 			this.currentPartIndex --;
-			if(this.currentPartIndex > 0)
-			{
-				this.partSelected = false;
-			}
-			else
+			this.partSelected = false;
+			if(this.currentPartIndex < 1)
 			{
 				this.allowStartAnimation = false;
+				this.createParts = true;
+				this.currentSuitcase = null;
 				if(this.playerSpot.IsAvailableSpot)
 				{
 					this.instatiateVerifier(true);
+					// puntaje
 				}
 				else
 				{
 					this.instatiateVerifier(false);
+					// puntaje
 				}
 			}
 			this.currentPartAnimating.GetComponent<SuitcasePartController>().reflectItems(this.transform.GetChild(this.currentPartIndex).gameObject);
-			//GameObject.Destroy(this.transform.GetChild(this.currentPartIndex + 1).gameObject);
-			this.currentPartAnimating = null;
+			GameObject.Destroy(this.transform.GetChild(this.currentPartIndex + 1).gameObject);
 		}
 	}
 
+	private IEnumerator resetTableboard()
+	{
+		yield return new WaitForSeconds(1.5f);
+		foreach(Transform child in this.transform)
+		{
+			GameObject.Destroy(child.gameObject);
+		}
+
+		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();
+		this.suitcaseLogic.spawnItems (this.currentSuitcase);
+		this.suitcaseLogic.spawnPlayerItem ();
+	}
+	
 	public void placePlayerItem(Spot currentSpot)
 	{
 		GameObject _draggableItem = GameObject.FindGameObjectWithTag ("DraggableItem");
@@ -102,7 +117,12 @@ public class SuitcaseController : MonoBehaviour {
 	{
 		if (this.allowStartAnimation) 
 		{
-			this.animateParts();
+			this.animateParts ();
+		} 
+		else if (this.createParts) 
+		{
+			this.createParts = false;
+			StartCoroutine(this.resetTableboard());
 		}
 	}
 	#endregion

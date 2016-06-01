@@ -24,14 +24,21 @@ namespace StridersVR.Domain.SpeedPack
 			this.suitcasePartList.Add (newPart);
 		}
 
+		public void addSuitcasePartMain(SuitcasePart newPart)
+		{
+			if (this.suitcasePartList.Count > 0) 
+			{
+				newPart.setAttachedPart(this.suitcasePartList.Find( x => x.IsMainPart == true));
+			}
+			
+			this.suitcasePartList.Add (newPart);
+		}
+
 		public void setMainPart()
 		{
 			if (this.suitcasePartList.Count > 0) 
 			{
 				this.suitcasePartList[0].setMainPart();
-//				int _randomIndex = Random.Range(0, this.suitcasePartList.Count);
-//
-//				this.suitcasePartList[_randomIndex].setMainPart();
 			}
 		}
 

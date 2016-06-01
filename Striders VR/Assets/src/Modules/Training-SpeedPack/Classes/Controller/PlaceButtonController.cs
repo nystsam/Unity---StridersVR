@@ -91,7 +91,7 @@ public class PlaceButtonController : MonoBehaviour {
 			this.isDisable = true;
 		}
 
-		this.transform.GetChild (0).rotation = Quaternion.Euler (Vector3.zero);
+		this.transform.rotation = Quaternion.Euler (Vector3.zero);
 	}
 
 	#region Script

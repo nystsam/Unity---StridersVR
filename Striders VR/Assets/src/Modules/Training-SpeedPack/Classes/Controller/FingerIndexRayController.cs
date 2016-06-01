@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class FingerIndexRayController : MonoBehaviour {
 
@@ -43,31 +44,43 @@ public class FingerIndexRayController : MonoBehaviour {
 		{
 			if (Physics.Raycast (myRay, out hit, hitHeight)) 
 			{
-				this.outHit();
+				this.outHit ();
 			}
 		} 
 		else if (this.hitting) 
 		{
-			currentRayDistance = Vector3.Distance(this.transform.position, hit.transform.position);
-			
-			if(currentRayDistance > hitHeight && hit.collider.tag.Equals ("SuitcaseSpot"))
+			try
+			{
+				currentRayDistance = Vector3.Distance (this.transform.position, hit.transform.position);
+				
+				if (currentRayDistance > hitHeight && hit.collider.tag.Equals ("SuitcaseSpot")) 
+				{
+					this.hitting = false;
+					hit.collider.GetComponent<SpotController> ().hoverColor (false);
+					this.placeButton.GetComponent<PlaceButtonController> ().buttonActivation (false);
+					this.placeButton.GetComponent<PlaceButtonController> ().CurrentSpot = null;
+				}
+				else if (!this.GetComponentInParent<GrabController> ().IsTouching && this.handModel.GetLeapHand ().IsLeft) 
+				{
+					this.placeButton.GetComponent<PlaceButtonController> ().buttonActivation (false);
+					this.placeButton.GetComponent<PlaceButtonController> ().CurrentSpot = null;
+				}
+				else if (currentRayDistance > 0.75f && hit.collider.tag.Equals ("PlayerPanelButtons")) 
+				{
+					this.hitting = false;
+					hit.collider.GetComponent<PlaceButtonController> ().hoverColor (false);
+				}
+			}
+			catch (NullReferenceException e)
 			{
 				this.hitting = false;
-				hit.collider.GetComponent<SpotController>().hoverColor(false);
-				this.placeButton.GetComponent<PlaceButtonController>().buttonActivation(false);
-				this.placeButton.GetComponent<PlaceButtonController>().CurrentSpot = null;
 			}
-			else if(!this.GetComponentInParent<GrabController>().IsTouching)
-			{
-				this.placeButton.GetComponent<PlaceButtonController>().buttonActivation(false);
-				this.placeButton.GetComponent<PlaceButtonController>().CurrentSpot = null;
-			}
-			else if(currentRayDistance > 0.75f && hit.collider.tag.Equals ("PlayerPanelButtons"))
-			{
-				this.hitting = false;
-				hit.collider.GetComponent<PlaceButtonController> ().hoverColor (false);
-			}
-		}
+
+		} 
+//		else if (hit == null) 
+//		{
+//			this.hitting = false;
+//		}
 	}
 
 
