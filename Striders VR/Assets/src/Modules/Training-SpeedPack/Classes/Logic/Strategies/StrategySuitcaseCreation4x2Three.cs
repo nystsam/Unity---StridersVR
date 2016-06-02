@@ -20,8 +20,8 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 		private ScriptableObjectSuitcasePart suitcasePartData;
 		private ScriptableObjectItem itemData;
 
-		private SuitcasePart mainPart;
-		
+		private List<OrientationPoint> orientationPoints;
+
 		private List<Spot> selectedSpots;
 
 		public StrategySuitcaseCreation4x2Three (GameObject suitcaseContainer)
@@ -34,12 +34,15 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 		public Suitcase createSuitcase(ScriptableObject genericSuitcasePartData)
 		{
 			Suitcase _newSuitcase = new Suitcase ();
-			
+
+			this.orientationPoints = new List<OrientationPoint> ();
 			this.suitcasePartData = (ScriptableObjectSuitcasePart)genericSuitcasePartData;	
 			this.addIndicatedParts (ref _newSuitcase);
-			
-			_newSuitcase.setMainPart ();
-			this.mainPart = _newSuitcase.getMainPart ();
+
+			if(!isMainAttached)
+				_newSuitcase.setMainPart ();
+
+			this.orientationPoints = _newSuitcase.getMainPart ().OrientationPoints;
 			this.instantiateSuitcasePart (_newSuitcase);
 			
 			return _newSuitcase;
@@ -73,22 +76,22 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 		
 		public void createItem (Suitcase currentSuitcase)
 		{
-			int _itemsInThisPart;
+			int _itemsInThisPart = 0;
 			int _totalItems = this.numberOfItems;
 			
 			SuitcasePart _currentPart;
 			
 			for (int partIndex = 0; partIndex < this.numberOfSuitcaseParts; partIndex ++) 
 			{
-				if(_totalItems == this.numberOfItems || _totalItems >= this.numberOfItems/2 && partIndex != this.numberOfSuitcaseParts - 1)
+				if(_totalItems == this.numberOfItems)
 				{
 					_itemsInThisPart = Random.Range(1,_totalItems - 1);
 				}
-				else if (_totalItems <= this.numberOfItems/2 && _totalItems > 1)
+				else if (_totalItems >= this.numberOfItems/2 || _totalItems > 1 && partIndex != this.numberOfSuitcaseParts - 1)
 				{
 					_itemsInThisPart = Random.Range(1,_totalItems);
 				}
-				else
+				else if(partIndex == this.numberOfSuitcaseParts - 1)
 				{
 					_itemsInThisPart = _totalItems;
 				}
@@ -124,7 +127,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			
 			if (currentPart.AttachedPart != null) 
 			{
-				currentPart.AttachedPart.getOppositeIndex (currentPart.getActivePoint (), ref currentX, ref currentY);
+				currentPart.AttachedPart.getOppositeIndex (currentPart.AttachedOrientation, ref currentX, ref currentY);
 			} 
 			
 			_newSpot = currentPart.getSpotAtIndex (currentX, currentY);
@@ -165,39 +168,46 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 		{
 			int _randomPointOrientation;
 			GameObject _clone;
-			SuitcasePart _previousPart = null;
-			OrientationPoint _previousPoint;
+			OrientationPoint _previousPoint = null;
 
 			foreach (SuitcasePart part in newSuitcase.SuitcasePartList) 
 			{
-//				if(_previousPart != null && !this.isMainAttached)
-//				{
-//					_previousPoint = _previousPart.getActivePoint();
-//					_previousPart.getPointAvailability(_previousPoint.Id);
-//				}
-//
-//				while(true)
-//				{
-//					_randomPointOrientation = Random.Range(0, part.OrientationPointsCount);
-//
-//					if(!this.isMainAttached)
-//					{
-//						if(part.getPointAvailability(_randomPointOrientation))
-//						{
-//							break;
-//						}
-//					}
-//					else
-//					{
-//						if(this.mainPart.getPointAvailability(_randomPointOrientation))
-//						{
-//							break;
-//						}
-//					}
-//				}
-				_randomPointOrientation = Random.Range(0, part.OrientationPointsCount);
-				part.activeOrientationPoint(_randomPointOrientation);	
-//				_previousPart = part;
+				if(part.AttachedPart != null)
+				{
+					while(true)
+					{
+						_randomPointOrientation = Random.Range(0, part.OrientationPointsCount);
+
+						if(!this.isMainAttached)
+						{
+							if(_previousPoint == null)
+							{
+								_previousPoint = this.orientationPoints[_randomPointOrientation];
+								part.setAttachedOrientation(_previousPoint);
+								this.orientationPoints[_randomPointOrientation].changeAvailability();
+								break;
+							}
+							else if(this.orientationPoints[_randomPointOrientation].IsAvailable &&
+							   	this.checkDiferentOrientation(_previousPoint, _randomPointOrientation))
+							{
+								_previousPoint = this.orientationPoints[_randomPointOrientation];
+								part.setAttachedOrientation(_previousPoint);
+								this.orientationPoints[_randomPointOrientation].changeAvailability();
+								break;
+							}
+						}
+						else
+						{
+							if(this.orientationPoints[_randomPointOrientation].IsAvailable)
+							{
+								part.setAttachedOrientation(this.orientationPoints[_randomPointOrientation]);
+								this.orientationPoints[_randomPointOrientation].changeAvailability();
+
+								break;
+							}
+						}
+					}
+				}
 
 				_clone = (GameObject)GameObject.Instantiate(part.SuitcasePartPrefab, Vector3.zero, Quaternion.Euler(Vector3.zero));
 				_clone.transform.parent = this.suitcaseContainer.transform;
@@ -213,19 +223,27 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			}
 			
 		}
-		
+
+		private bool checkDiferentOrientation(OrientationPoint previous, int _randomIndex)
+		{
+			if ((this.orientationPoints [_randomIndex].IsHorizontal && !previous.IsHorizontal) ||
+				(!this.orientationPoints [_randomIndex].IsHorizontal && previous.IsHorizontal))
+				return true;
+			return false;
+		}
+
 		private void addIndicatedParts(ref Suitcase newSuitcase)
 		{
 			int _attachedRandom = Random.Range (0, 2);
 
-//			if (_attachedRandom == 0)
-//				this.isMainAttached = true;
+			if (_attachedRandom == 0)
+				this.isMainAttached = true;
 
 			for (int quantity = 0; quantity < this.numberOfSuitcaseParts; quantity ++) 
 			{
-//				if(_attachedRandom == 0)
-//					newSuitcase.addSuitcasePartMain(this.suitcasePartData.getSuitcasePart4x2 ());
-//				else
+				if(_attachedRandom == 0)
+					newSuitcase.addSuitcasePartMain(this.suitcasePartData.getSuitcasePart4x2 ());
+				else
 					newSuitcase.addSuitcasePart(this.suitcasePartData.getSuitcasePart4x2 ());
 			}
 		}

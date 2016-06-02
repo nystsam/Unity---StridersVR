@@ -36,11 +36,14 @@ public class SuitcasePartController : MonoBehaviour {
 	{
 		if (localPart != null && localPart.AttachedPart != null) 
 		{
-			this.transform.localPosition = localPart.AttachedPart.getGamePosition(this.transform.localPosition);
-			OrientationPoint _myNewOrientation = localPart.AttachedPart.getActivePoint();
+			OrientationPoint _myNewOrientation;
 
-			this.transform.localPosition += _myNewOrientation.AttachedPosition;
-			this.transform.Find("SuitcasePart").localPosition += _myNewOrientation.AttachedPosition; 
+			this.transform.localPosition = localPart.AttachedPart.getGamePosition(this.transform.localPosition);
+
+			_myNewOrientation = localPart.AttachedOrientation;
+
+			this.transform.localPosition += -_myNewOrientation.AttachedPosition;
+			this.transform.Find("SuitcasePart").localPosition += -_myNewOrientation.AttachedPosition; 
 			this.hashParam = _myNewOrientation.getAnimHash(ref this.hashAnim);
 
 			this.localPart.GamePosition = this.transform.localPosition * 2;
@@ -65,10 +68,21 @@ public class SuitcasePartController : MonoBehaviour {
 			{
 				_previousSpot = this.spotsContainer.transform.GetChild(index).GetComponent<SpotController>().LocalSpot;
 
-				this.localPart.findSpotMatrixIndex(_previousSpot, ref _localX, ref _localY);
+				if(_nextSuitcasePart.IsMainPart)
+				{
+					this.localPart.findSpotMatrixIndex(_previousSpot, ref _localX, ref _localY);
 
-				_nextSuitcasePart.getOppositeIndex(this.localPart.getActivePoint(), ref _localX, ref _localY);
-				_nextItemPosition = _nextSuitcasePart.getSpotAtIndex(_localX,_localY).SpotPosition;
+					_nextSuitcasePart.getOppositeIndex(this.localPart.AttachedOrientation, ref _localX, ref _localY);
+					_nextItemPosition = _nextSuitcasePart.getSpotAtIndex(_localX,_localY).SpotPosition;
+				}
+				else
+				{
+					_nextSuitcasePart.findSpotMatrixIndex(_previousSpot, ref _localX, ref _localY);
+					
+					_nextSuitcasePart.AttachedPart.getOppositeIndex(this.localPart.AttachedOrientation, ref _localX, ref _localY);
+					_nextItemPosition = _nextSuitcasePart.getSpotAtIndex(_localX,_localY).SpotPosition;
+					_nextSuitcasePart.getSpotAtIndex(index).setItem(_previousSpot.CurrentItem); 
+				}
 
 				_clone = (GameObject)GameObject.Instantiate (_previousSpot.CurrentItem.ItemPrefab,
 				                                             Vector3.zero,

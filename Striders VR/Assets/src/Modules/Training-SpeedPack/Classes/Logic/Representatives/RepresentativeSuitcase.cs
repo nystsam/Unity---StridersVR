@@ -20,8 +20,8 @@ namespace StridersVR.Modules.SpeedPack.Logic.Representatives
 			this.suitcaseContainer = suitcaseContainer;
 			this.contextSuitcaseCreation = new ContextSuitcaseCreation ();
 
-			this.contextSuitcaseCreation.StrategyGenerateObjects = new StrategySuitcaseCreation4x2 (this.suitcaseContainer);
-//			this.contextSuitcaseCreation.StrategyGenerateObjects = new StrategySuitcaseCreation4x2Three (this.suitcaseContainer);
+//			this.contextSuitcaseCreation.StrategyGenerateObjects = new StrategySuitcaseCreation4x2 (this.suitcaseContainer);
+			this.contextSuitcaseCreation.StrategyGenerateObjects = new StrategySuitcaseCreation4x2Three (this.suitcaseContainer);
 		}
 
 

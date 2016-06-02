@@ -73,6 +73,7 @@ public class FingerIndexRayController : MonoBehaviour {
 			}
 			catch (NullReferenceException e)
 			{
+				Debug.Log (e.Message);
 				this.hitting = false;
 			}
 

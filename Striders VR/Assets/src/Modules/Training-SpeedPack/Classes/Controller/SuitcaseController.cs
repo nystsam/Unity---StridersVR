@@ -65,8 +65,10 @@ public class SuitcaseController : MonoBehaviour {
 					// puntaje
 				}
 			}
+
 			this.currentPartAnimating.GetComponent<SuitcasePartController>().reflectItems(this.transform.GetChild(this.currentPartIndex).gameObject);
 			GameObject.Destroy(this.transform.GetChild(this.currentPartIndex + 1).gameObject);
+			//Debug.Break();
 		}
 	}
 

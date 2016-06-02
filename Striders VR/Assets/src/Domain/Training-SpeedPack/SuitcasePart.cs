@@ -16,7 +16,7 @@ namespace StridersVR.Domain.SpeedPack
 
 		private SuitcasePart attachedPart;
 
-		private OrientationPoint currentOrientationPoint;
+		private OrientationPoint currentOrientation;
 		private List<OrientationPoint> orientationPoints;
 
 		private bool isMainPart;
@@ -74,7 +74,7 @@ namespace StridersVR.Domain.SpeedPack
 			if (this.attachedPart != null) 
 			{
 
-				this.attachedPart.getOppositeIndex(this.getActivePoint(), ref currentX, ref currentY);
+				this.attachedPart.getOppositeIndex(this.AttachedOrientation, ref currentX, ref currentY);
 				this.calculateIndex(orientation, ref currentX, ref currentY);
 			}
 			else
@@ -121,10 +121,9 @@ namespace StridersVR.Domain.SpeedPack
 			return false;
 		}
 
-		public void activeOrientationPoint(int index)
+		public void setAttachedOrientation(OrientationPoint orientation)
 		{
-			this.orientationPoints [index].activePoint ();
-			this.orientationPoints [index].changeAvailability ();
+			this.currentOrientation = orientation;
 		}
 
 		public OrientationPoint getActivePoint()
@@ -138,11 +137,6 @@ namespace StridersVR.Domain.SpeedPack
 			}
 
 			return null;
-		}
-
-		public bool getPointAvailability(int index)
-		{
-			return this.orientationPoints [index].IsAvailable;
 		}
 
 		public Vector3 getGamePosition(Vector3 position)
@@ -260,10 +254,14 @@ namespace StridersVR.Domain.SpeedPack
 			get { return this.attachedPart; }
 		}
 
-		public OrientationPoint CurrentOrientationPoint
+		public OrientationPoint AttachedOrientation
 		{
-			get { return this.currentOrientationPoint; }
-			set { this.currentOrientationPoint = value; }
+			get { return this.currentOrientation; }
+		}
+
+		public List<OrientationPoint> OrientationPoints
+		{
+			get { return this.orientationPoints; }
 		}
 
 		public int OrientationPointsCount

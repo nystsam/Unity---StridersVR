@@ -26,12 +26,16 @@ namespace StridersVR.Domain.SpeedPack
 
 		public void addSuitcasePartMain(SuitcasePart newPart)
 		{
-			if (this.suitcasePartList.Count > 0) 
+			if (this.suitcasePartList.Count == 0) 
 			{
-				newPart.setAttachedPart(this.suitcasePartList.Find( x => x.IsMainPart == true));
+				this.suitcasePartList.Add (newPart);
+				this.setMainPart();
 			}
-			
-			this.suitcasePartList.Add (newPart);
+			else if (this.suitcasePartList.Count > 0) 
+			{
+				newPart.setAttachedPart(this.getMainPart());
+				this.suitcasePartList.Add (newPart);
+			}
 		}
 
 		public void setMainPart()

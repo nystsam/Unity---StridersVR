@@ -11,6 +11,7 @@ namespace StridersVR.Domain.SpeedPack
 
 		private bool isActive;
 		private bool isAvailable;
+		private bool isHorizontal;
 
 		public OrientationPoint (int id, Vector3 position, Vector3 rotation)
 		{
@@ -20,22 +21,27 @@ namespace StridersVR.Domain.SpeedPack
 
 			this.isActive = false;
 			this.isAvailable = true;
+
+			if (position.x != 0)
+				this.isHorizontal = true;
+			else
+				this.isHorizontal = false;
 		}
 
 		public int getAnimHash(ref int _hashAnimName)
 		{
 			int _hashParam = 0;
 
-			if (this.attachedPosition == new Vector3 (1, 0, 0)) {
+			if (this.attachedPosition == new Vector3 (-1, 0, 0)) {
 				_hashParam = Animator.StringToHash ("RotateLeft");
 				_hashAnimName = Animator.StringToHash("AnimLeftPart");
-			} else if (this.attachedPosition == new Vector3 (-1, 0, 0)) {
+			} else if (this.attachedPosition == new Vector3 (1, 0, 0)) {
 				_hashParam = Animator.StringToHash ("RotateRight");
 				_hashAnimName = Animator.StringToHash("AnimRightPart");
-			} else if (this.attachedPosition == new Vector3 (0, -0.5f, 0)) {
+			} else if (this.attachedPosition == new Vector3 (0, 0.5f, 0)) {
 				_hashParam = Animator.StringToHash ("RotateBottom");
 				_hashAnimName = Animator.StringToHash("AnimBottomPart");
-			} else if (this.attachedPosition == new Vector3 (0, 0.5f, 0)) {
+			} else if (this.attachedPosition == new Vector3 (0, -0.5f, 0)) {
 				_hashParam = Animator.StringToHash ("RotateTop");
 				_hashAnimName = Animator.StringToHash("AnimTopPart");
 			}
@@ -79,6 +85,11 @@ namespace StridersVR.Domain.SpeedPack
 		public bool IsAvailable
 		{
 			get { return this.isAvailable; }
+		}
+
+		public bool IsHorizontal
+		{
+			get { return this.isHorizontal; }
 		}
 		#endregion
 	}

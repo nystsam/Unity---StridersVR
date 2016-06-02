@@ -160,7 +160,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			foreach (SuitcasePart part in newSuitcase.SuitcasePartList) 
 			{
 				_randomPointOrientation = Random.Range(0, part.OrientationPointsCount);
-				part.activeOrientationPoint(_randomPointOrientation);
+				//part.activeOrientationPoint(_randomPointOrientation);
 
 				_clone = (GameObject)GameObject.Instantiate(part.SuitcasePartPrefab, Vector3.zero, Quaternion.Euler(Vector3.zero));
 				_clone.transform.parent = this.suitcaseContainer.transform;
