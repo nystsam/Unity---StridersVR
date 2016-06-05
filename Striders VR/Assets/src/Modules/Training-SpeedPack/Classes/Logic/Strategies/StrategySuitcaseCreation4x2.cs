@@ -77,7 +77,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			{
 				if(_totalItems == this.numberOfItems || _totalItems >= this.numberOfItems/2 && partIndex != this.numberOfSuitcaseParts - 1)
 				{
-					_itemsInThisPart = Random.Range(1,_totalItems);
+					_itemsInThisPart = Random.Range(1,_totalItems - 1);
 				}
 				else
 				{
@@ -115,7 +115,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 
 			if (currentPart.AttachedPart != null) 
 			{
-				currentPart.AttachedPart.getOppositeIndex (currentPart.AttachedPart.getActivePoint (), ref currentX, ref currentY);
+				currentPart.AttachedPart.getOppositeIndex (currentPart.AttachedOrientation, ref currentX, ref currentY);
 			} 
 
 			_newSpot = currentPart.getSpotAtIndex (currentX, currentY);
@@ -159,8 +159,12 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 
 			foreach (SuitcasePart part in newSuitcase.SuitcasePartList) 
 			{
-				_randomPointOrientation = Random.Range(0, part.OrientationPointsCount);
-				//part.activeOrientationPoint(_randomPointOrientation);
+				if(part.AttachedPart != null)
+				{
+					_randomPointOrientation = Random.Range(0, part.OrientationPointsCount);
+
+					part.setAttachedOrientation(_randomPointOrientation);
+				}
 
 				_clone = (GameObject)GameObject.Instantiate(part.SuitcasePartPrefab, Vector3.zero, Quaternion.Euler(Vector3.zero));
 				_clone.transform.parent = this.suitcaseContainer.transform;

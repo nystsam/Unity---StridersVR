@@ -27,6 +27,15 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 		[SerializeField]
 		private GameObject spatulaPrefab;
 
+		[SerializeField]
+		private GameObject headphonesPrefab;
+
+		[SerializeField]
+		private GameObject capPrefab;
+
+		[SerializeField]
+		private GameObject shoesPrefab;
+
 
 		public List<Item> items()
 		{
@@ -38,6 +47,9 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 			_myItemList.Add (new Item (this.flashLightPrefab));
 			_myItemList.Add (new Item (this.notebookPrefab));
 			_myItemList.Add (new Item (this.spatulaPrefab));
+			_myItemList.Add (new Item (this.headphonesPrefab));
+			_myItemList.Add (new Item (this.capPrefab));
+			_myItemList.Add (new Item (this.shoesPrefab));
 
 			return _myItemList;
 		}

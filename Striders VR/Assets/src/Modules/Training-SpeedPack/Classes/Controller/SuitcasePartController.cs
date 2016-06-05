@@ -77,13 +77,12 @@ public class SuitcasePartController : MonoBehaviour {
 				}
 				else
 				{
-					_nextSuitcasePart.findSpotMatrixIndex(_previousSpot, ref _localX, ref _localY);
-					
-					_nextSuitcasePart.AttachedPart.getOppositeIndex(this.localPart.AttachedOrientation, ref _localX, ref _localY);
-					_nextItemPosition = _nextSuitcasePart.getSpotAtIndex(_localX,_localY).SpotPosition;
-					_nextSuitcasePart.getSpotAtIndex(index).setItem(_previousSpot.CurrentItem); 
-				}
+					this.localPart.findSpotMatrixIndex(_previousSpot, ref _localX, ref _localY);
 
+					_nextSuitcasePart.calculateIndex(this.localPart.AttachedOrientation, ref _localX, ref _localY);
+					_nextItemPosition = _nextSuitcasePart.getSpotAtIndex(_localX,_localY).SpotPosition;
+					_nextSuitcasePart.getSpotAtIndex(_localX,_localY).setItem(_previousSpot.CurrentItem); 
+				}
 				_clone = (GameObject)GameObject.Instantiate (_previousSpot.CurrentItem.ItemPrefab,
 				                                             Vector3.zero,
 				                                             Quaternion.Euler (Vector3.zero));

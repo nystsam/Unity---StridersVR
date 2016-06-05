@@ -32,19 +32,33 @@ namespace StridersVR.Domain.SpeedPack
 		{
 			int _hashParam = 0;
 
-			if (this.attachedPosition == new Vector3 (-1, 0, 0)) {
+			if (this.attachedPosition.x < 0) {
 				_hashParam = Animator.StringToHash ("RotateLeft");
 				_hashAnimName = Animator.StringToHash("AnimLeftPart");
-			} else if (this.attachedPosition == new Vector3 (1, 0, 0)) {
+			} else if (this.attachedPosition.x > 0) {
 				_hashParam = Animator.StringToHash ("RotateRight");
 				_hashAnimName = Animator.StringToHash("AnimRightPart");
-			} else if (this.attachedPosition == new Vector3 (0, 0.5f, 0)) {
+			} else if (this.attachedPosition.y > 0) {
 				_hashParam = Animator.StringToHash ("RotateBottom");
 				_hashAnimName = Animator.StringToHash("AnimBottomPart");
-			} else if (this.attachedPosition == new Vector3 (0, -0.5f, 0)) {
+			} else if (this.attachedPosition.y < 0) {
 				_hashParam = Animator.StringToHash ("RotateTop");
 				_hashAnimName = Animator.StringToHash("AnimTopPart");
 			}
+
+//			if (this.attachedPosition == new Vector3 (-1, 0, 0)) {
+//				_hashParam = Animator.StringToHash ("RotateLeft");
+//				_hashAnimName = Animator.StringToHash("AnimLeftPart");
+//			} else if (this.attachedPosition == new Vector3 (1, 0, 0)) {
+//				_hashParam = Animator.StringToHash ("RotateRight");
+//				_hashAnimName = Animator.StringToHash("AnimRightPart");
+//			} else if (this.attachedPosition == new Vector3 (0, 0.5f, 0)) {
+//				_hashParam = Animator.StringToHash ("RotateBottom");
+//				_hashAnimName = Animator.StringToHash("AnimBottomPart");
+//			} else if (this.attachedPosition == new Vector3 (0, -0.5f, 0)) {
+//				_hashParam = Animator.StringToHash ("RotateTop");
+//				_hashAnimName = Animator.StringToHash("AnimTopPart");
+//			}
 
 			return _hashParam;
 		}

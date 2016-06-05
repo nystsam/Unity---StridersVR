@@ -126,17 +126,10 @@ namespace StridersVR.Domain.SpeedPack
 			this.currentOrientation = orientation;
 		}
 
-		public OrientationPoint getActivePoint()
+		public void setAttachedOrientation (int index)
 		{
-			foreach (OrientationPoint point in this.orientationPoints) 
-			{
-				if(point.IsActive)
-				{
-					return point;
-				}
-			}
-
-			return null;
+			this.currentOrientation = this.orientationPoints [index];
+			this.currentOrientation.changeAvailability ();
 		}
 
 		public Vector3 getGamePosition(Vector3 position)
@@ -225,7 +218,7 @@ namespace StridersVR.Domain.SpeedPack
 				
 				if(this.spotMatrix[xAxis, yAxis].IsAvailableSpot)
 					return true;
-				else if(_constraint >= this.spotMatrix.Length*2)
+				else if(_constraint >= this.spotMatrix.Length*3)
 					return false;
 
 				_constraint ++;

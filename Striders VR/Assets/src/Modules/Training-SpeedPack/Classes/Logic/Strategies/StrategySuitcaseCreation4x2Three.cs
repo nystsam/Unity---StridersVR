@@ -67,6 +67,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 				if(!_mainPart.placeItem(_newItem))
 				{
 					Debug.Log ("No mas disponibles");
+					this.numberOfItems = _mainPart.getUsedSpots ().Count;
 					break;
 				}
 			}
@@ -85,22 +86,22 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			{
 				if(_totalItems == this.numberOfItems)
 				{
-					_itemsInThisPart = Random.Range(1,_totalItems - 1);
-				}
-				else if (_totalItems >= this.numberOfItems/2 || _totalItems > 1 && partIndex != this.numberOfSuitcaseParts - 1)
-				{
-					_itemsInThisPart = Random.Range(1,_totalItems);
+					_itemsInThisPart = Random.Range(1,_totalItems - 2);
 				}
 				else if(partIndex == this.numberOfSuitcaseParts - 1)
 				{
 					_itemsInThisPart = _totalItems;
 				}
+				else if (_totalItems >= this.numberOfItems/2 || _totalItems > 1 && partIndex != this.numberOfSuitcaseParts - 1)
+				{
+					_itemsInThisPart = Random.Range(1,_totalItems);
+				}
+
 				
 				_totalItems -= _itemsInThisPart;
 				_currentPart = currentSuitcase.getPartAtIndex(partIndex);
 				this.getInGameSuitcasePart(_currentPart);
 				this.itemsInPart(_currentPart, _itemsInThisPart);
-				
 			}
 		}
 		#endregion
@@ -238,6 +239,8 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 
 			if (_attachedRandom == 0)
 				this.isMainAttached = true;
+			else
+				this.isMainAttached = false;
 
 			for (int quantity = 0; quantity < this.numberOfSuitcaseParts; quantity ++) 
 			{

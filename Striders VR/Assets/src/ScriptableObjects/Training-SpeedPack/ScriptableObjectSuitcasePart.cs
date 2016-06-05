@@ -15,6 +15,8 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 		[SerializeField]
 		private SuitcasePart suitcasePart2x2;
 
+		[SerializeField]
+		private SuitcasePart suitcasePart3x2;
 
 		public SuitcasePart getSuitcasePart4x2()
 		{
@@ -30,7 +32,7 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 		{
 			SuitcasePart _newSuitcasePart;
 			
-			_newSuitcasePart = new SuitcasePart (this.suitcasePart4x2.SuitcasePartPrefab);
+			_newSuitcasePart = new SuitcasePart (this.suitcasePart3x3.SuitcasePartPrefab);
 			_newSuitcasePart.setSpotsFromData (3, 3);
 			
 			return _newSuitcasePart;
@@ -40,8 +42,18 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 		{
 			SuitcasePart _newSuitcasePart;
 			
-			_newSuitcasePart = new SuitcasePart (this.suitcasePart4x2.SuitcasePartPrefab);
+			_newSuitcasePart = new SuitcasePart (this.suitcasePart2x2.SuitcasePartPrefab);
 			_newSuitcasePart.setSpotsFromData (2, 2);
+			
+			return _newSuitcasePart;
+		}
+
+		public SuitcasePart getSuitcasePart3x2()
+		{
+			SuitcasePart _newSuitcasePart;
+			
+			_newSuitcasePart = new SuitcasePart (this.suitcasePart3x2.SuitcasePartPrefab);
+			_newSuitcasePart.setSpotsFromData (3, 2);
 			
 			return _newSuitcasePart;
 		}

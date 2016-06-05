@@ -9,12 +9,15 @@ public class SuitcaseController : MonoBehaviour {
 	public ScriptableObject suitcasePartData;
 	public ScriptableObject itemData;
 
+	public GameObject scoreContainer;
+
 	private GameObject currentPartAnimating;
 	private GameObject verifier;
 
 	private bool allowStartAnimation = false;
 	private bool partSelected = false;
-	private bool createParts = false;
+	private bool allowToCreate = false;
+	private bool gameStarted = false;
 
 	private int currentPartIndex;
 
@@ -52,24 +55,34 @@ public class SuitcaseController : MonoBehaviour {
 			if(this.currentPartIndex < 1)
 			{
 				this.allowStartAnimation = false;
-				this.createParts = true;
+				this.allowToCreate = true;
 				this.currentSuitcase = null;
 				if(this.playerSpot.IsAvailableSpot)
 				{
 					this.instatiateVerifier(true);
-					// puntaje
+					this.scoreContainer.GetComponent<ScorePackController>().setScore(true);
 				}
 				else
 				{
 					this.instatiateVerifier(false);
-					// puntaje
+					this.scoreContainer.GetComponent<ScorePackController>().setScore(false);
 				}
 			}
 
-			this.currentPartAnimating.GetComponent<SuitcasePartController>().reflectItems(this.transform.GetChild(this.currentPartIndex).gameObject);
-			GameObject.Destroy(this.transform.GetChild(this.currentPartIndex + 1).gameObject);
-			//Debug.Break();
+			if(this.currentPartAnimating.GetComponent<SuitcasePartController>().LocalPart.AttachedPart.IsMainPart)
+				this.currentPartAnimating.GetComponent<SuitcasePartController>().reflectItems(this.transform.GetChild(0).gameObject);
+			else
+				this.currentPartAnimating.GetComponent<SuitcasePartController>().reflectItems(this.transform.GetChild(this.currentPartIndex).gameObject);
+
+			this.transform.GetChild(this.currentPartIndex + 1).gameObject.SetActive(false);
 		}
+	}
+
+	private void createParts()
+	{
+		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();
+		this.suitcaseLogic.spawnItems (this.currentSuitcase);
+		this.suitcaseLogic.spawnPlayerItem ();
 	}
 
 	private IEnumerator resetTableboard()
@@ -80,9 +93,7 @@ public class SuitcaseController : MonoBehaviour {
 			GameObject.Destroy(child.gameObject);
 		}
 
-		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();
-		this.suitcaseLogic.spawnItems (this.currentSuitcase);
-		this.suitcaseLogic.spawnPlayerItem ();
+		this.createParts ();
 	}
 	
 	public void placePlayerItem(Spot currentSpot)
@@ -106,24 +117,33 @@ public class SuitcaseController : MonoBehaviour {
 		this.suitcaseLogic = new RepresentativeSuitcase (this.gameObject);
 		this.suitcaseLogic.SetPartData = this.suitcasePartData;
 		this.suitcaseLogic.SetItemData = this.itemData;
-		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();
+//		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();
 	}
 
-	void Start()
-	{
-		this.suitcaseLogic.spawnItems (this.currentSuitcase);
-		this.suitcaseLogic.spawnPlayerItem ();
-	}
+//	void Start()
+//	{
+//		this.suitcaseLogic.spawnItems (this.currentSuitcase);
+//		this.suitcaseLogic.spawnPlayerItem ();
+//	}
 
 	void Update()
 	{
+		if (!this.gameStarted) 
+		{
+			if(this.scoreContainer.GetComponent<ScorePackController>().IsGameBegin)
+			{
+				this.gameStarted = true;
+				this.createParts();
+			}
+		}
+
 		if (this.allowStartAnimation) 
 		{
 			this.animateParts ();
 		} 
-		else if (this.createParts) 
+		else if (this.allowToCreate && !this.scoreContainer.GetComponent<ScorePackController>().IsGameTimerEnd) 
 		{
-			this.createParts = false;
+			this.allowToCreate = false;
 			StartCoroutine(this.resetTableboard());
 		}
 	}

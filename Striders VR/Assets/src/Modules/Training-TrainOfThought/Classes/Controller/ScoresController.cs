@@ -48,7 +48,7 @@ public class ScoresController : MonoBehaviour {
 		if (this.gameBegin && !this.gameTimerEnd) 
 		{
 			if (this.gameTimer.Seconds == 59)
-				this.timingMin.text = this.gameTimer.Minutes.ToString ();
+				this.timingMin.text = "0" + this.gameTimer.Minutes.ToString ();
 			
 			this.trainTimeInSeconds -= Time.deltaTime;
 			this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
@@ -78,7 +78,7 @@ public class ScoresController : MonoBehaviour {
 	{
 		this.trainScore = new RepresentativeTrainScore (ref this.countingCurrent, ref this.countingTotal, this.platform);
 		this.gameTimer = TimeSpan.FromSeconds (trainTimeInSeconds);
-		this.timingMin.text = this.gameTimer.Minutes.ToString();
+		this.timingMin.text =  "0" + this.gameTimer.Minutes.ToString();
 		this.startTimeText.GetComponent<TextMesh> ().text = this.timeToStart.ToString("F0");
 	}
 
