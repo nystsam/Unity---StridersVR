@@ -14,8 +14,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 		
 		private int numberOfSuitcaseParts = 4;
 		private int numberOfItems = 5;
-		
-		private bool isMainAttached = false;
+		private int score = 325;
 		
 		private ScriptableObjectSuitcasePart suitcasePartData;
 		private ScriptableObjectItem itemData;
@@ -38,7 +37,9 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			this.orientationPoints = new List<OrientationPoint> ();
 			this.suitcasePartData = (ScriptableObjectSuitcasePart)genericSuitcasePartData;	
 			this.addIndicatedParts (ref _newSuitcase);
-			
+
+			_newSuitcase.setSuicaseScore (this.score);
+
 			this.orientationPoints = _newSuitcase.getMainPart ().OrientationPoints;
 			this.instantiateSuitcasePart (_newSuitcase);
 			
@@ -166,7 +167,6 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 		{
 			int _randomPointOrientation;
 			GameObject _clone;
-			OrientationPoint _previousPoint = null;
 			
 			foreach (SuitcasePart part in newSuitcase.SuitcasePartList) 
 			{
@@ -210,9 +210,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 		}
 		
 		private void addIndicatedParts(ref Suitcase newSuitcase)
-		{
-			int _attachedRandom = Random.Range (0, 2);
-			
+		{		
 			for (int quantity = 0; quantity < this.numberOfSuitcaseParts; quantity ++) 
 			{
 				newSuitcase.addSuitcasePartMain(this.suitcasePartData.getSuitcasePart3x2 ());

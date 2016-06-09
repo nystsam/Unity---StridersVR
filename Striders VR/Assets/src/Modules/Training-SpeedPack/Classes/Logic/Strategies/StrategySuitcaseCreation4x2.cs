@@ -14,6 +14,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 
 		private int numberOfSuitcaseParts = 2;
 		private int numberOfItems = 7;
+		private int score = 250;
 
 		private ScriptableObjectSuitcasePart suitcasePartData;
 		private ScriptableObjectItem itemData;
@@ -35,6 +36,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			this.addIndicatedParts (ref _newSuitcase);
 
 			_newSuitcase.setMainPart ();
+			_newSuitcase.setSuicaseScore (this.score);
 			this.instantiateSuitcasePart (_newSuitcase);
 
 			return _newSuitcase;

@@ -13,13 +13,14 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	private Spot hittingSpot;
 
-	private float hitHeight = 0.45f;
+	private float hitRange = 0.45f;
 	private float currentRayDistance;
 
 	private RaycastHit hit;
 
 	private bool hitting;
 	private bool placingItem = false;
+	private bool isRayRangeIncreased = false;
 
 	private void outHit()
 	{
@@ -29,8 +30,6 @@ public class FingerIndexRayController : MonoBehaviour {
 			hit.collider.GetComponent<SpotController> ().hoverColor (true);
 			if(this.GetComponentInParent<GrabController>().IsTouching && hit.collider.GetComponent<SpotController> ().IsActive)
 			{
-//				this.placeButton.GetComponent<PlaceButtonController>().buttonActivation(true);
-//				this.placeButton.GetComponent<PlaceButtonController>().CurrentSpot = hit.collider.GetComponent<SpotController> ().LocalSpot;
 				this.hittingSpot = hit.collider.GetComponent<SpotController>().LocalSpot;
 				this.progressBar.GetComponent<RProgressBarController>().startLoading();
 				this.placingItem = true;
@@ -48,10 +47,10 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	private void createRay(Vector3 direction)
 	{
-		Ray myRay = new Ray (transform.position, direction * hitHeight);
+		Ray myRay = new Ray (transform.position, direction * hitRange);
 		if (!this.hitting) 
 		{
-			if (Physics.Raycast (myRay, out hit, hitHeight)) 
+			if (Physics.Raycast (myRay, out hit, hitRange)) 
 			{
 				this.outHit ();
 			}
@@ -62,7 +61,7 @@ public class FingerIndexRayController : MonoBehaviour {
 			{
 				currentRayDistance = Vector3.Distance (this.transform.position, hit.transform.position);
 				
-				if (currentRayDistance > hitHeight && hit.collider.tag.Equals ("SuitcaseSpot")) 
+				if (currentRayDistance > hitRange && hit.collider.tag.Equals ("SuitcaseSpot")) 
 				{
 					this.hitting = false;
 					this.placingItem = false;
@@ -70,8 +69,6 @@ public class FingerIndexRayController : MonoBehaviour {
 
 					this.progressBar.GetComponent<RProgressBarController>().stopLoading();
 					this.hittingSpot = null;
-//					this.placeButton.GetComponent<PlaceButtonController> ().buttonActivation (false);
-//					this.placeButton.GetComponent<PlaceButtonController> ().CurrentSpot = null;
 				}
 //				else if (!this.GetComponentInParent<GrabController> ().IsTouching && this.handModel.GetLeapHand ().IsLeft) 
 //				{
@@ -86,10 +83,9 @@ public class FingerIndexRayController : MonoBehaviour {
 			}
 			catch (NullReferenceException e)
 			{
-				Debug.LogException(e);
+				Debug.Log (e.Message);
 				this.hitting = false;
 			}
-
 		} 		
 	}
 
@@ -111,13 +107,18 @@ public class FingerIndexRayController : MonoBehaviour {
 	{
 		if (this.handModel.GetLeapHand ().IsLeft) 
 		{
-			Debug.DrawRay (transform.position, -Vector3.forward * hitHeight);
+			if(this.GetComponentInParent<GrabController>().IsTouching && !this.isRayRangeIncreased)
+			{
+				hitRange += 0.25f;
+				this.isRayRangeIncreased = true;
+			}
+			else if(!this.GetComponentInParent<GrabController>().IsTouching && this.isRayRangeIncreased)
+			{
+				hitRange -= 0.25f;
+				this.isRayRangeIncreased = false;
+			}
+			Debug.DrawRay (transform.position, -Vector3.forward * hitRange);
 			this.createRay (-Vector3.forward);
-		} 
-		else if (this.handModel.GetLeapHand ().IsRight) 
-		{
-			Debug.DrawRay (transform.position, -Vector3.forward * hitHeight);
-			this.createRay(-Vector3.forward * 0.15f);
 		}
 
 		if (this.placingItem) 

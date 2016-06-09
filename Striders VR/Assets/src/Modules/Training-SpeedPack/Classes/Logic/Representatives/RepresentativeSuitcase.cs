@@ -15,14 +15,14 @@ namespace StridersVR.Modules.SpeedPack.Logic.Representatives
 
 		private ContextSuitcaseCreation contextSuitcaseCreation;
 
-		private StrategySuitcaseCreationComposite strategyCompositeMedium;
+		private StrategySuitcaseCreationComposite strategyComposite;
 
-		public RepresentativeSuitcase(GameObject suitcaseContainer)
+		public RepresentativeSuitcase(GameObject suitcaseContainer, string dificulty)
 		{
 			this.suitcaseContainer = suitcaseContainer;
 			this.contextSuitcaseCreation = new ContextSuitcaseCreation ();
 
-			this.createStrategies ();
+			this.createStrategies (dificulty);
 		}
 
 
@@ -52,14 +52,32 @@ namespace StridersVR.Modules.SpeedPack.Logic.Representatives
 			_clone.transform.localRotation = Quaternion.Euler (new Vector3 (275, 270, 29));
 		}
 
-		private void createStrategies()
+		private void createStrategies(string dificulty)
 		{
-			this.strategyCompositeMedium = new StrategySuitcaseCreationComposite ();
-			this.strategyCompositeMedium.addStrategy (new StrategySuitcaseCreation4x2 (this.suitcaseContainer));
-			this.strategyCompositeMedium.addStrategy (new StrategySuitcaseCreation4x2Three (this.suitcaseContainer));
-			this.strategyCompositeMedium.addStrategy (new StrategySuitcaseCreation3x2FourMain (this.suitcaseContainer));
+			this.strategyComposite = new StrategySuitcaseCreationComposite ();
 
-			this.contextSuitcaseCreation.assignStrategy(this.strategyCompositeMedium);
+			if(dificulty.Equals("Easy"))
+			{
+				//this.strategyComposite.addStrategy (new StrategySuitcaseCreation2x2 (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation3x2 (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation2x2Three (this.suitcaseContainer));
+			}
+			else if (dificulty.Equals ("Medium")) 
+			{
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation4x2 (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation4x2Three (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation3x2FourMain (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation3x3NotFull (this.suitcaseContainer));
+			}
+			else if (dificulty.Equals("Hard"))
+			{
+				// 4x2FourMain
+				// 3x3
+				// 3x3Three
+				// 3x3ForMain
+			}
+
+			this.contextSuitcaseCreation.assignStrategy(this.strategyComposite);
 		}
 
 		#region Properties

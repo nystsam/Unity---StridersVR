@@ -103,6 +103,7 @@ public class SuitcasePartController : MonoBehaviour {
 		{
 			this.spotsContainer.transform.GetChild(index).GetComponent<MeshRenderer>().material = _spotsMaterial;
 			this.spotsContainer.transform.GetChild(index).GetComponent<SpotController>().LocalSpot = this.localPart.getSpotAtIndex(index);
+			this.spotsContainer.transform.GetChild(index).GetComponent<SpotController>().activeSpot();
 		}
 	}
 

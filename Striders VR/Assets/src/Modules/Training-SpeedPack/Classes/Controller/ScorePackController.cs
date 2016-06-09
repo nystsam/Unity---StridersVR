@@ -9,6 +9,7 @@ public class ScorePackController : MonoBehaviour {
 	public GameObject timingSeg;
 	public GameObject countingCurrent;
 	public GameObject countingTotal;
+	public GameObject totalScore;
 	public GameObject startTime;
 
 	[SerializeField] private float gameTimeInSeconds;
@@ -56,16 +57,20 @@ public class ScorePackController : MonoBehaviour {
 		}
 	}
 
-	public void setScore(bool isSuccesses)
+	public void setScore(bool isSuccesses, int newScore)
 	{
-		int _current, _total;
+		int _current, _total, _score;
 
 		if (isSuccesses) 
 		{
 			_current = int.Parse(this.countingCurrent.GetComponent<Text>().text);
 			_current ++;
 
+			_score = int.Parse(this.totalScore.GetComponent<Text>().text);
+			_score += newScore;
+
 			this.countingCurrent.GetComponent<Text>().text = _current.ToString();
+			this.totalScore.GetComponent<Text>().text = _score.ToString();
 		}
 
 		_total = int.Parse(this.countingTotal.GetComponent<Text>().text);

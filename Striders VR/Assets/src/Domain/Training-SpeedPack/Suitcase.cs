@@ -8,6 +8,8 @@ namespace StridersVR.Domain.SpeedPack
 	{
 		private List<SuitcasePart> suitcasePartList;
 
+		private int suitcaseScore;
+
 		public Suitcase()
 		{
 			this.suitcasePartList = new List<SuitcasePart> ();
@@ -46,6 +48,11 @@ namespace StridersVR.Domain.SpeedPack
 			}
 		}
 
+		public void setSuicaseScore(int score)
+		{
+			this.suitcaseScore = score;
+		}
+
 		public SuitcasePart getMainPart()
 		{
 			foreach (SuitcasePart part in this.suitcasePartList) 
@@ -68,6 +75,11 @@ namespace StridersVR.Domain.SpeedPack
 		public List<SuitcasePart> SuitcasePartList 
 		{
 			get { return this.suitcasePartList; }
+		}
+
+		public int SuitcaseScore
+		{
+			get { return this.suitcaseScore; }
 		}
 		#endregion
 

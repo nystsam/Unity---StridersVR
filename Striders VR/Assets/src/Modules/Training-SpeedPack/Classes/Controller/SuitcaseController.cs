@@ -21,6 +21,8 @@ public class SuitcaseController : MonoBehaviour {
 
 	private int currentPartIndex;
 
+	private string gameDificulty = "";
+
 	private Suitcase currentSuitcase;
 
 	private Spot playerSpot;
@@ -56,17 +58,19 @@ public class SuitcaseController : MonoBehaviour {
 			{
 				this.allowStartAnimation = false;
 				this.allowToCreate = true;
-				this.currentSuitcase = null;
+
 				if(this.playerSpot.IsAvailableSpot)
 				{
 					this.instatiateVerifier(true);
-					this.scoreContainer.GetComponent<ScorePackController>().setScore(true);
+					this.scoreContainer.GetComponent<ScorePackController>().setScore(true, this.currentSuitcase.SuitcaseScore);
 				}
 				else
 				{
 					this.instatiateVerifier(false);
-					this.scoreContainer.GetComponent<ScorePackController>().setScore(false);
+					this.scoreContainer.GetComponent<ScorePackController>().setScore(false, 0);
 				}
+
+				this.currentSuitcase = null;
 			}
 
 			if(this.currentPartAnimating.GetComponent<SuitcasePartController>().LocalPart.AttachedPart.IsMainPart)
@@ -114,7 +118,8 @@ public class SuitcaseController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.suitcaseLogic = new RepresentativeSuitcase (this.gameObject);
+		this.gameDificulty = "Easy";
+		this.suitcaseLogic = new RepresentativeSuitcase (this.gameObject, this.gameDificulty);
 		this.suitcaseLogic.SetPartData = this.suitcasePartData;
 		this.suitcaseLogic.SetItemData = this.itemData;
 //		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();

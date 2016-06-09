@@ -8,6 +8,7 @@ public class SpotController : MonoBehaviour {
 	private Material originalColor;
 
 	private bool isActive;
+	private bool isColliderUp;
 	private bool isHandHitting;
 	private bool colorChange;
 
@@ -50,11 +51,18 @@ public class SpotController : MonoBehaviour {
 		}
 	}
 
+	public void activeSpot()
+	{
+		this.originalColor = this.GetComponent<MeshRenderer> ().material;
+		this.isActive = true;
+	}
+
 
 	#region Script
 	void Awake () 
 	{
 		this.isActive = false;
+		this.isColliderUp = true;
 		this.isHandHitting = false;
 		this.colorChange = true;
 		this.availableSpotColor = Resources.Load("Materials/Training-SpeedPack/MatAvailableSpot", typeof(Material)) as Material;
@@ -62,12 +70,11 @@ public class SpotController : MonoBehaviour {
 
 	void Update()
 	{
-		if (this.localSpot != null && !this.isActive) 
+		if (this.isActive) 
 		{
-			this.originalColor = this.GetComponent<MeshRenderer> ().material;
-			this.isActive = true;
-			if(this.localSpot.IsMainSpot)
+			if(this.localSpot.IsMainSpot && this.isColliderUp)
 			{
+				this.isColliderUp = false;
 				this.GetComponent<BoxCollider>().size = Vector3.zero;
 			}
 		}
