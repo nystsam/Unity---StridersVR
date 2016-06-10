@@ -77,9 +77,9 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			
 			for (int partIndex = 0; partIndex < this.numberOfSuitcaseParts; partIndex ++) 
 			{
-				if(_totalItems == this.numberOfItems || _totalItems >= this.numberOfItems/2 && partIndex != this.numberOfSuitcaseParts - 1)
+				if(_totalItems == this.numberOfItems)
 				{
-					_itemsInThisPart = Random.Range(1,_totalItems - 1);
+					_itemsInThisPart = Random.Range(1,_totalItems);
 				}
 				else
 				{

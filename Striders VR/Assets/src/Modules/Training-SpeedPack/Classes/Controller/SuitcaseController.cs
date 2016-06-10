@@ -21,7 +21,7 @@ public class SuitcaseController : MonoBehaviour {
 
 	private int currentPartIndex;
 
-	private string gameDificulty = "";
+	private string gameDificulty;
 
 	private Suitcase currentSuitcase;
 
@@ -118,18 +118,11 @@ public class SuitcaseController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.gameDificulty = "Easy";
+		this.gameDificulty = "Hard";
 		this.suitcaseLogic = new RepresentativeSuitcase (this.gameObject, this.gameDificulty);
 		this.suitcaseLogic.SetPartData = this.suitcasePartData;
 		this.suitcaseLogic.SetItemData = this.itemData;
-//		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();
 	}
-
-//	void Start()
-//	{
-//		this.suitcaseLogic.spawnItems (this.currentSuitcase);
-//		this.suitcaseLogic.spawnPlayerItem ();
-//	}
 
 	void Update()
 	{

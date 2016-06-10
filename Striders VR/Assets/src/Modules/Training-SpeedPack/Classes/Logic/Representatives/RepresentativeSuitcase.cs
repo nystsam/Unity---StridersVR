@@ -58,7 +58,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Representatives
 
 			if(dificulty.Equals("Easy"))
 			{
-				//this.strategyComposite.addStrategy (new StrategySuitcaseCreation2x2 (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation2x2 (this.suitcaseContainer));
 				this.strategyComposite.addStrategy (new StrategySuitcaseCreation3x2 (this.suitcaseContainer));
 				this.strategyComposite.addStrategy (new StrategySuitcaseCreation2x2Three (this.suitcaseContainer));
 			}
@@ -71,10 +71,10 @@ namespace StridersVR.Modules.SpeedPack.Logic.Representatives
 			}
 			else if (dificulty.Equals("Hard"))
 			{
-				// 4x2FourMain
-				// 3x3
-				// 3x3Three
-				// 3x3ForMain
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation4x2FourMain (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation3x3 (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation3x3Three (this.suitcaseContainer));
+				this.strategyComposite.addStrategy (new StrategySuitcaseCreation3x3FourMain (this.suitcaseContainer));
 			}
 
 			this.contextSuitcaseCreation.assignStrategy(this.strategyComposite);
