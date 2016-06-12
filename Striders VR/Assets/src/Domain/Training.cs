@@ -4,7 +4,6 @@ namespace StridersVR.Domain
 {
 	public class Training
 	{
-
 		private string name = "";
 		private string difficulty = "";
 

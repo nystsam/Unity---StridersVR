@@ -4,18 +4,19 @@ using System.Collections;
 
 public class LoadingScreenController : MonoBehaviour {
 
-	[SerializeField] 
-	private Slider progressBar;
-	[SerializeField] 
-	private Text percentage;
-	[SerializeField] 
-	private Text postProgress;
+	[SerializeField] private Slider progressBar;
+
+	[SerializeField] private Text percentage;
+	[SerializeField] private Text postProgress;
 
 	private bool turnOnLoadingScreen;
 	private bool waitingForLoad;
 	private bool waitingForAnyKey;
+
 	private string sceneName = "";
+
 	private int loadProcess;
+
 	private AsyncOperation async;
 
 	private void loadingScreen()
