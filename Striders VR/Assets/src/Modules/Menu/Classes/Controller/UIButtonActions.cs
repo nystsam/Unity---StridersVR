@@ -5,7 +5,7 @@ public interface UIButtonActions
 {
 	void buttonHover(bool isHitting);
 
-	void buttonAction();
+	void buttonAction(GameObject menuOptions);
 
 	bool buttonPressed();
 }

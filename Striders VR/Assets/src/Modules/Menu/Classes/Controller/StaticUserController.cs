@@ -31,7 +31,7 @@ public class StaticUserController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.training = new Training ("Train of Throught");
+		this.training = new Training (Application.loadedLevelName);
 		this.training.Difficulty = "Easy";
 		GameObject.DontDestroyOnLoad (this);
 	}

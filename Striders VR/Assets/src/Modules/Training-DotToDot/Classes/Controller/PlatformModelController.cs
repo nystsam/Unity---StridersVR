@@ -20,8 +20,8 @@ public class PlatformModelController : MonoBehaviour
 		if (this.allowToCreateModel) 
 		{
 			this.allowToCreateModel = false;
-			this.modelFigure.createModel();
-			this.dotReferee.GetComponent<RefereeController> ().setNumberOfStripes(this.modelFigure.NumberOfStripesAssigned); 
+			//this.modelFigure.createModel();
+			//this.dotReferee.GetComponent<RefereeController> ().setNumberOfStripes(this.modelFigure.NumberOfStripesAssigned); 
 		}
 
 	}

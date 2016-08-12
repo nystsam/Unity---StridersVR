@@ -66,8 +66,7 @@ public class HandModelExampleController : MonoBehaviour {
 	{
 		this.anim = this.modelExampleContainer.GetComponent<Animator> ();
 		this.allowToRotateHash = Animator.StringToHash("AllowToRotate");
-
-//		provider = FindObjectOfType<LeapProvider> () as LeapProvider;
+		
 		this.leapController = new Controller ();
 	}
 	
@@ -78,20 +77,6 @@ public class HandModelExampleController : MonoBehaviour {
 		this.hands = frame.Hands;
 		this.myHand = hands [0];
 		this.palmPosition ();
-		//		GestureList gestureList = frame.Gestures ();
-		//		for (int i = 0; i < gestureList.Count; i++) 
-		//		{
-		//			Gesture gesture = gestureList [i];
-		//			if (gesture.Type == Gesture.GestureType.TYPESWIPE) 
-		//			{
-		//				SwipeGesture handSwipe = new SwipeGesture (gesture);
-		//				Vector swipeDirection = handSwipe.Direction;
-		//				if (swipeDirection.x > 0)
-		//					Debug.Log ("Right");
-		//				else if (swipeDirection.x < 0)
-		//					Debug.Log ("Left");
-		//			}
-		//		}
 	}
 
 	void OnTriggerEnter(Collider other)

@@ -118,7 +118,7 @@ public class SuitcaseController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.gameDificulty = "Hard";
+		this.gameDificulty = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Difficulty;
 		this.suitcaseLogic = new RepresentativeSuitcase (this.gameObject, this.gameDificulty);
 		this.suitcaseLogic.SetPartData = this.suitcasePartData;
 		this.suitcaseLogic.SetItemData = this.itemData;

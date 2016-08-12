@@ -9,7 +9,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		private GameObject dotContainer;
 		private GameObject pointPrefab;
 
-		private int distanceSeparation = 15;
+		private int distanceSeparation = 25;
 		private int pointId = 1;
 
 		public StrategyPointsEasy (GameObject dotContainer, GameObject pointPrefab)
@@ -23,9 +23,9 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		public PointsContainer createPoints()
 		{
 			PointsContainer _pointsContainer = new PointsContainer();
-			int _positionZ = -this.distanceSeparation;
+			int _positionZ = -this.distanceSeparation/2;
 
-			for (int vectorZ = 0; vectorZ < 3; vectorZ ++) 
+			for (int vectorZ = 0; vectorZ < 2; vectorZ ++) 
 			{
 				this.drawRect(_positionZ, _pointsContainer);
 				_positionZ += this.distanceSeparation;
@@ -42,7 +42,6 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 
 			for (int vectorY = 0; vectorY < this.distanceSeparation * 3; vectorY += this.distanceSeparation) 
 			{
-
 				for(int vectorX = 0; vectorX < this.distanceSeparation * 3; vectorX += this.distanceSeparation)
 				{
 					_newDot = (GameObject)GameObject.Instantiate(this.pointPrefab, Vector3.zero, Quaternion.Euler(Vector3.zero));	

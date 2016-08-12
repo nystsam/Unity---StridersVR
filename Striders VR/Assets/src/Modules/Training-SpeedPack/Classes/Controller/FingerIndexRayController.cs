@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 using System;
+using StridersVR.Domain;
 using StridersVR.Domain.SpeedPack;
 
 public class FingerIndexRayController : MonoBehaviour {
 
-	public GameObject progressBar;
-
+	private GameObject progressBar;
 	private GameObject suitcaseContainer;
 //	private GameObject placeButton;
 
 	private HandModel handModel;
 
 	private Spot hittingSpot;
+
+	private ITouchBoard touchBoard;
 
 	private float hitRange = 0.45f;
 	private float currentRayDistance;
@@ -31,7 +33,7 @@ public class FingerIndexRayController : MonoBehaviour {
 			if(this.GetComponentInParent<GrabController>().IsTouching && hit.collider.GetComponent<SpotController> ().IsActive)
 			{
 				this.hittingSpot = hit.collider.GetComponent<SpotController>().LocalSpot;
-				this.progressBar.GetComponent<RProgressBarController>().startLoading();
+				this.touchBoard.startAction();
 				this.placingItem = true;
 			}
 		} 
@@ -66,8 +68,7 @@ public class FingerIndexRayController : MonoBehaviour {
 					this.hitting = false;
 					this.placingItem = false;
 					hit.collider.GetComponent<SpotController> ().hoverColor (false);
-
-					this.progressBar.GetComponent<RProgressBarController>().stopLoading();
+					this.touchBoard.cancelAction();
 					this.hittingSpot = null;
 				}
 //				else if (!this.GetComponentInParent<GrabController> ().IsTouching && this.handModel.GetLeapHand ().IsLeft) 
@@ -84,6 +85,7 @@ public class FingerIndexRayController : MonoBehaviour {
 			catch (NullReferenceException e)
 			{
 				Debug.Log (e.Message);
+				Debug.Log ("Restarting Suitcase...");
 				this.hitting = false;
 			}
 		} 		
@@ -101,6 +103,11 @@ public class FingerIndexRayController : MonoBehaviour {
 		this.handModel = this.GetComponentInParent<HandModel> ();
 		this.hitting = false;
 //		this.placeButton = GameObject.FindGameObjectWithTag ("PlayerPanelButtons");
+
+		if (this.handModel.GetLeapHand ().IsLeft) 
+		{
+			this.touchBoard = GameObject.FindGameObjectWithTag("TouchBoard").GetComponent<TouchBoardController>();
+		}
 	}
 
 	void Update () 
@@ -123,7 +130,7 @@ public class FingerIndexRayController : MonoBehaviour {
 
 		if (this.placingItem) 
 		{
-			if(this.progressBar.GetComponent<RProgressBarController>().IsDone)
+			if(this.touchBoard.actionComplete())
 			{
 				this.placingItem = false;
 				this.suitcaseContainer.GetComponent<SuitcaseController>().placePlayerItem(this.hittingSpot);

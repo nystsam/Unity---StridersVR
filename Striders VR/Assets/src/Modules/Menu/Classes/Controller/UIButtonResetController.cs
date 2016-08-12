@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using StridersVR.Domain;
 
 public class UIButtonResetController : MonoBehaviour, UIButtonActions {
 
+	public GameObject buttonShape;
 	public GameObject buttonText;
 
 	private Material colorMain;
@@ -15,6 +17,10 @@ public class UIButtonResetController : MonoBehaviour, UIButtonActions {
 	private string colorTextPressed;
 
 	private bool isPressed = false;
+
+	private VirtualButton buttonVr;
+
+	private float triggerDistance = 0.075f;
 
 	#region UIAction
 	public void buttonHover(bool isHitting)
@@ -37,9 +43,12 @@ public class UIButtonResetController : MonoBehaviour, UIButtonActions {
 		}
 	}
 
-	public void buttonAction()
+	public void buttonAction(GameObject menuOptions)
 	{
-		
+		Training _currentTraining;
+
+		_currentTraining = GameObject.FindGameObjectWithTag("StaticUser").GetComponent<StaticUserController>().Training;
+		Application.LoadLevel (_currentTraining.Name);		
 	}
 
 	public bool buttonPressed ()
@@ -51,54 +60,39 @@ public class UIButtonResetController : MonoBehaviour, UIButtonActions {
 	#region Script
 	void Awake () 
 	{
-		this.colorMain = Resources.Load ("Materials/MatMainColor", typeof(Material)) as Material;
+		this.buttonVr = new VirtualButton (this.transform.localPosition, 100, Vector3.forward);
+		this.colorMain = Resources.Load ("Materials/MatUIMenuColor2", typeof(Material)) as Material;
 		this.colorHover = Resources.Load ("Materials/MatTouch", typeof(Material)) as Material;
-		this.colorPressed = Resources.Load ("Materials/MatUIButtonPressed", typeof(Material)) as Material;
+		this.colorPressed = Resources.Load ("Materials/MatMainColor", typeof(Material)) as Material;
 		this.colorTextMain = "18CAE6FF";
 		this.colorTextHover = "F25E21FF";
-		this.colorTextPressed = "FFEA23FF";
+		this.colorTextPressed = "1A6B79FF";
 	}
 
-	void OnTriggerEnter(Collider other)
+	void Update()
 	{
-		if (other.tag.Equals ("IndexUI")) 
+		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, -0.1f, 0f);
+		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
+		
+		if (!this.isPressed && this.buttonVr.IsButtonPressed (-this.transform.localPosition, this.triggerDistance)) 
 		{
-			this.buttonHover(true);
-		}
-	}
+			Color _textColor;
 
-	void OnTriggerStay(Collider other)
-	{
-		if (other.tag.Equals ("IndexUI")) 
+			this.isPressed = true;
+			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorPressed;
+
+			Color.TryParseHexString(this.colorTextPressed, out _textColor);
+			this.buttonText.GetComponent<Text>().color = _textColor;	
+		} 
+		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
 		{
-			if(Vector3.Distance(other.transform.position, this.transform.position) < 0.07f && !this.isPressed)
-			{
-				Color _textColor;
+			Color _textColor;
 
-				this.isPressed = true;
-				this.GetComponent<MeshRenderer>().material = this.colorPressed;
+			this.isPressed = false;
+			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorMain;
 
-				Color.TryParseHexString(this.colorTextPressed, out _textColor);
-				this.buttonText.GetComponent<Text>().color = _textColor;
-			}
-			else if(Vector3.Distance(other.transform.position, this.transform.position) > 0.08f && this.isPressed)
-			{
-				Color _textColor;
-
-				this.isPressed = false;
-				this.GetComponent<MeshRenderer>().material = this.colorHover;
-
-				Color.TryParseHexString(this.colorTextHover, out _textColor);
-				this.buttonText.GetComponent<Text>().color = _textColor;
-			}
-		}
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		if (other.tag.Equals ("IndexUI")) 
-		{
-			this.buttonHover(false);
+			Color.TryParseHexString(this.colorTextMain, out _textColor);
+			this.buttonText.GetComponent<Text>().color = _textColor;
 		}
 	}
 	#endregion

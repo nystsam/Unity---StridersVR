@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using StridersVR.Domain;
 using System.Collections;
 
 public class RProgressBarController : MonoBehaviour {
@@ -10,7 +11,7 @@ public class RProgressBarController : MonoBehaviour {
 	private float currentAmount;
 	[SerializeField] private float speed;
 
-	private bool isDone = false;
+	private bool isDone = true;
 
 	private void loadBar()
 	{
@@ -27,8 +28,13 @@ public class RProgressBarController : MonoBehaviour {
 		}
 	}
 
-	public void startLoading()
+	public void startLoading(Vector3 touchPosition)
 	{
+		Vector3 _newPosition = new Vector3 (0, 0, 0);
+		_newPosition.x = touchPosition.x;
+		_newPosition.y = touchPosition.y + 0.4f;
+		this.transform.position = _newPosition;
+
 		this.gameObject.SetActive (true);
 		this.currentAmount = 0;
 		this.isDone = false;
@@ -41,7 +47,7 @@ public class RProgressBarController : MonoBehaviour {
 
 
 	#region Script
-	void Awake()
+	void Start()
 	{
 		this.gameObject.SetActive (false);
 	}

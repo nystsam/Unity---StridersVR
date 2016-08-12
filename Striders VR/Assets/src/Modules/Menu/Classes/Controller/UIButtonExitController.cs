@@ -37,7 +37,7 @@ public class UIButtonExitController : MonoBehaviour, UIButtonActions {
 		}
 	}
 	
-	public void buttonAction()
+	public void buttonAction(GameObject menuOptions)
 	{
 		
 	}
@@ -51,7 +51,7 @@ public class UIButtonExitController : MonoBehaviour, UIButtonActions {
 	#region Script
 	void Awake () 
 	{
-		this.colorMain = Resources.Load ("Materials/MatMainColor", typeof(Material)) as Material;
+		this.colorMain = Resources.Load ("Materials/MatUIMenuColor2", typeof(Material)) as Material;
 		this.colorHover = Resources.Load ("Materials/MatTouch", typeof(Material)) as Material;
 		this.colorPressed = Resources.Load ("Materials/MatUIButtonPressed", typeof(Material)) as Material;
 		this.colorTextMain = "18CAE6FF";
