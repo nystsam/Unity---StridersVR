@@ -76,11 +76,6 @@ public class FingerIndexRayController : MonoBehaviour {
 //					this.placeButton.GetComponent<PlaceButtonController> ().buttonActivation (false);
 //					this.placeButton.GetComponent<PlaceButtonController> ().CurrentSpot = null;
 //				}
-				else if (currentRayDistance > 0.75f && hit.collider.tag.Equals ("PlayerPanelButtons")) 
-				{
-					this.hitting = false;
-					hit.collider.GetComponent<PlaceButtonController> ().hoverColor (false);
-				}
 			}
 			catch (NullReferenceException e)
 			{

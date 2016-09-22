@@ -2,7 +2,7 @@
 using Leap;
 using System.Collections;
 
-public class UIHandMenuController : MonoBehaviour {
+public class UILeapHandToolsController : MonoBehaviour {
 
 	private bool isButtonActive = false;
 	private bool isInstantiated = false;
@@ -20,29 +20,6 @@ public class UIHandMenuController : MonoBehaviour {
 	private Transform indexBone3;
  
 	private HandModel hand;
-
-	private void createMenuOptions()
-	{
-		GameObject _uiToolsPrefab;
-
-		_uiToolsPrefab = Resources.Load ("Prefabs/Menu/ToolsPanelUI", typeof(GameObject)) as GameObject;
-		
-		this.UIOptions = (GameObject)GameObject.Instantiate (_uiToolsPrefab, Vector3.zero, _uiToolsPrefab.transform.rotation);
-		
-		this.UIOptions.transform.position = new Vector3(-0.2f, 1.6f, 0.1f);
-		//			this.UIOptions.transform.parent = this.hand.palm;
-		//			this.UIOptions.transform.localPosition = new Vector3(-4.85f, 0, -3f);
-		//			this.UIOptions.transform.localRotation = Quaternion.Euler(new Vector3(280, 0, 180));
-		//			this.UIOptions.transform.localScale = new Vector3(4.8f, 2.75f, 4.8f);
-		
-		
-		this.buttonReset = this.UIOptions.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonResetController>();
-		this.buttonExit = this.UIOptions.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonExitController>();
-		this.buttonClose = this.UIOptions.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonCloseController>();
-		
-		this.UIOptions.SetActive(false);
-
-	}
 
 	private void createHandUI()
 	{
@@ -110,7 +87,6 @@ public class UIHandMenuController : MonoBehaviour {
 			        this.isButtonActive)
 			{
 				this.UIbutton.SetActive (false);
-				this.UIbutton.GetComponent<UIButtonTools>().resetButton();
 				this.isButtonActive = false;
 
 //				if(this.isPanelUp)
@@ -123,47 +99,6 @@ public class UIHandMenuController : MonoBehaviour {
 		}
 	}
 
-	private void checkUIButtonToolsPress()
-	{
-		if (this.hand.GetLeapHand ().IsLeft && !this.isPanelUp) 
-		{
-			if(this.UIbutton.GetComponent<UIButtonTools> ().IsPressed)
-			{
-				this.createMenuOptions();
-				this.isPanelUp = true;
-				this.UIOptions.SetActive(true);
-				this.UIbutton.GetComponent<UIButtonTools> ().resetButton();
-			}
-		}
-	}
-
-	private void pressButtons()
-	{
-		if (!this.isPanelButtonPressed) 
-		{
-			if(this.buttonReset != null && this.buttonReset.buttonPressed())
-			{
-				this.isPanelButtonPressed = true;
-				// ESPERAR UN RATO O HACER ALGO
-				this.buttonReset.buttonAction(this.UIOptions);
-			}
-			else if(this.buttonClose != null && this.buttonClose.buttonPressed())
-			{
-				this.isPanelButtonPressed = true;
-				this.buttonClose.buttonAction(this.UIOptions);
-
-				GameObject.Destroy(this.UIOptions);
-
-				this.buttonClose = null;
-				this.buttonExit = null;
-				this.buttonReset = null;
-				this.isPanelUp = false;
-				this.isPanelButtonPressed = false;
-			}
-		}
-	}
-
-
 	#region Script
 	void Start () 
 	{
@@ -174,9 +109,6 @@ public class UIHandMenuController : MonoBehaviour {
 	void Update () 
 	{
 		this.enableUIButtonTools ();
-		this.checkUIButtonToolsPress ();
-		this.pressButtons ();
-	
 	}
 	#endregion
 }

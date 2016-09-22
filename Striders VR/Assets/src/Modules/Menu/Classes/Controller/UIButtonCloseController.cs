@@ -4,50 +4,52 @@ using StridersVR.Domain;
 
 public class UIButtonCloseController : MonoBehaviour, UIButtonActions {
 
+	private GameObject UIGameController;
+
 	private bool isPressed = false;
 
 	private VirtualButton buttonVr;
 	
-	private float triggerDistance = 0.025f;
-
-
-
+	private float triggerDistance = 0.075f;
 
 	#region UIAction
 	public void buttonHover(bool isHitting)
 	{
 	}
-	
-	public void buttonAction(GameObject menuOptions)
-	{
-		this.isPressed = false;
-	}
-	
-	public bool buttonPressed ()
-	{
-		return this.isPressed;
-	}
 	#endregion
 
-	#region Script
-	void Awake () 
+	private void buttonAction()
 	{
-		this.buttonVr = new VirtualButton (this.transform.localPosition, 100, Vector3.forward);
+		this.UIGameController.transform.FindChild("ToolsPanelUI").GetComponent<UIMenuOptions>().desactiveMenu();
 	}
-
-	void Update () 
+	
+	private void buttonPressed ()
 	{
-		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, -0.05f, 0f);
-		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
-		
 		if (!this.isPressed && this.buttonVr.IsButtonPressed (-this.transform.localPosition, this.triggerDistance)) 
 		{
 			this.isPressed = true;
+			this.buttonAction();
 		} 
 		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
 		{	
 			this.isPressed = false;
 		}
+	}
+
+
+	#region Script
+	void Awake () 
+	{
+		this.buttonVr = new VirtualButton (this.transform.localPosition, 100, Vector3.forward);
+		this.UIGameController = GameObject.FindGameObjectWithTag ("GameController");
+	}
+
+	void Update () 
+	{
+		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, -0.1f, 0f);
+		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
+
+		this.buttonPressed ();
 	}
 	#endregion
 }

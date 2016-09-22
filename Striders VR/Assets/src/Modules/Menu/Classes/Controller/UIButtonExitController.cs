@@ -37,14 +37,14 @@ public class UIButtonExitController : MonoBehaviour, UIButtonActions {
 		}
 	}
 	
-	public void buttonAction(GameObject menuOptions)
+	public void buttonAction()
 	{
 		
 	}
 
-	public bool buttonPressed ()
+	public void buttonPressed ()
 	{
-		return this.isPressed;
+		//return this.isPressed;
 	}
 	#endregion
 	

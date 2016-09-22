@@ -42,20 +42,43 @@ public class UIButtonResetController : MonoBehaviour, UIButtonActions {
 			this.buttonText.GetComponent<Text>().color = _textColor;
 		}
 	}
+	#endregion
 
-	public void buttonAction(GameObject menuOptions)
+	public void buttonAction()
 	{
+		// Sacar un diaglo de Si o No
+
 		Training _currentTraining;
 
 		_currentTraining = GameObject.FindGameObjectWithTag("StaticUser").GetComponent<StaticUserController>().Training;
 		Application.LoadLevel (_currentTraining.Name);		
 	}
 
-	public bool buttonPressed ()
+	public void buttonPressed ()
 	{
-		return this.isPressed;
+		if (!this.isPressed && this.buttonVr.IsButtonPressed (-this.transform.localPosition, this.triggerDistance)) 
+		{
+			Color _textColor;
+			
+			this.isPressed = true;
+			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorPressed;
+			
+			Color.TryParseHexString(this.colorTextPressed, out _textColor);
+			this.buttonText.GetComponent<Text>().color = _textColor;
+
+			this.buttonAction();
+		} 
+		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
+		{
+			Color _textColor;
+			
+			this.isPressed = false;
+			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorMain;
+			
+			Color.TryParseHexString(this.colorTextMain, out _textColor);
+			this.buttonText.GetComponent<Text>().color = _textColor;
+		}
 	}
-	#endregion
 
 	#region Script
 	void Awake () 
@@ -73,27 +96,8 @@ public class UIButtonResetController : MonoBehaviour, UIButtonActions {
 	{
 		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, -0.1f, 0f);
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
-		
-		if (!this.isPressed && this.buttonVr.IsButtonPressed (-this.transform.localPosition, this.triggerDistance)) 
-		{
-			Color _textColor;
 
-			this.isPressed = true;
-			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorPressed;
-
-			Color.TryParseHexString(this.colorTextPressed, out _textColor);
-			this.buttonText.GetComponent<Text>().color = _textColor;	
-		} 
-		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
-		{
-			Color _textColor;
-
-			this.isPressed = false;
-			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorMain;
-
-			Color.TryParseHexString(this.colorTextMain, out _textColor);
-			this.buttonText.GetComponent<Text>().color = _textColor;
-		}
+		this.buttonPressed ();
 	}
 	#endregion
 }

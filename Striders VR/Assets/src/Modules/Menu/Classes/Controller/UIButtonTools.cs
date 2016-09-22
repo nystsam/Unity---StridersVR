@@ -9,6 +9,8 @@ public class UIButtonTools : MonoBehaviour {
 	private bool isPressed = false;
 	private bool isHoving = false;
 
+	private GameObject UIGameController;
+
 	private void hoverImage(bool isHitting)
 	{
 		if (isHitting) 
@@ -27,17 +29,17 @@ public class UIButtonTools : MonoBehaviour {
 		if (this.isHoving && !this.isPressed)
 		{
 			this.isPressed = true;
+			this.UIGameController.transform.FindChild("ToolsPanelUI").GetComponent<UIMenuOptions>().activeMenu();
 		}
 	}
 
-	public void resetButton()
+	#region Script
+	void Awake()
 	{
-		this.isHoving = false;
-		this.isPressed = false;
+		this.UIGameController = GameObject.FindGameObjectWithTag ("GameController");
+
 	}
 
-
-	#region Script
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.tag.Equals ("IndexUI")) 
@@ -55,14 +57,8 @@ public class UIButtonTools : MonoBehaviour {
 		{
 			this.isHoving = false;
 			this.hoverImage(false);
+			this.isPressed = false;
 		}
-	}
-	#endregion
-
-	#region Properties
-	public bool IsPressed
-	{
-		get { return this.isPressed; }
 	}
 	#endregion
 }
