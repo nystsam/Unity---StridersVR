@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace StridersVR.Domain.Menu
 {
-	public class MenuButtonStatistic : MenuButton
-	{
-		public MenuButtonStatistic ()
+	public class MenuButtonDifficulty : MenuButton
+	{	
+		public MenuButtonDifficulty ()
 		{
 			this.menuContainer = GameObject.FindGameObjectWithTag("GameController");
 
-			this.animName = "AnimStatisticsMenu";
-			this.animVariable = "IsStatistics";
+			this.animName = "AnimDifficultyMenu";
+			this.animVariable = "IsDifficulty";
 		}
-		
+
 		public override void buttonAction()
 		{
 			this.menuContainer.GetComponent<MenuContainerController> ().changeMenu (this.animName, this.animVariable, true);

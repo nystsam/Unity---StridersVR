@@ -19,6 +19,7 @@ public class MenuButtonController : MonoBehaviour {
 
 	private VirtualButton virtualButton;
 
+
 	private void buttonPressed ()
 	{
 		if (!this.isPressed && this.virtualButton.IsButtonPressed (this.transform.localPosition, this.triggerDistance)) 

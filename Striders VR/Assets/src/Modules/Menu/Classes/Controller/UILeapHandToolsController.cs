@@ -6,9 +6,9 @@ public class UILeapHandToolsController : MonoBehaviour {
 
 	private bool isButtonActive = false;
 	private bool isInstantiated = false;
-	private bool isHoving = false;
-	private bool isPanelUp = false;
-	private bool isPanelButtonPressed = true;
+//	private bool isHoving = false;
+//	private bool isPanelUp = false;
+//	private bool isPanelButtonPressed = true;
 
 	private GameObject UIbutton;
 	private GameObject UIOptions;
@@ -36,7 +36,7 @@ public class UILeapHandToolsController : MonoBehaviour {
 			this.UIbutton.transform.localScale = new Vector3(0.6f, 0.6f, 0.001f);
 			this.UIbutton.SetActive (false);
 
-			this.isPanelButtonPressed = false;
+			//this.isPanelButtonPressed = false;
 			this.isInstantiated = true;
 		}
 		else if (this.hand.GetLeapHand ().IsRight) 

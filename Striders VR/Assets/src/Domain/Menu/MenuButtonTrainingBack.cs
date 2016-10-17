@@ -3,19 +3,19 @@ using UnityEngine;
 
 namespace StridersVR.Domain.Menu
 {
-	public class MenuButtonTraining : MenuButton
+	public class MenuButtonTrainingBack : MenuButton
 	{
-		public MenuButtonTraining ()
+		public MenuButtonTrainingBack ()
 		{
 			this.menuContainer = GameObject.FindGameObjectWithTag("GameController");
 
-			this.animName = "AnimTrainingMenu";
+			this.animName = "AnimMainMenu";
 			this.animVariable = "IsTraining";
 		}
 
 		public override void buttonAction()
 		{
-			this.menuContainer.GetComponent<MenuContainerController> ().changeMenu (this.animName, this.animVariable, true);	
+			this.menuContainer.GetComponent<MenuContainerController> ().changeMenu (this.animName, this.animVariable, false);	
 		}
 	}
 }

@@ -9,33 +9,20 @@ public class MenuContainerController : MonoBehaviour {
 	public GameObject menuStatistics;
 
 	private bool animationTransition;
-	private bool isMainMenu;
 
 	private Animator containerAnimator;
 
 	private int hashVariable;
 	private int hashName;
 
-	public void changeMenu(string animName, string variableName)
+	public void changeMenu(string animName, string variableName, bool variableValue)
 	{
 		if (!this.animationTransition) 
 		{
-			if (this.isMainMenu) 
-			{
-				this.hashName = Animator.StringToHash (animName);
-				this.hashVariable = Animator.StringToHash (variableName);
+			this.hashName = Animator.StringToHash (animName);
+			this.hashVariable = Animator.StringToHash (variableName);
 
-				this.containerAnimator.SetBool (this.hashVariable, true);
-
-				this.isMainMenu = false;
-			}
-			else if(!this.isMainMenu)
-			{
-				this.hashName = Animator.StringToHash ("AnimMainMenu");
-				this.containerAnimator.SetBool (this.hashVariable, false);
-				this.isMainMenu = true;
-			}
-
+			this.containerAnimator.SetBool (this.hashVariable, variableValue);
 			this.animationTransition = true;
 		}
 	}
@@ -49,8 +36,6 @@ public class MenuContainerController : MonoBehaviour {
 			   !this.containerAnimator.IsInTransition(0))
 			{
 				this.animationTransition = false;
-				Debug.Log ("Termino");
-
 			}
 
 		}
@@ -59,7 +44,6 @@ public class MenuContainerController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.isMainMenu = true;
 		this.animationTransition = false;
 
 		this.containerAnimator = this.GetComponent<Animator> ();

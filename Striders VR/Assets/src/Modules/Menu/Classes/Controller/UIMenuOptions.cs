@@ -5,9 +5,9 @@ public class UIMenuOptions : MonoBehaviour {
 
 	private bool isActive;
 
-	private UIButtonActions buttonReset;
-	private UIButtonActions buttonExit;
-	private UIButtonActions buttonClose;
+//	private UIButtonActions buttonReset;
+//	private UIButtonActions buttonExit;
+//	private UIButtonActions buttonClose;
 
 	public bool activeMenu()
 	{
@@ -33,9 +33,9 @@ public class UIMenuOptions : MonoBehaviour {
 	{
 		this.isActive = false;
 
-		this.buttonReset = this.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonResetController>();
-		this.buttonExit = this.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonExitController>();
-		this.buttonClose = this.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonCloseController>();
+//		this.buttonReset = this.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonResetController>();
+//		this.buttonExit = this.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonExitController>();
+//		this.buttonClose = this.transform.FindChild("PanelButtons").GetComponentInChildren<UIButtonCloseController>();
 
 		this.gameObject.SetActive(false);
 	}
