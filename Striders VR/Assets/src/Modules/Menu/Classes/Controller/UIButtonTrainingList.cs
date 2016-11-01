@@ -21,7 +21,6 @@ public class UIButtonTrainingList : MonoBehaviour {
 	
 	private VirtualButton virtualButton;
 
-	//FIXME Enviar info al static user del entrenamiento seleccionado
 
 	public void nextTraining()
 	{
@@ -37,12 +36,20 @@ public class UIButtonTrainingList : MonoBehaviour {
 		this.trainingName.GetComponent<Text> ().text = this.currentTrain.Name;
 	}
 
+	/* Setting Training to Static User */
+	private void selectTraining()
+	{
+		GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().setTraining (this.currentTrain);
+	}
+	/* ********************* */
+
 	private void buttonPressed ()
 	{
 		if (!this.isPressed && this.virtualButton.IsButtonPressed (this.transform.localPosition, this.triggerDistance)) 
 		{
 			this.isPressed = true;
 			this.localButton.buttonAction();
+			this.selectTraining();
 		} 
 		else if (this.isPressed && this.virtualButton.IsButtonReleased (this.transform.localPosition, this.triggerDistance)) 
 		{	

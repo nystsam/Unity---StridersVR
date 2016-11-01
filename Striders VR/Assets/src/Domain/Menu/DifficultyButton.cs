@@ -20,7 +20,6 @@ namespace StridersVR.Domain.Menu
 			this.unpressedButtonColor = this.button.GetComponent<DifficultyButtonController> ().imageButton.GetComponent<Image>().color;
 		}
 
-
 		public void toogleOn()
 		{
 			Color _newColor = this.unpressedButtonColor;
@@ -33,6 +32,14 @@ namespace StridersVR.Domain.Menu
 		{
 			this.button.GetComponent<DifficultyButtonController> ().imageButton.GetComponent<Image> ().color = this.unpressedButtonColor;
 		}
+
+
+		#region Properties
+		public string Difficulty
+		{
+			get{ return this.difficulty; }
+		}
+		#endregion
 	}
 }
 

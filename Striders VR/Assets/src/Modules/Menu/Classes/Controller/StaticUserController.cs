@@ -1,38 +1,46 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using StridersVR.Domain;
 
 
 public class StaticUserController : MonoBehaviour {
 
-	public Toggle toggleEasy;
-	public Toggle toggleMedium;
-	public Toggle toggleHard;
-
 	private string userName;
+
 	private Training training;
 
-	public void selectedToggle()
+
+	public void setTraining(Training newTraining)
 	{
-		if (toggleEasy.isOn) 
-		{
-			this.training.Difficulty = "Easy";
-		} 
-		else if (toggleMedium.isOn) 
-		{
-			this.training.Difficulty = "Medium";
-		} 
-		else if (toggleHard.isOn) 
-		{
-			this.training.Difficulty = "Hard";
-		}
+		this.training = newTraining;
+	}
+
+	public void setDifficulty(string newDifficulty)
+	{
+		this.training.Difficulty = newDifficulty;
+	}
+
+	public void gameSelected()
+	{
+		Debug.Log ("Game: " + this.training.Name);
+		Debug.Log ("Difficulty: " + this.training.Difficulty);
+	}
+
+	public bool isValidGame()
+	{
+		if(this.training != null)
+			if(!this.training.Difficulty.Equals(""))
+				return true;
+
+		return false;
 	}
 
 	#region Script
 	void Awake () 
 	{
-		this.training = new Training (Application.loadedLevelName);
-		this.training.Difficulty = "Easy";
+		this.training = null;
+		//FIXME Descomentar para hacer las pruebas en los mapas o juegos
+//		this.training = new Training (Application.loadedLevelName);
+//		this.training.Difficulty = "Easy";
 		GameObject.DontDestroyOnLoad (this);
 	}
 	#endregion

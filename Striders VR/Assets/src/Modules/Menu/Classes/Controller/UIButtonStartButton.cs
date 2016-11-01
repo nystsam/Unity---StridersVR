@@ -1,32 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
-using StridersVR.Domain.Menu;
 using StridersVR.Domain;
+using StridersVR.Domain.Menu;
 
-public class DifficultyButtonController : MonoBehaviour {
+public class UIButtonStartButton : MonoBehaviour {
 
-	public GameObject selectionController;
+	private GameObject currentUser;
 
-	public string difficulty;
-
-	public GameObject imageButton;
-
-
-	private DifficultyButton localButton;
-
-	private float triggerDistance = 0.175f;
+	private float triggerDistance = 0.15f;
 	
 	private bool isPressed = false;
-
+	
 	private VirtualButton virtualButton;
 
+
+	private void startGame()
+	{
+		//FIXME Hacer un timer o algo antes de empezar
+		Application.LoadLevel (this.currentUser.GetComponent<StaticUserController>().Training.Name);
+	}
 
 	private void buttonPressed ()
 	{
 		if (!this.isPressed && this.virtualButton.IsButtonPressed (this.transform.localPosition, this.triggerDistance)) 
 		{
 			this.isPressed = true;
-			this.selectionController.GetComponent<DifficultySelectionController>().selectDifficulty(this.localButton);
+			if(this.currentUser.GetComponent<StaticUserController>().isValidGame())
+			{
+				this.currentUser.GetComponent<StaticUserController>().gameSelected();
+				this.startGame();
+			}
+
 		} 
 		else if (this.isPressed && this.virtualButton.IsButtonReleased (this.transform.localPosition, this.triggerDistance)) 
 		{	
@@ -37,10 +41,13 @@ public class DifficultyButtonController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.virtualButton = new VirtualButton (this.transform.localPosition, 300, Vector3.forward);
-		this.localButton = new DifficultyButton (this.gameObject, this.difficulty);
+		this.virtualButton = new VirtualButton(this.transform.localPosition, 200, Vector3.forward);
 	}
-	
+
+	void Start()
+	{
+		this.currentUser = GameObject.FindGameObjectWithTag("StaticUser");
+	}
 
 	void Update () 
 	{

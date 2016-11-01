@@ -16,18 +16,21 @@ public class DifficultySelectionController : MonoBehaviour {
 
 			this.currentButton = newDifficulty;
 			this.currentButton.toogleOn ();
+			this.selectDifficulty();
 		}
 	}
+
+	/* Setting Difficulty to Static User */
+	private void selectDifficulty()
+	{
+		GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().setDifficulty (currentButton.Difficulty);
+	}
+	/* ********************* */
 
 	#region script
 	void Awake () 
 	{
 		this.currentButton = null;
-	}
-
-	void Update () 
-	{
-	
 	}
 	#endregion
 }
