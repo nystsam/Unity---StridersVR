@@ -1,228 +1,68 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 using StridersVR.Domain.DotToDot;
-using StridersVR.Modules.DotToDot.Logic.Representatives;
 
 public class PointController : MonoBehaviour {
 
-	public Light pointLight;
-	public GameObject drawlableFigurePrefab;
+	public GameObject pointLight;
+	public GameObject pointAura;
 
-	private bool turnOn;
-	private bool isAlredyCloned;
+	private bool changePoint = false;
 
-	private PointDot localPointDot;
+	private Point localPoint;
 
-	private RepresentativePoint pointLogic;
-
-	private GameObject newDrawlableFigure;
-	private GameObject dotReferee;
-	private GameObject dotContainer;
-
-
-	private bool isHand(Collider other)
-	{
-		if (other.GetComponentInParent<HandController> ())
-			return true;
-		return false;
-	}
-
-	private void starDragging(Collider other)
-	{
-		GameObject _newClone;
-
-		if (!isAlredyCloned) 
-		{
-			_newClone = (GameObject)GameObject.Instantiate (this.drawlableFigurePrefab, Vector3.zero, Quaternion.Euler (new Vector3(0,180,0)));
-			_newClone.transform.parent = this.transform.parent;
-			_newClone.transform.localPosition = Vector3.zero;
-
-			this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot = true;
-			this.dotReferee.GetComponent<RefereeController> ().StartingPoint = this.gameObject;
-			this.dotReferee.GetComponent<RefereeController> ().DotFigure = _newClone;
-			this.newDrawlableFigure = _newClone;
-			this.isAlredyCloned = true;
-		}
-	}
-
-	private void resetDrawlableFigure()
-	{	
-		if (!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && this.newDrawlableFigure != null) 
-		{
-			GameObject.Destroy(this.newDrawlableFigure);
-			this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
-			this.newDrawlableFigure = null;
-			this.isAlredyCloned = false;
-		}
-	}
-
-	public void setLocalPointDot(PointDot localPointDot)
-	{
-		this.localPointDot = localPointDot;
-		this.pointLogic.LocalPointDot = this.localPointDot;
-	}
-
-	public void validateNeighbour(PointDot possibleNeighbourPoint)
-	{
-		this.pointLogic.validateNeighbour (possibleNeighbourPoint);
-	}
-
-	public int numberOfErrors()
-	{
-		return this.pointLogic.ErrorCount;
-	}
+	private GameObject pointAdvisor;
 
 	#region Script
 	void Awake () 
 	{
-		this.turnOn = false;
-		this.isAlredyCloned = false;
-		this.newDrawlableFigure = null;
-		this.dotReferee = GameObject.FindGameObjectWithTag("DotReferee");
-		this.dotContainer = GameObject.FindGameObjectWithTag ("DotContainer");
+		this.localPoint = new Point(this.transform.localPosition);
+		this.localPoint.setPointGraphics (this.pointLight, this.pointAura);
 
-		this.pointLogic = new RepresentativePoint ();
+		this.pointAdvisor = GameObject.FindGameObjectWithTag("GameController");
 	}
 
-	void Update () 
+	void Update()
 	{
-//		if (!this.setupChildList) 
-//		{
-//			this.setupChildList = this.pointLogic.setNeighbourDots(this.vertexPointLocal);
-//
-//		}
-		this.transform.localPosition = Vector3.zero;
-
-		this.resetDrawlableFigure ();
-
-		if (turnOn && this.pointLight.intensity < 2) 
+		if (this.changePoint) 
 		{
-			this.pointLight.intensity += 0.1f;
-		} 
-		else if (!turnOn && this.pointLight.intensity > 0.4f) 
-		{
-			this.pointLight.intensity -= 0.1f;
+			this.changePoint = false;
+			this.pointAdvisor.GetComponent<PointAdvisorController>().cancelPlacingPoint();
 		}
 	}
 
-	void OnCollisionEnter(Collision other)
+	void OnTriggerEnter(Collider other)
 	{
-		// ****************************************
-		// aplicar regla para reconocer leap motion
-		// ****************************************
-//		if (other.collider.name.Equals ("CubeTrigger") && !this.dotReferee.GetComponent<RefereeController> ().ChangeFigureModel) 
-		if (this.isHand(other.collider) && !this.dotReferee.GetComponent<RefereeController> ().ChangeFigureModel) 
+		if (other.tag.Equals ("IndexUI")) 
 		{
-			this.turnOn = true;
-
-			if(!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot)
+			if(!this.pointAdvisor.GetComponent<PointAdvisorController>().setPoint(this.localPoint))
 			{
-				if(this.dotReferee.GetComponent<RefereeController> ().IsFirstStripe)
-				{
-					this.starDragging(other.collider);
-				}
-				else
-				{
-					if(this.dotReferee.GetComponent<RefereeController> ().checkLastPointPosition(this.localPointDot.PointPosition))
-					{
-						this.starDragging(other.collider);
-					}
-				}
+				this.localPoint.IsSelectedPoint = true;
+				this.localPoint.turnOn();
 			}
-			else if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && !this.isAlredyCloned)
-			{
-				if(this.dotReferee.GetComponent<RefereeController> ().EndingPoint == null)
-				{
-					this.dotReferee.GetComponent<RefereeController> ().EndingPoint = this.gameObject;
-					this.dotReferee.GetComponent<RefereeController> ().newEndingPointDiscover();
-				}
-
-				if(this.dotReferee.GetComponent<RefereeController> ().isHandleIntersecting())
-				{
-					GameObject _startingPoint = this.dotReferee.GetComponent<RefereeController> ().StartingPoint;
-
-					if(_startingPoint != null)
-					{
-						_startingPoint.GetComponent<PointController>().DrawlableFigure = null;
-						_startingPoint.GetComponent<PointController>().isAlredyCloned = false;
-						_startingPoint.GetComponent<PointController>().validateNeighbour(this.localPointDot);
-
-						this.dotReferee.GetComponent<RefereeController> ().EndingPoint = this.gameObject;
-						this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
-						this.dotReferee.GetComponent<RefereeController> ().placeDotFigure(this.localPointDot.PointPosition);
-					}
-				}
-			}
-
-//			if(!this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot)
-//			{
-//				if(this.dotReferee.GetComponent<RefereeController> ().IsFirstStripe)
-//				{
-//					this.starDragging(other.collider);
-//				}
-//				else
-//				{
-//					if(this.dotReferee.GetComponent<RefereeController> ().checkLastVertexPosition(this.vertexPointLocal.VertexPointPosition))
-//					{
-//						this.starDragging(other.collider);
-//					}
-//				}
-//			}
-//			else if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && !this.isAlredyCloned)
-//			{
-//				GameObject _startingPoint = this.dotReferee.GetComponent<RefereeController> ().StartingPoint;
-//
-//				if(_startingPoint != null)
-//				{
-//					_startingPoint.GetComponent<PointController>().DrawlableFigure = null;
-//					_startingPoint.GetComponent<PointController>().isAlredyCloned = false;
-//					_startingPoint.GetComponent<PointController>().validateNeighbour(this.vertexPointLocal.VertexPointPosition);
-//
-//					this.dotReferee.GetComponent<RefereeController> ().EndingPoint = this.gameObject;
-//					this.dotReferee.GetComponent<RefereeController> ().CurrentDotFigure = null;
-//					this.dotReferee.GetComponent<RefereeController> ().StartingPoint = null;
-//					this.dotReferee.GetComponent<RefereeController> ().placeDotFigure(this.vertexPointLocal.VertexPointPosition);
-//				}
-//			}
-		} 
-	}
-	
-	void OnCollisionExit(Collision other)
-	{
-		// ****************************************
-		// aplicar regla para reconocer leap motion
-		// ****************************************
-//		if (other.collider.name.Equals ("CubeTrigger"))
-		if(this.isHand(other.collider))
+		}
+		else if (other.tag.Equals("IndexRight"))
 		{
-			this.turnOn = false;
-
-			if(this.dotReferee.GetComponent<RefereeController> ().IsHoldingDot && !this.isAlredyCloned)
+			if(this.pointAdvisor.GetComponent<PointAdvisorController>().isSamePoint(this.localPoint))
 			{
-				this.dotReferee.GetComponent<RefereeController> ().exitFromDiscoveredPoint();
+				this.pointAdvisor.GetComponent<PointAdvisorController>().cancelCurrentStripe();
+				this.localPoint.IsSelectedPoint = false;
+				this.localPoint.turnOff();
 			}
-
-			this.resetDrawlableFigure();
-
 		}
 	}
-	#endregion
 
-	#region Properties
-	public PointDot LocalPointDot
+	void OnTriggerExit(Collider other)
 	{
-		get { return this.localPointDot; }
-	}
-
-	public GameObject DrawlableFigure
-	{
-		get { return this.newDrawlableFigure; }
-		set { this.newDrawlableFigure = value; }
-	}
-
-	public bool IsAlredyCloned
-	{
-		set { this.isAlredyCloned = value; }
+		if (other.tag.Equals ("IndexUI")) 
+		{
+			if(this.localPoint.IsSelectedPoint)
+			{
+				this.changePoint = true;
+				this.localPoint.IsSelectedPoint = false;
+				this.localPoint.turnOff();
+			}
+		}
 	}
 	#endregion
 }

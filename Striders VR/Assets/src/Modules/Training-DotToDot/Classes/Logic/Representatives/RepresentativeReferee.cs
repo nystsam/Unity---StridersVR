@@ -43,7 +43,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			{
 				Transform _child = dotContainer.transform.GetChild(i);
 
-				if(_child.GetComponentInChildren<PointController>().numberOfErrors() > 0)
+				if(_child.GetComponentInChildren<GamePointController>().numberOfErrors() > 0)
 				{
 					_foundError = true;
 					break;

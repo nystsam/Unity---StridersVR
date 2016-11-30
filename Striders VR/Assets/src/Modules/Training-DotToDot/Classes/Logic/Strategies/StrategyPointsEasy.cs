@@ -51,7 +51,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 					_newPoint = new PointDot(this.pointId, _newDot.transform.localPosition);
 					pointsContainer.addPoint(_newPoint);
 
-					_newDot.GetComponentInChildren<PointController>().setLocalPointDot(_newPoint);
+					_newDot.GetComponentInChildren<GamePointController>().setLocalPointDot(_newPoint);
 					this.pointId ++;
 				}
 			}
