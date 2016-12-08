@@ -5,9 +5,9 @@ using StridersVR.Domain.DotToDot;
 
 namespace StridersVR.Modules.DotToDot.Logic.Strategies
 {
-	public class StrategyCreateModelComposite
+	public class StrategyCreateModelComposite : IStrategyCreateModel
 	{
-		private int selectedStrategyIndex = 0;
+		private int strategyIndex = 0;
 		private List<IStrategyCreateModel> stategyCreateModelList;
 
 		public StrategyCreateModelComposite ()
@@ -17,6 +17,10 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 
 
 		#region IStrategyCreateModel
+		public Model createModel()
+		{
+			return this.stategyCreateModelList [this.strategyIndex].createModel ();
+		}
 //		public void selectGameFigure(ScriptableObject figureData)
 //		{
 //			this.stategyCreateModelList [this.selectedStrategyIndex].selectGameFigure (figureData);
@@ -44,20 +48,15 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		}
 
 		#region Properties
-		public int SelectedStrategyIndex
+		public int StrategyIndex
 		{
-			get { return this.selectedStrategyIndex; }
-			set { this.selectedStrategyIndex = value; }
+			get { return this.strategyIndex; }
+			set { this.strategyIndex = value; }
 		}
 		
-		public int StrategyCreateModelListCount
+		public int StrategyCount
 		{
 			get { return this.stategyCreateModelList.Count; }
-		}
-
-		public List<IStrategyCreateModel> StategyCreateModelList
-		{
-			get { return this.stategyCreateModelList; }
 		}
 		#endregion
 	}

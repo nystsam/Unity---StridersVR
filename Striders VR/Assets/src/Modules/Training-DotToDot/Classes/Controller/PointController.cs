@@ -11,15 +11,19 @@ public class PointController : MonoBehaviour {
 
 	private Point localPoint;
 
-	private GameObject pointAdvisor;
+	private GameObject pointManager;
+
+
+	public void setLocalPoint(Point point)
+	{
+		this.localPoint = point;
+		this.localPoint.setGameplayValues (this.pointLight, this.pointAura);
+	}
 
 	#region Script
 	void Awake () 
 	{
-		this.localPoint = new Point(this.transform.localPosition);
-		this.localPoint.setPointGraphics (this.pointLight, this.pointAura);
-
-		this.pointAdvisor = GameObject.FindGameObjectWithTag("GameController");
+		this.pointManager = GameObject.FindGameObjectWithTag("GameController");
 	}
 
 	void Update()
@@ -27,7 +31,7 @@ public class PointController : MonoBehaviour {
 		if (this.changePoint) 
 		{
 			this.changePoint = false;
-			this.pointAdvisor.GetComponent<PointAdvisorController>().cancelPlacingPoint();
+			this.pointManager.GetComponent<PointManagerController>().cancelPlacingPoint();
 		}
 	}
 
@@ -35,7 +39,7 @@ public class PointController : MonoBehaviour {
 	{
 		if (other.tag.Equals ("IndexUI")) 
 		{
-			if(!this.pointAdvisor.GetComponent<PointAdvisorController>().setPoint(this.localPoint))
+			if(!this.pointManager.GetComponent<PointManagerController>().setPoint(this.localPoint))
 			{
 				this.localPoint.IsSelectedPoint = true;
 				this.localPoint.turnOn();
@@ -43,9 +47,9 @@ public class PointController : MonoBehaviour {
 		}
 		else if (other.tag.Equals("IndexRight"))
 		{
-			if(this.pointAdvisor.GetComponent<PointAdvisorController>().isSamePoint(this.localPoint))
+			if(this.pointManager.GetComponent<PointManagerController>().isSamePoint(this.localPoint))
 			{
-				this.pointAdvisor.GetComponent<PointAdvisorController>().cancelCurrentStripe();
+				this.pointManager.GetComponent<PointManagerController>().cancelCurrentStripe();
 				this.localPoint.IsSelectedPoint = false;
 				this.localPoint.turnOff();
 			}

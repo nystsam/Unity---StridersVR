@@ -10,6 +10,7 @@ namespace StridersVR.Modules.DotToDot.Logic.StrategyInterfaces
 //		void createModelFigure();
 //		void gameVertexPoint(ref List<VertexPoint> currentVertexPointList);
 //		int numberOfPoints();
-		void createModel(PointsContainer pointsFromController);
+//		void createModel(PointsContainer pointsFromController);
+		Model createModel();
 	}
 }

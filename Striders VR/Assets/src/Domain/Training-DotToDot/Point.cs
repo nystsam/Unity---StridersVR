@@ -1,23 +1,50 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace StridersVR.Domain.DotToDot
 {
 	public class Point
 	{
-		private Vector3 position;
+		private int pointId;
 
-		private GameObject pointLight;
-		private GameObject pointAura;
+		private Dictionary<int, Point> neighbors;
+
+		private Vector3 position;
 
 		private bool isSelectedPoint;
 
-		public Point (Vector3 position)
+		private GameObject pointLight = null;
+		private GameObject pointAura = null;
+		private GameObject pointPrefab;		
+
+		public Point (int id)
+		{
+			this.pointId = id;
+			this.neighbors = new Dictionary<int, Point> ();
+			this.pointPrefab = Resources.Load ("Prefabs/Training-DotToDot/Point", typeof(GameObject)) as GameObject;
+		}
+
+		public void addNeighbor(Point neighbor)
+		{
+			this.neighbors.Add (neighbor.pointId, neighbor);
+		}
+
+		public bool isAlreadyNeighbor(Point currentPoint)
+		{
+			if(this.neighbors.ContainsKey(currentPoint.pointId))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		public void setPosition(Vector3 position)
 		{
 			this.position = position;
 		}
 
-		public void setPointGraphics(GameObject pointLight, GameObject pointAura)
+		public void setGameplayValues(GameObject pointLight, GameObject pointAura)
 		{
 			this.pointLight = pointLight;
 			this.pointAura = pointAura;
@@ -26,17 +53,28 @@ namespace StridersVR.Domain.DotToDot
 
 		public void turnOn()
 		{
-			this.pointLight.SetActive (false);
-			this.pointAura.GetComponent<ParticleSystem> ().Play ();
+			if(this.pointLight != null && this.pointAura != null)
+			{
+				this.pointLight.SetActive (false);
+				this.pointAura.GetComponent<ParticleSystem> ().Play ();
+			}
 		}
 
 		public void turnOff()
 		{
-			this.pointLight.SetActive (true);
-			this.pointAura.GetComponent<ParticleSystem> ().Stop ();
+			if(this.pointLight != null && this.pointAura != null)
+			{
+				this.pointLight.SetActive (true);
+				this.pointAura.GetComponent<ParticleSystem> ().Stop ();
+			}
 		}
 
 		#region Properties
+		public int PointId
+		{
+			get { return this.pointId; }
+		}
+
 		public Vector3 Position
 		{
 			get { return this.position; }
@@ -46,6 +84,11 @@ namespace StridersVR.Domain.DotToDot
 		{
 			get { return this.isSelectedPoint; }
 			set { this.isSelectedPoint = value; }
+		}
+
+		public GameObject PointPrefab
+		{
+			get { return this.pointPrefab; }
 		}
 		#endregion
 	}

@@ -6,7 +6,7 @@ public class CheckInController : MonoBehaviour {
 	public GameObject firstPart;
 	public GameObject secondPart;
 
-	private GameObject dotContainer;
+	//private GameObject dotContainer;
 
 	private Animator anim;
 
@@ -50,7 +50,7 @@ public class CheckInController : MonoBehaviour {
 			this.fadeOutTimer += Time.deltaTime;
 			if(this.fadeOutTimer > 0.5f)
 			{
-				this.dotContainer.GetComponent<PlatformDotController>().CheckInDone = true;
+				//this.dotContainer.GetComponent<PlatformDotController>().CheckInDone = true;
 				GameObject.Destroy(this.gameObject);
 			}
 		}
@@ -79,9 +79,9 @@ public class CheckInController : MonoBehaviour {
 	#endregion
 
 	#region Properties
-	public GameObject DotContainer
-	{
-		set { this.dotContainer = value; }
-	}
+//	public GameObject DotContainer
+//	{
+//		set { this.dotContainer = value; }
+//	}
 	#endregion
 }
