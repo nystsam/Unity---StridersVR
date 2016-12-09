@@ -33,6 +33,8 @@ namespace StridersVR.Domain.DotToDot
 			this.stripesPlaced = 0;
 		}
 
+
+		#region In-Game features
 		/// <summary>
 		/// Instantiates the current points in the game.
 		/// </summary>
@@ -49,7 +51,18 @@ namespace StridersVR.Domain.DotToDot
 				_gamePoint.GetComponent<PointController>().setLocalPoint(_point);
 			}
 		}
+		#endregion
 
+		public bool finishModel()
+		{
+			//Deshabilitar los puntos
+			if(this.stripesPlaced == this.currentModel.StripesCount  && this.errorCount <= 0)
+			{
+				return true;
+			}
+
+			return false;
+		}
 
 		public bool setTouchingPoint(Point point)
 		{

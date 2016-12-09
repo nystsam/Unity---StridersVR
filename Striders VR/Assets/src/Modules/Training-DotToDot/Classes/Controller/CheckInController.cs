@@ -6,8 +6,6 @@ public class CheckInController : MonoBehaviour {
 	public GameObject firstPart;
 	public GameObject secondPart;
 
-	//private GameObject dotContainer;
-
 	private Animator anim;
 
 	private int stateFirstPartHash;

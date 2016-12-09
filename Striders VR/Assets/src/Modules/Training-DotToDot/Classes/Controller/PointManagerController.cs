@@ -6,14 +6,26 @@ using StridersVR.Domain;
 public class PointManagerController : MonoBehaviour {
 
 	public GameObject pointsContainer;
-
+	public GameObject verifer;
 
 	private PointManager localPointManager;
 
 	private bool isPlacingPoint = false;
 	private bool requesttModel = false;
+	private bool verificationStarted = false;
 
 	private ITouchBoard touchBoard;
+
+
+	public void finishModel()
+	{
+		bool _result = this.localPointManager.finishModel();
+
+		// Animacion para desplazar el modelo a los puntos reales
+		this.verificationStarted = true;
+		this.verifer.GetComponent<VerifierController>().setAnimation(_result);
+		// PUNTAJE
+	}
 
 	public void setModel(Model newModel)
 	{
@@ -61,6 +73,29 @@ public class PointManagerController : MonoBehaviour {
 		}
 	}
 
+	private IEnumerator resetModel()
+	{
+		yield return new WaitForSeconds(1.5f);
+		foreach(Transform child in this.pointsContainer.transform)
+		{
+			GameObject.Destroy(child.gameObject);
+		}
+		// Deshabilitar el verifer
+		// crear un bool que lo lea el platform model controller
+		// borrar el modelo en el platformodel
+	}
+
+	private void currentResult()
+	{
+		if(this.verificationStarted)
+		{
+			if(this.verifer.GetComponent<VerifierController>().IsVerificationDone)
+			{
+				this.verificationStarted = false;
+			}
+		}
+	}
+
 	private void placePoint()
 	{
 		if (this.isPlacingPoint) 
@@ -83,6 +118,7 @@ public class PointManagerController : MonoBehaviour {
 	void Update()
 	{
 		this.placePoint ();
+		this.currentResult();
 	}
 	#endregion
 

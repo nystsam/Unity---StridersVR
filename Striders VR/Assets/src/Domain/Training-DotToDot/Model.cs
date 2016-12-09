@@ -32,6 +32,7 @@ namespace StridersVR.Domain.DotToDot
 			secondPoint.addNeighbor (firstPoint);
 		}
 
+		#region In-Game features
 		/// <summary>
 		/// Create a Stripe between one point to another
 		/// </summary>
@@ -69,6 +70,7 @@ namespace StridersVR.Domain.DotToDot
 
 			this.stripesCount ++;
 		}
+		#endregion
 
 		#region Properties
 		public Dictionary<int, Point> Points

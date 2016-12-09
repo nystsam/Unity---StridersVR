@@ -15,11 +15,19 @@ public class FinishModelButtonController : MonoBehaviour {
 	private bool isPressed;
 	private bool isFinger;
 
+
 	private bool isRightFinger(GameObject other)
 	{
 		if (other.tag.Equals ("IndexRight"))
 			return true;
 		return false;
+	}
+
+	private void buttonAction()
+	{
+		GameObject _pointManager = GameObject.FindGameObjectWithTag("GameController");
+
+		_pointManager.GetComponent<PointManagerController> ().finishModel ();
 	}
 
 	private void buttonPressed ()
@@ -29,6 +37,7 @@ public class FinishModelButtonController : MonoBehaviour {
 			if(this.isFinger)
 			{
 				this.isPressed = true;
+				this.buttonAction();
 			}
 		} 
 		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
@@ -36,6 +45,10 @@ public class FinishModelButtonController : MonoBehaviour {
 			this.isPressed = false;
 		}
 	}
+
+	#region Button Decoration
+
+	#endregion
 
 	#region Script
 	void Awake () 
