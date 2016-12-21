@@ -12,11 +12,7 @@ public class CameraLookHand : MonoBehaviour {
 
 	void Start () 
 	{
-		if (this.GetComponent<HandModel> ().GetLeapHand ().IsRight) 
-		{
-			this.gameObject.SetActive(false);
-		}
-		else
+		if (this.GetComponent<HandModel> ().GetLeapHand ().IsLeft) 
 		{
 			this.isLeftHand = true;
 		}

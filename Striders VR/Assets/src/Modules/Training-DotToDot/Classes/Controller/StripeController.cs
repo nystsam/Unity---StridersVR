@@ -11,6 +11,7 @@ public class StripeController : MonoBehaviour {
 	private bool decreaseSize = false;
 	private bool increaseSize = false;
 	private bool isStripePlaced = false;
+	private bool isDraggable = true;
 
 	private GameObject playerIndex;
 	private GameObject childObject;
@@ -41,6 +42,11 @@ public class StripeController : MonoBehaviour {
 		this.parentObject.transform.rotation = Quaternion.Euler(Vector3.zero);
 	}
 
+	public void setUndraggable()
+	{
+		this.isDraggable = false;
+	}
+
 	private void changeSize()
 	{
 		if(this.increaseSize)
@@ -60,7 +66,7 @@ public class StripeController : MonoBehaviour {
 			}
 		}
 	}
-	
+
 	private void changeRotation()
 	{
 		Vector3 _direction = (this.playerIndex.GetComponent<SphereCollider>().bounds.center - this.parentObject.transform.position).normalized;
@@ -125,7 +131,7 @@ public class StripeController : MonoBehaviour {
 		{
 			if(other.tag.Equals("IndexUI"))
 			{
-				if (!isTrigger) 
+				if (!this.isTrigger && this.isDraggable) 
 				{
 					this.playerIndex = other.gameObject;
 					this.increaseSize = true;

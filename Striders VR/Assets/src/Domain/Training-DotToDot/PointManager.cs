@@ -22,6 +22,7 @@ namespace StridersVR.Domain.DotToDot
 
 		private int errorCount;
 		private int stripesPlaced;
+		private int modelRevealCount;
 
 		public PointManager (GameObject pointsContainer)
 		{
@@ -31,6 +32,7 @@ namespace StridersVR.Domain.DotToDot
 			this.isFirstPoint = true;
 			this.errorCount = -1;
 			this.stripesPlaced = 0;
+			this.modelRevealCount = 0;
 		}
 
 
@@ -93,7 +95,12 @@ namespace StridersVR.Domain.DotToDot
 
 			return false;
 		}
-		
+
+		public void addModelRevealCount()
+		{
+			this.modelRevealCount ++;
+		}
+
 		public void placeStripe()
 		{
 			GameObject _endStripe;
@@ -191,6 +198,11 @@ namespace StridersVR.Domain.DotToDot
 		public int ErrorCount
 		{
 			get { return this.errorCount; }
+		}
+
+		public int ModelRevealCount
+		{
+			get { return this.modelRevealCount; }
 		}
 		#endregion
 	}

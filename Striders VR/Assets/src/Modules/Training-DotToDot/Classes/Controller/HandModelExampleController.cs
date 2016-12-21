@@ -4,100 +4,76 @@ using Leap;
 
 public class HandModelExampleController : MonoBehaviour {
 
-	public GameObject modelExampleContainer;
-	
-	private Controller leapController;
-	
-	private Frame frame;
+	private GameObject model;
 
-	private Animator anim;
+	private GameObject gameController;
 
-	private int allowToRotateHash;
+	private HandModel leftHand;
 
-	private bool isModelExampleEnabled = false;
-	private bool allowToDetectPalm = false;
+	private bool isLeftHand = false;
+	private bool showingModel = false;
 
-	private HandList hands;
+	Vector3 velocity;
 
-	private Hand myHand;
-	
-	private bool isHand(Collider other)
+	private void resetModel()
 	{
-		if (other.GetComponentInParent<HandController> ())
-			return true;
-		return false;
+		this.showingModel = false;
+		this.model.transform.position = new Vector3(0,-10,0);
+		this.model.transform.localScale = new Vector3(1,1,1);
 	}
 
-	private void disableModel()
+	private void showModel()
 	{
-		this.allowToDetectPalm = false;
-		this.isModelExampleEnabled = false;
-		this.anim.SetBool(this.allowToRotateHash, false);
-		this.modelExampleContainer.SetActive(false);
-	}
-
-	private void palmPosition()
-	{
-		if (this.allowToDetectPalm) 
+		// Conocer dificultad, obtener cantidad de revelaciones (1) y activar bool que no permita las siguientes condiciones
+		if(this.leftHand.palm.up.y < -0.6f && !this.showingModel)
 		{
-			if (myHand.PalmNormal.y > 0.7f) 
-			{
-				Vector3 posBall = myHand.PalmPosition.ToUnity ().normalized;
-				posBall.y -= 0.25f;
-			
-				if (!isModelExampleEnabled) 
-				{
-					this.modelExampleContainer.SetActive (true);
-					this.anim.SetBool (this.allowToRotateHash, true);
-					this.isModelExampleEnabled = true;
-				}
-				this.modelExampleContainer.transform.localPosition = posBall;
-			} 
-			else if (this.isModelExampleEnabled && myHand.PalmNormal.y < 0.7f) 
-			{
-				this.disableModel ();
-			}
+			this.showingModel = true;
+			this.model.transform.position = this.leftHand.palm.position + new Vector3(0,0.75f,0);
+			this.model.transform.localScale = new Vector3(0.4f,0.4f,0.4f);
+			this.gameController.GetComponent<PointManagerController>().addRevealCount();
+		
+		}
+		else if(this.leftHand.palm.up.y > -0.6f)
+		{
+			this.resetModel();
+		}
+		
+		if(this.showingModel)
+		{
+			this.model.transform.position = Vector3.SmoothDamp(this.model.transform.position, 
+			                                                   this.leftHand.palm.position + new Vector3(0,0.75f,0), 
+			                                                   ref this.velocity, 
+			                                                   0.3f);
 		}
 	}
-	
-	
+
 	#region Script
 	void Start () 
 	{
-		this.anim = this.modelExampleContainer.GetComponent<Animator> ();
-		this.allowToRotateHash = Animator.StringToHash("AllowToRotate");
-		
-		this.leapController = new Controller ();
-	}
-	
-	
-	void Update () 
-	{
-		this.frame = this.leapController.Frame ();
-		this.hands = frame.Hands;
-		this.myHand = hands [0];
-		this.palmPosition ();
-	}
+		if(this.GetComponent<HandModel>().GetLeapHand().IsLeft)
+		{
+			this.leftHand = this.GetComponent<HandModel>();
+			this.isLeftHand = true;
+			this.model = GameObject.FindGameObjectWithTag("Respawn");
+			this.gameController = GameObject.FindGameObjectWithTag("GameController");
+			this.velocity = new Vector3(6,6,6);
 
-	void OnTriggerEnter(Collider other)
-	{
-		if (this.isHand (other)) 
-		{	
-			if (myHand.IsLeft) 
-			{
-				this.allowToDetectPalm = true;
-			}
+			//Conocer la dificultad para limitar a 1
 		}
 	}
-	
-	void OnTriggerExit(Collider other)
+
+	void Update () 
 	{
-		if (this.isHand (other)) 
+		if(this.isLeftHand)
 		{
-			if(this.isModelExampleEnabled)
+			if(this.gameController.GetComponent<PointManagerController>().getModelStatus())
 			{
-				this.disableModel();
-			}		
+				this.showModel();
+			}
+			else if(!this.gameController.GetComponent<PointManagerController>().getModelStatus())
+			{
+				this.resetModel();
+			}
 		}
 	}
 	#endregion

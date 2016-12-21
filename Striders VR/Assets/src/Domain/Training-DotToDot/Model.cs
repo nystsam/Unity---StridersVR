@@ -50,6 +50,7 @@ namespace StridersVR.Domain.DotToDot
 
 			_newStripe = (GameObject)GameObject.Instantiate (this.stripePrefab, Vector3.zero, Quaternion.Euler (Vector3.zero));
 			_newStripe.transform.parent = container.transform;
+			_newStripe.transform.GetChild(0).GetComponent<StripeController>().setUndraggable();
 
 			_modelPosition = startPoint.Position;
 			_modelPosition.y = _modelPosition.y - 20f;
@@ -63,7 +64,7 @@ namespace StridersVR.Domain.DotToDot
 			_modelPosition = endPoint.Position;
 			_modelPosition.y = _modelPosition.y - 20f;
 
-			_newEndStripe.transform.localPosition = _modelPosition; 
+			_newEndStripe.transform.localPosition = _modelPosition;
 
 			_stripeScale.z = Vector3.Distance (_newStripe.transform.position, _newEndStripe.transform.position)*25;
 			_newStripe.transform.localScale = _stripeScale;

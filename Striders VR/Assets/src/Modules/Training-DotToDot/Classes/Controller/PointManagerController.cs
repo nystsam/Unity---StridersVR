@@ -13,27 +13,13 @@ public class PointManagerController : MonoBehaviour {
 	private bool isPlacingPoint = false;
 	private bool requesttModel = false;
 	private bool verificationStarted = false;
+	private bool allowShowFinishButton = true;
+	private bool allowShowModel = true;
 
 	private ITouchBoard touchBoard;
 
 
-	public void finishModel()
-	{
-		bool _result = this.localPointManager.finishModel();
-
-		// Animacion para desplazar el modelo a los puntos reales
-		this.verificationStarted = true;
-		this.verifer.GetComponent<VerifierController>().setAnimation(_result);
-		// PUNTAJE
-	}
-
-	public void setModel(Model newModel)
-	{
-		this.requesttModel = false;
-		this.localPointManager.CurrentModel = newModel;
-		this.localPointManager.instantiatePoints ();
-	}
-
+	#region Point & Stripe controller
 	public bool setPoint(Point newPoint)
 	{
 		if (!this.localPointManager.setTouchingPoint (newPoint)) 
@@ -73,29 +59,6 @@ public class PointManagerController : MonoBehaviour {
 		}
 	}
 
-	private IEnumerator resetModel()
-	{
-		yield return new WaitForSeconds(1.5f);
-		foreach(Transform child in this.pointsContainer.transform)
-		{
-			GameObject.Destroy(child.gameObject);
-		}
-		// Deshabilitar el verifer
-		// crear un bool que lo lea el platform model controller
-		// borrar el modelo en el platformodel
-	}
-
-	private void currentResult()
-	{
-		if(this.verificationStarted)
-		{
-			if(this.verifer.GetComponent<VerifierController>().IsVerificationDone)
-			{
-				this.verificationStarted = false;
-			}
-		}
-	}
-
 	private void placePoint()
 	{
 		if (this.isPlacingPoint) 
@@ -107,6 +70,98 @@ public class PointManagerController : MonoBehaviour {
 			}
 		}
 	}
+	#endregion
+
+	#region Model controller
+	public void revealModel()
+	{
+		GameObject _modelController = GameObject.FindGameObjectWithTag("Respawn");
+
+		if(_modelController.transform.GetChild(0).GetComponent<ModelController>() != null)
+		{
+			this.allowShowModel = false;
+			
+			_modelController.transform.GetChild(0).GetComponent<ModelController>().revealOriginalModel();
+		}
+	}
+
+	public void finishModel()
+	{
+		bool _result = this.localPointManager.finishModel();
+
+		this.verificationStarted = true;
+		this.verifer.GetComponent<VerifierController>().setAnimation(_result);
+
+		foreach(Transform child in this.pointsContainer.transform)
+		{
+			GameObject.Destroy(child.gameObject);
+		}
+
+		// PUNTAJE: Cantidad de modelos, correctos, incorrectos, revelaciones por modelos
+		this.localPointManager = new PointManager(this.pointsContainer);
+	}
+	
+	public void setModel(Model newModel)
+	{
+		this.requesttModel = false;
+		this.allowShowModel = true;
+		this.localPointManager.CurrentModel = newModel;
+		this.localPointManager.instantiatePoints ();
+	}
+
+	#region Hand-Methods
+	public void setFinishButtonStatus(bool status)
+	{
+		this.allowShowFinishButton = status;
+	}
+
+	public bool getFinishButtonStatus()
+	{
+		return this.allowShowFinishButton;
+	}
+
+	public bool getModelStatus()
+	{
+		return this.allowShowModel;
+	}
+
+	public void addRevealCount()
+	{
+		this.localPointManager.addModelRevealCount();
+	}
+
+	public int getRevealCount()
+	{
+		return this.localPointManager.ModelRevealCount;
+	}
+	#endregion
+
+	private void verification()
+	{
+		if(this.verificationStarted)
+		{
+			if(this.verifer.GetComponent<VerifierController>().IsVerificationDone)
+			{
+				this.verificationStarted = false;
+				this.verifer.GetComponent<VerifierController>().resetAnimation();
+
+				StartCoroutine(resetModel());
+			}
+		}
+	}
+
+	private IEnumerator resetModel()
+	{
+		yield return new WaitForSeconds(1.5f);
+		GameObject _modelController = GameObject.FindGameObjectWithTag("Respawn");
+		
+		if(_modelController.transform.GetChild(0).GetComponent<ModelController>() != null)
+		{
+			_modelController.transform.GetChild(0).GetComponent<ModelController>().clearCurrentModel();
+		}
+		
+	}
+	#endregion
 
 	#region Script
 	void Awake () 
@@ -118,7 +173,7 @@ public class PointManagerController : MonoBehaviour {
 	void Update()
 	{
 		this.placePoint ();
-		this.currentResult();
+		this.verification();
 	}
 	#endregion
 

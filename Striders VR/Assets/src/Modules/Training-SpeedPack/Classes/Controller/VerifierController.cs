@@ -28,6 +28,12 @@ public class VerifierController : MonoBehaviour {
 		this.startAnimation = true;
 	}
 
+	public void resetAnimation()
+	{
+		this.verifierAnimator.SetBool (this.animCorrectHash, false);
+		this.verifierAnimator.SetBool (this.animIncorrectHash, false);
+		this.animationDone = false;
+	}
 
 	#region Script
 	void Awake () 
