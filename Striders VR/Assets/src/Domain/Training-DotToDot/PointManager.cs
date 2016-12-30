@@ -116,6 +116,7 @@ namespace StridersVR.Domain.DotToDot
 			_endStripe = (GameObject)GameObject.Instantiate(this.endStripePrefab, 
 		                                                        this.nextPoint.Position, Quaternion.Euler(Vector3.zero));
 			_endStripe.transform.parent = this.pointsContainer.transform;
+			_endStripe.transform.localPosition = this.nextPoint.Position;
 
 			this.collector.addEndStripe(_endStripe);
 
@@ -180,6 +181,7 @@ namespace StridersVR.Domain.DotToDot
 			this.currentStripe = (GameObject)GameObject.Instantiate(this.stripePrefab, position, 
 			                                                        Quaternion.Euler(Vector3.zero));
 			this.currentStripe.transform.parent = this.pointsContainer.transform;
+			this.currentStripe.transform.localPosition = position;
 
 			this.collector.addCurrentStripe (this.currentStripe);
 		}

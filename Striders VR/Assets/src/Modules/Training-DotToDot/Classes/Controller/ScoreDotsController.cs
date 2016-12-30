@@ -1,31 +1,71 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
-public class ScorePackController : MonoBehaviour {
+public class ScoreDotsController : MonoBehaviour {
 
+	public GameObject modelGenerator;
 	public GameObject timingMin;
 	public GameObject timingSeg;
 	public GameObject countingCurrent;
 	public GameObject countingTotal;
-	public GameObject totalScore;
+	public GameObject exampleRevealed;
 	public GameObject startTime;
-
+	
 	[SerializeField] private float gameTimeInSeconds;
 	[SerializeField] private float timeToStart;
-
+	
 	private bool isGameBegin;
 	private bool isGameTimerEnd;
-
+	
 	private TimeSpan gameTimer;
+
+	private Dictionary<int, int> exampleRevealedList;
+
+
+	public void setScore(bool isCorrect)
+	{
+		int _current = int.Parse(this.countingCurrent.GetComponent<Text>().text);
+		int _total = int.Parse(this.countingTotal.GetComponent<Text>().text);
+		
+		if(isCorrect)
+		{
+			_current ++;
+		}
+		
+		_total ++;
+		this.countingCurrent.GetComponent<Text>().text = _current.ToString();
+		this.countingTotal.GetComponent<Text>().text = _total.ToString();
+	}
+
+	public void addReveal()
+	{
+		int _count = int.Parse(this.exampleRevealed.GetComponent<Text>().text);
+		int _currentModel = int.Parse(this.countingTotal.GetComponent<Text>().text) + 1;
+
+		_count ++;
+
+		this.exampleRevealed.GetComponent<Text>().text = _count.ToString();
+		this.exampleRevealedList[_currentModel] = _count;
+	}
+
+	public void newModel()
+	{
+		int _totalModels = int.Parse(this.countingTotal.GetComponent<Text>().text) + 1;
+
+		this.exampleRevealedList.Add(_totalModels, 0);
+
+		this.exampleRevealed.GetComponent<Text>().text = "0";
+	}
 
 	private IEnumerator disableStarTime()
 	{
 		yield return new WaitForSeconds(1f);
 		this.startTime.SetActive(false);
 	}
-
+	
 	private void getReady()
 	{
 		if(!this.isGameBegin)
@@ -43,7 +83,7 @@ public class ScorePackController : MonoBehaviour {
 			} 	
 		}
 	}
-
+	
 	private void timing()
 	{
 		if(this.isGameBegin && this.gameTimeInSeconds <= 0)
@@ -61,38 +101,17 @@ public class ScorePackController : MonoBehaviour {
 		}
 	}
 
-	public void setScore(bool isSuccesses, int newScore)
-	{
-		int _current, _total, _score;
-
-		if (isSuccesses) 
-		{
-			_current = int.Parse(this.countingCurrent.GetComponent<Text>().text);
-			_current ++;
-
-			_score = int.Parse(this.totalScore.GetComponent<Text>().text);
-			_score += newScore;
-
-			this.countingCurrent.GetComponent<Text>().text = _current.ToString();
-			this.totalScore.GetComponent<Text>().text = _score.ToString();
-		}
-
-		_total = int.Parse(this.countingTotal.GetComponent<Text>().text);
-		_total ++;
-
-		this.countingTotal.GetComponent<Text> ().text = _total.ToString ();
-	}
-
-
 	#region Script
 	void Awake () 
 	{
 		this.isGameBegin = false;
 		this.isGameTimerEnd = false;
 		this.gameTimer = TimeSpan.FromSeconds (this.gameTimeInSeconds);
-	
+
 		this.timingMin.GetComponent<Text>().text = "0" + this.gameTimer.Minutes.ToString ();
 		this.timingSeg.GetComponent<Text>().text = this.gameTimer.Seconds.ToString ("00");
+
+		this.exampleRevealedList = new Dictionary<int, int>();
 	}
 
 	void Update () 
@@ -110,7 +129,7 @@ public class ScorePackController : MonoBehaviour {
 	{
 		get { return this.isGameBegin; }
 	}
-
+	
 	public bool IsGameTimerEnd
 	{
 		get { return this.isGameTimerEnd; }

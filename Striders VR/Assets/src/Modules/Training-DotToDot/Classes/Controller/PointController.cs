@@ -6,6 +6,7 @@ public class PointController : MonoBehaviour {
 
 	public GameObject pointLight;
 	public GameObject pointAura;
+	public GameObject pointNumber;
 
 	private bool changePoint = false;
 
@@ -18,6 +19,16 @@ public class PointController : MonoBehaviour {
 	{
 		this.localPoint = point;
 		this.localPoint.setGameplayValues (this.pointLight, this.pointAura);
+		this.pointNumber.GetComponent<TextMesh>().text = point.PointId.ToString();
+
+		if(point.Position.y == 20f)
+		{
+			this.pointNumber.transform.localPosition = new Vector3(0,-0.25f,0);
+		}
+		else if(point.Position.y > 20f)
+		{
+			this.pointNumber.transform.localPosition = new Vector3(0,0.25f,0);
+		}
 	}
 
 	#region Script

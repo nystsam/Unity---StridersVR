@@ -8,13 +8,15 @@ public class PointManagerController : MonoBehaviour {
 	public GameObject pointsContainer;
 	public GameObject verifer;
 
+	private GameObject scoreController;
+
 	private PointManager localPointManager;
 
 	private bool isPlacingPoint = false;
 	private bool requesttModel = false;
 	private bool verificationStarted = false;
 	private bool allowShowFinishButton = true;
-	private bool allowShowModel = true;
+	private bool allowShowModel = false;
 
 	private ITouchBoard touchBoard;
 
@@ -73,6 +75,12 @@ public class PointManagerController : MonoBehaviour {
 	#endregion
 
 	#region Model controller
+	public void gameOver()
+	{
+		this.clearChilds();
+		this.localPointManager = null;
+	}
+
 	public void revealModel()
 	{
 		GameObject _modelController = GameObject.FindGameObjectWithTag("Respawn");
@@ -91,13 +99,9 @@ public class PointManagerController : MonoBehaviour {
 
 		this.verificationStarted = true;
 		this.verifer.GetComponent<VerifierController>().setAnimation(_result);
+		this.clearChilds();
 
-		foreach(Transform child in this.pointsContainer.transform)
-		{
-			GameObject.Destroy(child.gameObject);
-		}
-
-		// PUNTAJE: Cantidad de modelos, correctos, incorrectos, revelaciones por modelos
+		this.scoreController.GetComponent<ScoreDotsController>().setScore(_result);
 		this.localPointManager = new PointManager(this.pointsContainer);
 	}
 	
@@ -107,6 +111,7 @@ public class PointManagerController : MonoBehaviour {
 		this.allowShowModel = true;
 		this.localPointManager.CurrentModel = newModel;
 		this.localPointManager.instantiatePoints ();
+		this.scoreController.GetComponent<ScoreDotsController>().newModel();
 	}
 
 	#region Hand-Methods
@@ -128,6 +133,7 @@ public class PointManagerController : MonoBehaviour {
 	public void addRevealCount()
 	{
 		this.localPointManager.addModelRevealCount();
+		this.scoreController.GetComponent<ScoreDotsController>().addReveal();
 	}
 
 	public int getRevealCount()
@@ -135,6 +141,14 @@ public class PointManagerController : MonoBehaviour {
 		return this.localPointManager.ModelRevealCount;
 	}
 	#endregion
+
+	private void clearChilds()
+	{
+		foreach(Transform child in this.pointsContainer.transform)
+		{
+			GameObject.Destroy(child.gameObject);
+		}
+	}
 
 	private void verification()
 	{
@@ -168,6 +182,7 @@ public class PointManagerController : MonoBehaviour {
 	{
 		this.localPointManager = new PointManager (this.pointsContainer);
 		this.touchBoard = GameObject.FindGameObjectWithTag ("TouchBoard").GetComponent<TouchBoardIndexController> ();
+		this.scoreController = GameObject.FindGameObjectWithTag("Finish");
 	}
 
 	void Update()

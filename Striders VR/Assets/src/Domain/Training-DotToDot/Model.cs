@@ -71,6 +71,32 @@ namespace StridersVR.Domain.DotToDot
 
 			this.stripesCount ++;
 		}
+
+		public void createSelectedPoints(GameObject container, Point point)
+		{
+			GameObject _newPoint;
+			Vector3 _pointPosition;
+
+			_newPoint = (GameObject)GameObject.Instantiate (point.PointPrefab, Vector3.zero, Quaternion.Euler (Vector3.zero));
+			_newPoint.transform.parent = container.transform;
+
+			_pointPosition = point.Position;
+			_pointPosition.y -= 20f;
+
+			_newPoint.transform.localPosition = _pointPosition;
+			_newPoint.GetComponent<PointController>().pointNumber.GetComponent<TextMesh>().text = point.PointId.ToString();
+			_newPoint.GetComponent<SphereCollider>().radius = 0;
+
+			if(point.Position.y == 20f)
+			{
+				_newPoint.GetComponent<PointController>().pointNumber.transform.localPosition = new Vector3(0,-0.25f,0);
+			}
+			else if(point.Position.y > 20f)
+			{
+				_newPoint.GetComponent<PointController>().pointNumber.transform.localPosition = new Vector3(0,0.25f,0);
+			}
+		}
+
 		#endregion
 
 		#region Properties

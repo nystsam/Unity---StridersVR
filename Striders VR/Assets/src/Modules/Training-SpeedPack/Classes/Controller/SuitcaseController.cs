@@ -144,6 +144,7 @@ public class SuitcaseController : MonoBehaviour {
 			this.allowToCreate = false;
 			StartCoroutine(this.resetTableboard());
 		}
+		// Acomodar el final del juego... Y las estadisticas
 	}
 	#endregion
 }
