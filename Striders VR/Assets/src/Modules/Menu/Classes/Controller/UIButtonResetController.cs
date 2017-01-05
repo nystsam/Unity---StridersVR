@@ -2,102 +2,119 @@
 using UnityEngine.UI;
 using System.Collections;
 using StridersVR.Domain;
+using StridersVR.Domain.Menu;
 
-public class UIButtonResetController : MonoBehaviour, UIButtonActions {
+public class UIButtonResetController : MonoBehaviour {
 
 	public GameObject buttonShape;
 	public GameObject buttonText;
 
+	// 0.075f speedpack
+	public float triggerDistance;
+	public float spring;
+	// speed pack -0.1f, 0f
+	public float min;
+	public float max;
+
+	private GameObject UIGameController;
+
 	private Material colorMain;
-	private Material colorHover;
 	private Material colorPressed;
 
 	private string colorTextMain;
-	private string colorTextHover;
 	private string colorTextPressed;
 
 	private bool isPressed = false;
 
 	private VirtualButton buttonVr;
 
-	private float triggerDistance = 0.075f;
 
-	#region UIAction
-	public void buttonHover(bool isHitting)
+	private void buttonAction()
 	{
-		Color _textColor;
-		
-		if (isHitting) 
-		{
-			this.GetComponent<MeshRenderer>().material = this.colorHover;
-			
-			Color.TryParseHexString(this.colorTextHover, out _textColor);
-			this.buttonText.GetComponent<Text>().color = _textColor;
-		}
-		else
-		{
-			this.GetComponent<MeshRenderer>().material = this.colorMain;
-			
-			Color.TryParseHexString(this.colorTextMain, out _textColor);
-			this.buttonText.GetComponent<Text>().color = _textColor;
-		}
+		ToolButton _reset = new ToolButtonReset();
+
+		this.UIGameController.transform.FindChild("ToolsPanelUI").GetComponent<UIMenuOptions>().callConfimation(_reset);			
 	}
-	#endregion
-
-	public void buttonAction()
-	{
-		// Sacar un diaglo de Si o No
-
-		Training _currentTraining;
-
-		_currentTraining = GameObject.FindGameObjectWithTag("StaticUser").GetComponent<StaticUserController>().Training;
-		Application.LoadLevel (_currentTraining.Name);		
-	}
-
-	public void buttonPressed ()
+	
+	private void buttonPressed ()
 	{
 		if (!this.isPressed && this.buttonVr.IsButtonPressed (-this.transform.localPosition, this.triggerDistance)) 
 		{
-			Color _textColor;
-			
 			this.isPressed = true;
-			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorPressed;
-			
-			Color.TryParseHexString(this.colorTextPressed, out _textColor);
-			this.buttonText.GetComponent<Text>().color = _textColor;
-
+			//this.changeColor(true);
 			this.buttonAction();
 		} 
 		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
 		{
-			Color _textColor;
-			
 			this.isPressed = false;
+			//this.changeColor(false);
+		}
+	}
+
+	#region Button Decoration
+	private void changeColor(bool val)
+	{
+		Color _textColor;
+		
+		if(val)
+		{
+			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorPressed;
+			
+			Color.TryParseHexString(this.colorTextPressed, out _textColor);
+			this.buttonText.GetComponent<Text>().color = _textColor;
+		}
+		else
+		{
 			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorMain;
 			
 			Color.TryParseHexString(this.colorTextMain, out _textColor);
 			this.buttonText.GetComponent<Text>().color = _textColor;
 		}
+		
 	}
+	#endregion
 
 	#region Script
 	void Awake () 
 	{
-		this.buttonVr = new VirtualButton (this.transform.localPosition, 100, Vector3.forward);
+		this.buttonVr = new VirtualButton (this.transform.localPosition, spring, Vector3.forward);
 		this.colorMain = Resources.Load ("Materials/MatUIMenuColor2", typeof(Material)) as Material;
-		this.colorHover = Resources.Load ("Materials/MatTouch", typeof(Material)) as Material;
 		this.colorPressed = Resources.Load ("Materials/MatMainColor", typeof(Material)) as Material;
 		this.colorTextMain = "18CAE6FF";
-		this.colorTextHover = "F25E21FF";
 		this.colorTextPressed = "1A6B79FF";
+		this.UIGameController = GameObject.FindGameObjectWithTag ("PlayerPanelButtons");
 	}
 
 	void Update()
 	{
-		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, -0.1f, 0f);
+		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, min, max);
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
 
 		this.buttonPressed ();
+	}
+
+	void OnCollisionEnter(Collision other)
+	{
+		if(other.collider.GetComponentInParent<HandModel>() != null)
+		{
+			this.changeColor(true);
+		}
+	}
+
+	void OnCollisionExit(Collision other)
+	{
+		if(other.collider.GetComponentInParent<HandModel>() != null)
+		{
+			this.changeColor(false);
+		}
+	}
+
+	void OnDisable()
+	{
+		this.transform.localPosition = this.buttonVr.RestingPosition;
+		this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+		this.changeColor(false);
 	}
 	#endregion
 }

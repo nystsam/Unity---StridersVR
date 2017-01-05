@@ -18,6 +18,9 @@ public class PointManagerController : MonoBehaviour {
 	private bool allowShowFinishButton = true;
 	private bool allowShowModel = false;
 
+	// Solo para Hard
+	private bool exampleConstraint = true;
+
 	private ITouchBoard touchBoard;
 
 
@@ -109,6 +112,7 @@ public class PointManagerController : MonoBehaviour {
 	{
 		this.requesttModel = false;
 		this.allowShowModel = true;
+		this.exampleConstraint = true;
 		this.localPointManager.CurrentModel = newModel;
 		this.localPointManager.instantiatePoints ();
 		this.scoreController.GetComponent<ScoreDotsController>().newModel();
@@ -130,15 +134,39 @@ public class PointManagerController : MonoBehaviour {
 		return this.allowShowModel;
 	}
 
+	public void showingModel(bool val)
+	{
+		this.localPointManager.IsShowingExample = val;
+	}
+
+	public void resetCurrentStripe()
+	{
+		this.localPointManager.resetCurrentStripe();
+	}
+
 	public void addRevealCount()
 	{
 		this.localPointManager.addModelRevealCount();
 		this.scoreController.GetComponent<ScoreDotsController>().addReveal();
-	}
 
+		if(GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ()
+		   .Training.Difficulty.Equals("Hard"))
+		{
+			if(this.localPointManager.ModelRevealCount >= 2)
+			{
+				this.exampleConstraint = false;
+			}
+		}
+	}
+	
 	public int getRevealCount()
 	{
 		return this.localPointManager.ModelRevealCount;
+	}
+
+	public bool getExampleStatus()
+	{
+		return this.exampleConstraint;
 	}
 	#endregion
 

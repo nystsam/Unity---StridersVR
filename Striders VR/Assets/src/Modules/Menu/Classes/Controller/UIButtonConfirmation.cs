@@ -2,11 +2,14 @@
 using UnityEngine.UI;
 using System.Collections;
 using StridersVR.Domain;
+using StridersVR.Domain.Menu;
 
-public class UIButtonExitController : MonoBehaviour {
+public class UIButtonConfirmation : MonoBehaviour {
 
 	public GameObject buttonShape;
 	public GameObject buttonText;
+
+	public bool isNoButton;
 
 	public float triggerDistance;
 	public float spring;
@@ -20,27 +23,43 @@ public class UIButtonExitController : MonoBehaviour {
 	private string colorTextPressed;
 	
 	private bool isPressed = false;
-	
+
+	private GameObject UIGameController;
+
 	private VirtualButton buttonVr;
 
+	private ToolButton tool;
+
+	public void setToolAction(ToolButton buttonAction)
+	{
+		this.tool = buttonAction;
+	}
 
 	private void buttonAction()
 	{
-		
+		if(this.isNoButton)
+		{
+			this.UIGameController.transform.FindChild("ToolsPanelUI").GetComponent<UIMenuOptions>().activeMenu();
+		}
+		else if(this.tool != null)
+		{
+			tool.toolAction();
+		}
+
 	}
-	
+
 	private void buttonPressed ()
 	{
 		if (!this.isPressed && this.buttonVr.IsButtonPressed (-this.transform.localPosition, this.triggerDistance)) 
 		{
 			this.isPressed = true;
-			this.changeColor(true);
+			//this.changeColor(true);
 			this.buttonAction();
 		} 
 		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
 		{
 			this.isPressed = false;
-			this.changeColor(false);
+			//this.changeColor(false);
 		}
 	}
 
@@ -48,7 +67,7 @@ public class UIButtonExitController : MonoBehaviour {
 	private void changeColor(bool val)
 	{
 		Color _textColor;
-		
+
 		if(val)
 		{
 			this.buttonShape.GetComponent<MeshRenderer>().material = this.colorPressed;
@@ -63,10 +82,10 @@ public class UIButtonExitController : MonoBehaviour {
 			Color.TryParseHexString(this.colorTextMain, out _textColor);
 			this.buttonText.GetComponent<Text>().color = _textColor;
 		}
-		
+
 	}
 	#endregion
-
+	
 	#region Script
 	void Awake () 
 	{
@@ -75,14 +94,39 @@ public class UIButtonExitController : MonoBehaviour {
 		this.colorPressed = Resources.Load ("Materials/MatMainColor", typeof(Material)) as Material;
 		this.colorTextMain = "18CAE6FF";
 		this.colorTextPressed = "1A6B79FF";
+		this.UIGameController = GameObject.FindGameObjectWithTag ("PlayerPanelButtons");
 	}
-
+	
 	void Update()
 	{
 		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, min, max);
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
 		
 		this.buttonPressed ();
+	}
+
+	void OnCollisionEnter(Collision other)
+	{
+		if(other.collider.GetComponentInParent<HandModel>() != null)
+		{
+			this.changeColor(true);
+		}
+	}
+	
+	void OnCollisionExit(Collision other)
+	{
+		if(other.collider.GetComponentInParent<HandModel>() != null)
+		{
+			this.changeColor(false);
+		}
+	}
+
+	void OnDisable()
+	{
+		this.transform.localPosition = this.buttonVr.RestingPosition;
+		this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+		this.changeColor(false);
 	}
 	#endregion
 }

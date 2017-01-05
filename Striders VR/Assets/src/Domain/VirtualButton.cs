@@ -12,6 +12,10 @@ namespace StridersVR.Domain
 		/// The resting position in local space of the current button.
 		/// </summary>
 		private Vector3 restingPosition;
+		public Vector3 RestingPosition
+		{
+			get { return this.restingPosition; }
+		}
 		/// <summary>
 		/// The spring force.
 		/// </summary>

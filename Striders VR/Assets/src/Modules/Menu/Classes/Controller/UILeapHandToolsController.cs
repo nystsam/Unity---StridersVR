@@ -13,20 +13,18 @@ public class UILeapHandToolsController : MonoBehaviour {
 	private GameObject UIbutton;
 	private GameObject UIOptions;
 
-	private UIButtonActions buttonReset;
-	private UIButtonActions buttonExit;
-	private UIButtonActions buttonClose;
-
 	private Transform indexBone3;
  
 	private HandModel hand;
+	private HandModel leftHand;
 
 	private void createHandUI()
 	{
 		if (this.hand.GetLeapHand ().IsLeft) 
 		{
 			GameObject _uiPrefab;
-			
+
+			this.leftHand = this.transform.GetComponent<HandModel> ();
 			_uiPrefab = Resources.Load ("Prefabs/Menu/OptionUI", typeof(GameObject)) as GameObject;
 			
 			this.UIbutton = (GameObject)GameObject.Instantiate (_uiPrefab, Vector3.zero, Quaternion.identity);
@@ -39,17 +37,17 @@ public class UILeapHandToolsController : MonoBehaviour {
 			//this.isPanelButtonPressed = false;
 			this.isInstantiated = true;
 		}
-		else if (this.hand.GetLeapHand ().IsRight) 
-		{
-			GameObject _clone, _indexColliderPrefab;
-
-			_indexColliderPrefab = Resources.Load("Prefabs/Menu/IndexColliderUI", typeof(GameObject)) as GameObject;
-
-			_clone = (GameObject)GameObject.Instantiate (_indexColliderPrefab, Vector3.zero, Quaternion.identity);
-			_clone.transform.parent = this.hand.fingers [1].bones [3];
-			_clone.transform.localPosition = Vector3.zero;
-			_clone.GetComponent<SphereCollider>().radius = 0.1f;
-		}
+//		else if (this.hand.GetLeapHand ().IsRight) 
+//		{
+//			GameObject _clone, _indexColliderPrefab;
+//
+//			_indexColliderPrefab = Resources.Load("Prefabs/Menu/IndexColliderUI", typeof(GameObject)) as GameObject;
+//
+//			_clone = (GameObject)GameObject.Instantiate (_indexColliderPrefab, Vector3.zero, Quaternion.identity);
+//			_clone.transform.parent = this.hand.fingers [1].bones [3];
+//			_clone.transform.localPosition = Vector3.zero;
+//			_clone.GetComponent<SphereCollider>().radius = 0.1f;
+//		}
 	}
 
 	private void enableUIButtonTools()
@@ -77,13 +75,13 @@ public class UILeapHandToolsController : MonoBehaviour {
 //				}
 //			}
 
-			if (this.hand.GetPalmRotation().x >= -0.7f && 
+			if (this.leftHand.palm.up.y < -0.6f && 
 			    !this.isButtonActive) 
 			{
 				this.UIbutton.SetActive (true);
 				this.isButtonActive = true;
 			} 
-			else if(this.hand.GetPalmRotation().x <= -0.7f &&
+			else if(this.leftHand.palm.up.y > -0.6f &&
 			        this.isButtonActive)
 			{
 				this.UIbutton.SetActive (false);

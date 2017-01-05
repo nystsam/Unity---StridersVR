@@ -50,7 +50,8 @@ public class PointController : MonoBehaviour {
 	{
 		if (other.tag.Equals ("IndexUI")) 
 		{
-			if(!this.pointManager.GetComponent<PointManagerController>().setPoint(this.localPoint))
+			if(this.pointManager != null &&
+			   !this.pointManager.GetComponent<PointManagerController>().setPoint(this.localPoint))
 			{
 				this.localPoint.IsSelectedPoint = true;
 				this.localPoint.turnOn();
@@ -58,7 +59,8 @@ public class PointController : MonoBehaviour {
 		}
 		else if (other.tag.Equals("IndexRight"))
 		{
-			if(this.pointManager.GetComponent<PointManagerController>().isSamePoint(this.localPoint))
+			if(this.pointManager != null &&
+			   this.pointManager.GetComponent<PointManagerController>().isSamePoint(this.localPoint))
 			{
 				this.pointManager.GetComponent<PointManagerController>().cancelCurrentStripe();
 				this.localPoint.IsSelectedPoint = false;
@@ -71,7 +73,7 @@ public class PointController : MonoBehaviour {
 	{
 		if (other.tag.Equals ("IndexUI")) 
 		{
-			if(this.localPoint.IsSelectedPoint)
+			if(this.localPoint != null && this.localPoint.IsSelectedPoint)
 			{
 				this.changePoint = true;
 				this.localPoint.IsSelectedPoint = false;

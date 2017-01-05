@@ -29,6 +29,7 @@ public class UIButtonTools : MonoBehaviour {
 		if (this.isHoving && !this.isPressed)
 		{
 			this.isPressed = true;
+			CameraUITools.Current.ChangePosition(true);
 			this.UIGameController.transform.FindChild("ToolsPanelUI").GetComponent<UIMenuOptions>().activeMenu();
 		}
 	}
@@ -36,13 +37,13 @@ public class UIButtonTools : MonoBehaviour {
 	#region Script
 	void Awake()
 	{
-		this.UIGameController = GameObject.FindGameObjectWithTag ("GameController");
+		this.UIGameController = GameObject.FindGameObjectWithTag ("PlayerPanelButtons");
 
 	}
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.tag.Equals ("IndexUI")) 
+		if (other.tag.Equals ("IndexRight")) 
 		{
 			this.isHoving = true;
 			this.hoverImage(true);
@@ -53,7 +54,7 @@ public class UIButtonTools : MonoBehaviour {
 
 	void OnTriggerExit(Collider other)
 	{
-		if (other.tag.Equals ("IndexUI")) 
+		if (other.tag.Equals ("IndexRight")) 
 		{
 			this.isHoving = false;
 			this.hoverImage(false);

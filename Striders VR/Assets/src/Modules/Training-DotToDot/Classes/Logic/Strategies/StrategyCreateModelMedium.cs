@@ -12,7 +12,8 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		private Model currentModel;
 		
 		private int maxPoints = 12;
-		private int maxStripes = 8;
+		private int maxStripes = 7;
+		private int stripesAtXZero = 0;
 
 		public StrategyCreateModelMedium (GameObject modelContainer)
 		{
@@ -23,6 +24,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 		#region IStrategyCreateModel
 		public Model createModel()
 		{
+			this.stripesAtXZero = 0;
 			this.currentModel = new Model();
 			this.createPoints ();
 			this.createPositions ();
@@ -37,6 +39,9 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			Point _startPoint, _basePoint, _endPoint = null, _previousPoint = null;
 			
 			_basePoint = this.currentModel.Points [Random.Range (1, this.maxPoints + 1)];
+
+			if(_basePoint.Position.x == 0)
+				this.stripesAtXZero ++;
 
 			_startPoint = _basePoint;
 			this.currentModel.createSelectedPoints(this.modelContainer,_startPoint);
@@ -83,7 +88,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			float _xAxis, _yAxis, _zAxis;
 			
 			_xAxis = 1f;
-			_yAxis = 20f;
+			_yAxis = 21.5f;
 			_zAxis = 0.5f;
 			
 			foreach(Point point in this.currentModel.Points.Values)
@@ -93,11 +98,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 				if(_xAxis < -1f)
 				{
 					_xAxis = 1f;
-					_zAxis -= 1f;
-					if(_zAxis < -0.5f)
+					_yAxis -= 1.5f;
+					if(_yAxis < 20f)
 					{
-						_zAxis = 0.5f;
-						_yAxis += 1.5f; 
+						_yAxis = 21.5f;
+						_zAxis -= 1f;
 					}
 				}
 				
@@ -119,7 +124,21 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 					{
 						if(!startPoint.isAlreadyNeighbor(_endPoint))
 						{
-							break;
+							if(startPoint.Position.x != 0 && _endPoint.Position.x == 0)
+							{
+								this.stripesAtXZero ++;
+								break;
+							}
+							else if(startPoint.Position.x == 0)
+							{
+								if(this.stripesAtXZero < 2 && _endPoint.Position.x == 0)
+								{
+									this.stripesAtXZero ++;
+									break;
+								}
+								else if(_endPoint.Position.x != 0)
+									break;				
+							}	
 						}
 					}
 				}

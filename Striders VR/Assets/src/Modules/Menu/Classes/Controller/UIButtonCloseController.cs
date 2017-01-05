@@ -2,7 +2,7 @@
 using System.Collections;
 using StridersVR.Domain;
 
-public class UIButtonCloseController : MonoBehaviour, UIButtonActions {
+public class UIButtonCloseController : MonoBehaviour {
 
 	private GameObject UIGameController;
 
@@ -12,15 +12,11 @@ public class UIButtonCloseController : MonoBehaviour, UIButtonActions {
 	
 	private float triggerDistance = 0.075f;
 
-	#region UIAction
-	public void buttonHover(bool isHitting)
-	{
-	}
-	#endregion
 
 	private void buttonAction()
 	{
 		this.UIGameController.transform.FindChild("ToolsPanelUI").GetComponent<UIMenuOptions>().desactiveMenu();
+		CameraUITools.Current.ChangePosition(false);
 	}
 	
 	private void buttonPressed ()
@@ -41,7 +37,7 @@ public class UIButtonCloseController : MonoBehaviour, UIButtonActions {
 	void Awake () 
 	{
 		this.buttonVr = new VirtualButton (this.transform.localPosition, 100, Vector3.forward);
-		this.UIGameController = GameObject.FindGameObjectWithTag ("GameController");
+		this.UIGameController = GameObject.FindGameObjectWithTag ("PlayerPanelButtons");
 	}
 
 	void Update () 

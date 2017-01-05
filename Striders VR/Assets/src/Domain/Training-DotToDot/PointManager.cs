@@ -19,6 +19,7 @@ namespace StridersVR.Domain.DotToDot
 		private RedoCollector collector;
 
 		private bool isFirstPoint;
+		private bool isShowingExample = false;
 
 		private int errorCount;
 		private int stripesPlaced;
@@ -103,30 +104,38 @@ namespace StridersVR.Domain.DotToDot
 
 		public void placeStripe()
 		{
-			GameObject _endStripe;
-			// Distance entre la punta del stripe y el punto... necesaria para indicar si el stripe esta sostenido o no...
-			// lo idea seria: si la distancia < 1 entonces coloca
-//			Vector3 asd = this.currentStripe.transform.GetChild (0).GetComponent<StripeController> ().HandlePosition;
-//
-//			Debug.Log (Vector3.Distance (asd, this.nextPoint.Position));
-			this.collector.addCurrentPoint (this.currentPoint);
-			this.currentStripe.transform.GetChild(0).GetComponent<StripeController> ().placeStripe (this.nextPoint.Position);
-			this.nextPoint.IsSelectedPoint = false;
-			this.currentPoint.turnOff ();
-			_endStripe = (GameObject)GameObject.Instantiate(this.endStripePrefab, 
-		                                                        this.nextPoint.Position, Quaternion.Euler(Vector3.zero));
-			_endStripe.transform.parent = this.pointsContainer.transform;
-			_endStripe.transform.localPosition = this.nextPoint.Position;
+			if(!this.isShowingExample)
+			{
+				GameObject _endStripe;
+				// Distance entre la punta del stripe y el punto... necesaria para indicar si el stripe esta sostenido o no...
+				// lo idea seria: si la distancia < 1 entonces coloca
+				//			Vector3 asd = this.currentStripe.transform.GetChild (0).GetComponent<StripeController> ().HandlePosition;
+				//
+				//			Debug.Log (Vector3.Distance (asd, this.nextPoint.Position));
+				this.collector.addCurrentPoint (this.currentPoint);
+				this.currentStripe.transform.GetChild(0).GetComponent<StripeController> ().placeStripe (this.nextPoint.Position);
+				this.nextPoint.IsSelectedPoint = false;
+				this.currentPoint.turnOff ();
+				_endStripe = (GameObject)GameObject.Instantiate(this.endStripePrefab, 
+				                                                this.nextPoint.Position, Quaternion.Euler(Vector3.zero));
+				_endStripe.transform.parent = this.pointsContainer.transform;
+				_endStripe.transform.localPosition = this.nextPoint.Position;
+				
+				this.collector.addEndStripe(_endStripe);
+				
+				this.pointValidation ();
+				
+				this.previousPoint = this.currentPoint;
+				this.currentPoint = this.nextPoint;
+				this.nextPoint = null;
+				this.createNewStripe (this.currentPoint.Position);
+			}
+		}
 
-			this.collector.addEndStripe(_endStripe);
-
-			this.pointValidation ();
-
-			this.previousPoint = this.currentPoint;
-			this.currentPoint = this.nextPoint;
-			this.nextPoint = null;
-			this.createNewStripe (this.currentPoint.Position);
-
+		public void resetCurrentStripe()
+		{
+			if(this.currentStripe != null)
+				this.currentStripe.GetComponentInChildren<StripeController>().resetStripe();
 		}
 
 		public void cancelCurrentStripe()
@@ -205,6 +214,11 @@ namespace StridersVR.Domain.DotToDot
 		public int ModelRevealCount
 		{
 			get { return this.modelRevealCount; }
+		}
+
+		public bool IsShowingExample
+		{
+			set { this.isShowingExample = value; }
 		}
 		#endregion
 	}

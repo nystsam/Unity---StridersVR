@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using StridersVR.Domain.Menu;
 
 public class UIMenuOptions : MonoBehaviour {
+
+	public GameObject confirmation;
+	public GameObject doActionButton;
 
 	private bool isActive;
 
@@ -15,6 +19,7 @@ public class UIMenuOptions : MonoBehaviour {
 		{
 			this.isActive = true;
 			this.gameObject.SetActive(true);
+			this.confirmation.SetActive(false);
 
 			return true;
 		}
@@ -26,6 +31,13 @@ public class UIMenuOptions : MonoBehaviour {
 	{
 		this.isActive = false;
 		this.gameObject.SetActive (false);
+	}
+
+	public void callConfimation(ToolButton actionButton)
+	{
+		this.confirmation.SetActive(true);
+		this.doActionButton.GetComponent<UIButtonConfirmation>().setToolAction(actionButton);
+		this.desactiveMenu();
 	}
 
 	#region Script

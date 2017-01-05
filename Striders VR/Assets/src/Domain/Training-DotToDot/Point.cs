@@ -49,6 +49,7 @@ namespace StridersVR.Domain.DotToDot
 			this.pointLight = pointLight;
 			this.pointAura = pointAura;
 			this.isSelectedPoint = false;
+			this.pointLight.SetActive(true);
 		}
 
 		public void turnOn()

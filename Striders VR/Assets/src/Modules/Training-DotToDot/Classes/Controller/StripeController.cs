@@ -64,6 +64,9 @@ public class StripeController : MonoBehaviour {
 				this.decreaseSize = true;
 				this.increaseSize = false;
 			}
+
+			if(_newScale.z > 90f)
+				this.resetStripe();
 		}
 	}
 

@@ -76,7 +76,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Representatives
 			{
 				this.strategyComposite.addStrategy(new StrategyCreateModelEasy(this.modelContainer));
 			}
-			else if(difficulty.Equals("Medium"))
+			else
 			{
 				this.strategyComposite.addStrategy(new StrategyCreateModelMedium(this.modelContainer));
 			}
