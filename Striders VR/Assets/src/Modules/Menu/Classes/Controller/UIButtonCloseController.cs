@@ -8,9 +8,12 @@ public class UIButtonCloseController : MonoBehaviour {
 
 	private bool isPressed = false;
 
+	public float triggerDistance;
+	public float spring;
+	public float min;
+	public float max;
+
 	private VirtualButton buttonVr;
-	
-	private float triggerDistance = 0.075f;
 
 
 	private void buttonAction()
@@ -36,16 +39,23 @@ public class UIButtonCloseController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.buttonVr = new VirtualButton (this.transform.localPosition, 100, Vector3.forward);
+		this.buttonVr = new VirtualButton (this.transform.localPosition, spring, Vector3.forward);
 		this.UIGameController = GameObject.FindGameObjectWithTag ("PlayerPanelButtons");
 	}
 
 	void Update () 
 	{
-		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, -0.1f, 0f);
+		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, min, max);
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
 
 		this.buttonPressed ();
+	}
+
+	void OnDisable()
+	{
+		this.transform.localPosition = this.buttonVr.RestingPosition;
+		this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 	}
 	#endregion
 }

@@ -16,6 +16,11 @@ namespace StridersVR.Domain.Menu
 			_currentTraining = GameObject.FindGameObjectWithTag("StaticUser").GetComponent<StaticUserController>().Training;
 			Application.LoadLevel (_currentTraining.Name);	
 		}
+
+		public override string getActionName()
+		{
+			return "resetear";
+		}
 	}
 }
 

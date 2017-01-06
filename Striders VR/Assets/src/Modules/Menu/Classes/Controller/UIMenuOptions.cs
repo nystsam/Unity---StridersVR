@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using StridersVR.Domain.Menu;
 
@@ -6,6 +7,7 @@ public class UIMenuOptions : MonoBehaviour {
 
 	public GameObject confirmation;
 	public GameObject doActionButton;
+	public GameObject actionName;
 
 	private bool isActive;
 
@@ -37,6 +39,7 @@ public class UIMenuOptions : MonoBehaviour {
 	{
 		this.confirmation.SetActive(true);
 		this.doActionButton.GetComponent<UIButtonConfirmation>().setToolAction(actionButton);
+		this.actionName.GetComponent<Text>().text = "¿Está seguro que desea " + actionButton.getActionName() + "?"; 
 		this.desactiveMenu();
 	}
 

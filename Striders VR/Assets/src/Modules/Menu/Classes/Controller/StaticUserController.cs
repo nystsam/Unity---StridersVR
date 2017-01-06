@@ -40,7 +40,7 @@ public class StaticUserController : MonoBehaviour {
 		this.training = null;
 		//FIXME Descomentar para hacer las pruebas en los mapas o juegos
 		this.training = new Training (Application.loadedLevelName);
-		this.training.Difficulty = "Hard";
+		this.training.Difficulty = "Easy";
 		GameObject.DontDestroyOnLoad (this);
 	}
 	#endregion

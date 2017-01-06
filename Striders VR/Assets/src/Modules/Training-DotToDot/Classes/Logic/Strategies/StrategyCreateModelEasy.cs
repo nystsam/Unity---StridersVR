@@ -58,6 +58,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 				}
 				this.currentModel.addPointNeighbor(_startPoint, _endPoint);
 				this.currentModel.createStripe(this.modelContainer, _startPoint, _endPoint);
+				this.currentModel.createSelectedPoints(this.modelContainer,_endPoint);
 				_previousPoint = _startPoint;
 				_startPoint = _endPoint;
 			}
@@ -79,7 +80,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			float _xAxis, _yAxis, _zAxis;
 
 			_xAxis = 0.5f;
-			_yAxis = 20f;
+			_yAxis = 21f;
 			_zAxis = 0.5f;
 
 			foreach(Point point in this.currentModel.Points.Values)
@@ -89,11 +90,11 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 				if(_xAxis < -0.5f)
 				{
 					_xAxis = 0.5f;
-					_zAxis -= 1f;
-					if(_zAxis < -0.5f)
+					_yAxis -= 1f;
+					if(_yAxis < 20f)
 					{
-						_zAxis = 0.5f;
-						_yAxis += 1f; 
+						_yAxis = 21f;
+						_zAxis -= 1f; 
 					}
 				}
 
