@@ -4,25 +4,59 @@ using System.Collections.Generic;
 
 public class RailroadSwitchController : MonoBehaviour {
 
+	public GameObject switchDirection;
+	public GameObject switchPointer;
+
+	public ParticleSystem switchAura;
+
+	public TextMesh switchNumber;
+
 	public List<Vector3> directions;
+
 	public int selectedDirectionIndex;
 
+
 	private float rotationSpeed = 30f;
-	private GameObject arrowDirection;
 	private float rotationLimit;
 	private float anglesRotated;
 	private float firstDirectionAngle;
 	private float secondDirectionAngle;
+	private float orientation = 1;
+
 	private bool firstSwitchOpen = false;
 	private bool secondSwitchOpen = false;
 	private bool checkOrientation = false;
-	private float orientation = 1;
+
+
+	public void setSwitchNumber(int number)
+	{
+		string _text = number.ToString();
+
+		this.switchNumber.text = _text;
+		this.switchPointer.transform.GetChild(0).GetComponent<TextMesh>().text = _text;
+	}
+
+	public void activateIndicators(bool val)
+	{
+		if(val)
+		{
+			this.switchAura.Play();
+
+		}
+		else
+		{
+			this.switchAura.Clear();
+			this.switchAura.Stop();
+		}
+		this.switchNumber.gameObject.SetActive(!val);
+		this.switchPointer.SetActive(val);
+	}
 
 	public Vector3 getSelectedDitecion
 	{
 		get { return this.directions [this.selectedDirectionIndex]; }
 	}
-	
+
 	public void changeDirectionIndex()
 	{
 		if (this.selectedDirectionIndex == 1)
@@ -30,12 +64,14 @@ public class RailroadSwitchController : MonoBehaviour {
 		else
 			this.selectedDirectionIndex = 1;
 	}
-	
+
+
+	#region Switch Rotation Features
 	private void setRotationAngle(ref float rotationAngle, Vector3 direction)
 	{
 		if (direction.x > 0) {
 			rotationAngle = 180f;
-			this.arrowDirection.transform.localEulerAngles = new Vector3 (-90, 180, 0);
+			this.switchDirection.transform.localEulerAngles = new Vector3 (-90, 180, 0);
 		} else if (direction.x < 0) {
 			rotationAngle = 0f;
 		} else if( direction.z > 0){
@@ -49,7 +85,7 @@ public class RailroadSwitchController : MonoBehaviour {
 	{
 		float _maxAngle = Mathf.Max (this.firstDirectionAngle, this.secondDirectionAngle);
 		
-		if (this.arrowDirection.transform.localEulerAngles.y >= _maxAngle && (_maxAngle != 270 || Mathf.Min (this.firstDirectionAngle, this.secondDirectionAngle) != 0)) {
+		if (this.switchDirection.transform.localEulerAngles.y >= _maxAngle && (_maxAngle != 270 || Mathf.Min (this.firstDirectionAngle, this.secondDirectionAngle) != 0)) {
 			if (!this.checkOrientation) {
 				this.orientation = -this.orientation;
 				this.checkOrientation = true;
@@ -57,7 +93,7 @@ public class RailroadSwitchController : MonoBehaviour {
 			}	
 		} else if (_maxAngle == 270 && Mathf.Min (this.firstDirectionAngle, this.secondDirectionAngle) == 0) {
 			if (!this.checkOrientation) {
-				if (Mathf.Round(this.arrowDirection.transform.localEulerAngles.y) == 0) {
+				if (Mathf.Round(this.switchDirection.transform.localEulerAngles.y) == 0) {
 					this.orientation = -1f;
 				} else {
 					this.orientation = 1f;
@@ -67,7 +103,7 @@ public class RailroadSwitchController : MonoBehaviour {
 				
 			}
 		}
-		this.arrowDirection.transform.localEulerAngles = this.arrowDirection.transform.localEulerAngles + new Vector3(0, this.orientation * this.rotationSpeed, 0);
+		this.switchDirection.transform.localEulerAngles = this.switchDirection.transform.localEulerAngles + new Vector3(0, this.orientation * this.rotationSpeed, 0);
 		this.anglesRotated += Mathf.Abs(rotationSpeed);
 		if (anglesRotated >= this.rotationLimit) {
 			this.anglesRotated = 0f;
@@ -78,21 +114,21 @@ public class RailroadSwitchController : MonoBehaviour {
 			}
 		}
 	}
-
+	#endregion
 
 	#region Script
 	void Start () 
 	{
-		this.arrowDirection = this.transform.FindChild ("RailroadSwitchArrowDirection").gameObject;
+		this.switchPointer.SetActive(false);
 		this.selectedDirectionIndex = Random.Range (0,2);
 		this.setRotationAngle (ref this.firstDirectionAngle, this.directions [0]);
 		this.setRotationAngle (ref this.secondDirectionAngle, this.directions [1]);
 
 		if (this.selectedDirectionIndex == 0) {
-			this.arrowDirection.transform.localEulerAngles = new Vector3 (-90, this.firstDirectionAngle, 0);
+			this.switchDirection.transform.localEulerAngles = new Vector3 (-90, this.firstDirectionAngle, 0);
 			this.firstSwitchOpen = true;
 		} else {
-			this.arrowDirection.transform.localEulerAngles = new Vector3 (-90, this.secondDirectionAngle, 0);
+			this.switchDirection.transform.localEulerAngles = new Vector3 (-90, this.secondDirectionAngle, 0);
 			this.secondSwitchOpen = true;
 		}
 		this.rotationLimit = Mathf.Abs (this.firstDirectionAngle - this.secondDirectionAngle);
@@ -100,7 +136,7 @@ public class RailroadSwitchController : MonoBehaviour {
 
 	void Update()
 	{
-		if (this.arrowDirection != null) 
+		if (this.switchDirection != null) 
 		{
 			if (this.selectedDirectionIndex == 0 && !this.firstSwitchOpen) {
 				this.rotateSwitch (ref this.firstSwitchOpen);

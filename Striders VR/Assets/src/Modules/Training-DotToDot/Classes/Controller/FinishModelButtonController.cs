@@ -119,7 +119,7 @@ public class FinishModelButtonController : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.buttonVr = new VirtualButton (this.transform.localPosition, 200, Vector3.forward);
+		this.buttonVr = new VirtualButton (this.transform.localPosition, 500, Vector3.forward);
 		this.gameController = GameObject.FindGameObjectWithTag("GameController");
 
 		this.setChildComponents();

@@ -103,8 +103,12 @@ public class HandModelExampleController : MonoBehaviour {
 	{
 		if(this.isLeftHand && this.gameObject != null && this.model != null)
 		{
-			this.gameController.GetComponent<PointManagerController>().resetCurrentStripe();
-			this.resetModel();	
+			if(this.gameController != null)
+			{
+				this.gameController.GetComponent<PointManagerController>().resetCurrentStripe();
+				this.resetModel();	
+			}
+
 		}
 	}
 	#endregion

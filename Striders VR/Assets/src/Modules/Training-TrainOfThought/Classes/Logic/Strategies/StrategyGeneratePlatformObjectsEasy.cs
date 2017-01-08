@@ -56,27 +56,32 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 
 		public void generateSwitchs(ScriptableObject genericGameRailroadSwitchData)
 		{
-			float _localHorizontalSeparation = 0;
+			//float _localHorizontalSeparation = 0;
 			ScriptableObjectRailroadSwitch _gameRailroadSwitchData = (ScriptableObjectRailroadSwitch)genericGameRailroadSwitchData;
 			GameObject _raildroadSwitchContainer = this.gamePlatform.transform.FindChild ("RailroadSwitchContainer").gameObject;
-			GameObject _playerPanelButtons = GameObject.FindGameObjectWithTag("PlayerPanelButtons");
+//			GameObject _playerPanelButtons = GameObject.FindGameObjectWithTag("PlayerPanelButtons");
+			int _num = 1;
 
 			foreach (RailroadSwitch _switch in _gameRailroadSwitchData.RailroadSwitchListEasyMode) 
 			{
-				GameObject _newButtonSwitch;
+				//GameObject _newButtonSwitch;
 				GameObject _newRailroadSwitch;
 				_newRailroadSwitch = (GameObject)GameObject.Instantiate (_switch.Prefab, _switch.Position, Quaternion.Euler(_switch.RotationEuler));
 				_newRailroadSwitch.name = _switch.Name;
 				_newRailroadSwitch.transform.parent = _raildroadSwitchContainer.transform;
+				_newRailroadSwitch.GetComponent<RailroadSwitchController> ().setSwitchNumber(_num);
 				_newRailroadSwitch.GetComponent<RailroadSwitchController> ().directions = _switch.Directions;
 
-				_newButtonSwitch = (GameObject) GameObject.Instantiate (_gameRailroadSwitchData.PlayerButton, new Vector3(0,0,0), Quaternion.Euler(new Vector3(0,0,0)));
-				_newButtonSwitch.transform.parent = _playerPanelButtons.transform;
-				_newButtonSwitch.GetComponent<BoundingBoxButtonController>().AttachedRailroadSwitch = _newRailroadSwitch;
-				_newButtonSwitch.transform.localPosition = new Vector3(_localHorizontalSeparation, 0, 0);
-				_newButtonSwitch.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
-				_newButtonSwitch.transform.GetChild(0).GetComponent<SpringJoint>().autoConfigureConnectedAnchor = true;
-				_localHorizontalSeparation += 2f;
+				SwitchesPanelController.Current.AddSwitch(_newRailroadSwitch);
+
+				_num ++;
+				//_newButtonSwitch = (GameObject) GameObject.Instantiate (_gameRailroadSwitchData.PlayerButton, new Vector3(0,0,0), Quaternion.Euler(new Vector3(0,0,0)));
+//				_newButtonSwitch.transform.parent = _playerPanelButtons.transform;
+//				_newButtonSwitch.GetComponent<BoundingBoxButtonController>().AttachedRailroadSwitch = _newRailroadSwitch;
+//				_newButtonSwitch.transform.localPosition = new Vector3(_localHorizontalSeparation, 0, 0);
+//				_newButtonSwitch.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
+//				_newButtonSwitch.transform.GetChild(0).GetComponent<SpringJoint>().autoConfigureConnectedAnchor = true;
+//				_localHorizontalSeparation += 2f;
 			}		
 		}
 		#endregion

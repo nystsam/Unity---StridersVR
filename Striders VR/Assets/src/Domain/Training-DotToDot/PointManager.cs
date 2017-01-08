@@ -71,13 +71,16 @@ namespace StridersVR.Domain.DotToDot
 		{
 			if(this.isFirstPoint)
 			{
-				this.isFirstPoint = false;
-				this.collector = new RedoCollector ();
-				this.currentPoint = point;
-				this.createNewStripe(this.currentPoint.Position);
-				this.currentPoint.turnOn();
-
-				return true;
+				if(point != null)
+				{
+					this.isFirstPoint = false;
+					this.collector = new RedoCollector ();
+					this.currentPoint = point;
+					this.createNewStripe(this.currentPoint.Position);
+					this.currentPoint.turnOn();
+					
+					return true;
+				}
 			}
 
 			return false;
