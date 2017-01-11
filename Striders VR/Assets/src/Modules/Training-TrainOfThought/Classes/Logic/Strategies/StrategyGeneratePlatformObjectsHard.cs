@@ -53,30 +53,36 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 		
 		public void generateSwitchs(ScriptableObject genericGameRailroadSwitchData)
 		{
-			float _localHorizontalSeparation = 0;
+//			float _localHorizontalSeparation = 0;
 			ScriptableObjectRailroadSwitch _gameRailroadSwitchData = (ScriptableObjectRailroadSwitch)genericGameRailroadSwitchData;
 			GameObject _raildroadSwitchContainer = this.gamePlatform.transform.FindChild ("RailroadSwitchContainer").gameObject;
 			GameObject _trainTracksContainer = this.gamePlatform.transform.FindChild ("TrainTracksContainer").gameObject;
-			GameObject _playerPanelButtons = GameObject.FindGameObjectWithTag("PlayerPanelButtons");
+//			GameObject _playerPanelButtons = GameObject.FindGameObjectWithTag("PlayerPanelButtons");
+			int _num = 1;
 
-			_playerPanelButtons.transform.localPosition = new Vector3 (-6, -3, 4.5f);
-			this.adjustPlayerPanel (_playerPanelButtons);
+//			_playerPanelButtons.transform.localPosition = new Vector3 (-6, -3, 4.5f);
+//			this.adjustPlayerPanel (_playerPanelButtons);
 			foreach (RailroadSwitch _switch in _gameRailroadSwitchData.RailroadSwitchListHardMode) 
 			{
-				GameObject _newButtonSwitch;
+//				GameObject _newButtonSwitch;
 				GameObject _newRailroadSwitch;
 				_newRailroadSwitch = (GameObject)GameObject.Instantiate (_switch.Prefab, _switch.Position, Quaternion.Euler(_switch.RotationEuler));
 				_newRailroadSwitch.name = _switch.Name;
 				_newRailroadSwitch.transform.parent = _raildroadSwitchContainer.transform;
+				_newRailroadSwitch.GetComponent<RailroadSwitchController> ().setSwitchNumber(_num);
 				_newRailroadSwitch.GetComponent<RailroadSwitchController> ().directions = _switch.Directions;
+
+				SwitchesPanelController.Current.AddSwitch(_newRailroadSwitch);
 				
-				_newButtonSwitch = (GameObject) GameObject.Instantiate (_gameRailroadSwitchData.PlayerButton, new Vector3(0,0,0), Quaternion.Euler(new Vector3(0,0,0)));
-				_newButtonSwitch.transform.parent = _playerPanelButtons.transform;
-				_newButtonSwitch.GetComponent<BoundingBoxButtonController>().AttachedRailroadSwitch = _newRailroadSwitch;
-				_newButtonSwitch.transform.localPosition = new Vector3(_localHorizontalSeparation, 0, 0);
-				_newButtonSwitch.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
-				_newButtonSwitch.transform.GetChild(0).GetComponent<SpringJoint>().autoConfigureConnectedAnchor = true;
-				_localHorizontalSeparation += 2f;
+				_num ++;
+
+//				_newButtonSwitch = (GameObject) GameObject.Instantiate (_gameRailroadSwitchData.PlayerButton, new Vector3(0,0,0), Quaternion.Euler(new Vector3(0,0,0)));
+//				_newButtonSwitch.transform.parent = _playerPanelButtons.transform;
+//				_newButtonSwitch.GetComponent<BoundingBoxButtonController>().AttachedRailroadSwitch = _newRailroadSwitch;
+//				_newButtonSwitch.transform.localPosition = new Vector3(_localHorizontalSeparation, 0, 0);
+//				_newButtonSwitch.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
+//				_newButtonSwitch.transform.GetChild(0).GetComponent<SpringJoint>().autoConfigureConnectedAnchor = true;
+//				_localHorizontalSeparation += 2f;
 			}
 			
 			foreach (Track _track in _gameRailroadSwitchData.TrackListMediumMode) 
@@ -120,15 +126,15 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			}
 		}
 
-		private void adjustPlayerPanel(GameObject playerPanel)
-		{
-			Transform center = playerPanel.transform.FindChild("CenterPanel");
-			Transform right = playerPanel.transform.FindChild("RightPanel");
-			
-			center.localScale = new Vector3 (14, center.localScale.y, center.localScale.z);
-			center.localPosition = new Vector3 (6, center.localPosition.y, center.localPosition.z);
-			right.localPosition = new Vector3 (13.85f, right.localPosition.y, right.localPosition.z);
-		}
+//		private void adjustPlayerPanel(GameObject playerPanel)
+//		{
+//			Transform center = playerPanel.transform.FindChild("CenterPanel");
+//			Transform right = playerPanel.transform.FindChild("RightPanel");
+//			
+//			center.localScale = new Vector3 (14, center.localScale.y, center.localScale.z);
+//			center.localPosition = new Vector3 (6, center.localPosition.y, center.localPosition.z);
+//			right.localPosition = new Vector3 (13.85f, right.localPosition.y, right.localPosition.z);
+//		}
 		#endregion
 	}
 }

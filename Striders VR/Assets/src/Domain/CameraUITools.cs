@@ -7,6 +7,8 @@ public class CameraUITools : MonoBehaviour {
 
 	public Vector3 toolsUpPos;
 	public Vector3 toolsOutPos;
+	public Vector3 toolsUpRotation;
+	public Vector3 toolsOutRotation;
 
 	private Vector3 velocity;
 
@@ -50,6 +52,10 @@ public class CameraUITools : MonoBehaviour {
 				                                             this.toolsUpPos,
 				                                             ref this.velocity,
 				                                             0.3f);
+				this.transform.rotation = Quaternion.Slerp(this.transform.rotation,
+				                                           Quaternion.Euler(this.toolsUpRotation),
+				                                           Time.deltaTime * 5);
+
 				this.setNewPosition(this.toolsUpPos);
 			}
 			else
@@ -58,6 +64,9 @@ public class CameraUITools : MonoBehaviour {
 				                                             this.toolsOutPos,
 				                                             ref this.velocity,
 				                                             0.3f);
+				this.transform.rotation = Quaternion.Slerp(this.transform.rotation,
+				                                           Quaternion.Euler(this.toolsOutRotation),
+				                                           Time.deltaTime * 5);
 				this.setNewPosition(this.toolsOutPos);
 			}
 		}

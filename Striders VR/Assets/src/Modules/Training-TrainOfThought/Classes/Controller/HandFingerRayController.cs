@@ -14,7 +14,6 @@ public class HandFingerRayController : MonoBehaviour {
 	private void setRayCast()
 	{
 		this.direction = this.transform.forward;
-		this.direction.y += -0.5f;
 		Ray myRay = new Ray (transform.position, direction * hitRange);
 		Debug.DrawRay (transform.position, direction * hitRange);
 		if (Physics.Raycast (myRay, out hit, hitRange) && hit.collider.tag.Equals("GameButton")) 

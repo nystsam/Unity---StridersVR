@@ -66,6 +66,7 @@ namespace StridersVR.Domain.DotToDot
 			if(this.pointLight != null && this.pointAura != null)
 			{
 				this.pointLight.SetActive (true);
+				this.pointAura.GetComponent<ParticleSystem> ().Clear();
 				this.pointAura.GetComponent<ParticleSystem> ().Stop ();
 			}
 		}

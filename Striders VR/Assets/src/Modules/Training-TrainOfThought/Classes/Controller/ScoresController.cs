@@ -12,12 +12,12 @@ public class ScoresController : MonoBehaviour {
 	public Text countingCurrent;
 	public Text countingTotal;
 	public float trainTimeInSeconds;
+	public float timeToStart;
 
 	private TimeSpan gameTimer;
 	private RepresentativeTrainScore trainScore;
 	private bool gameBegin = false;
 	private bool gameTimerEnd = false;
-	private float timeToStart = 6;
 
 	private void getReady()
 	{

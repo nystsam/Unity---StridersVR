@@ -16,8 +16,8 @@ public class SwitchButtonController : MonoBehaviour {
 
 	private GameObject attrachedSwitch;
 
-	private bool isPressed;
-	private bool isLightOn;
+	private bool isPressed = false;
+	private bool isLightOn = false;
 
 	private VirtualButton buttonVr;
 
@@ -37,14 +37,20 @@ public class SwitchButtonController : MonoBehaviour {
 	#region Decoration
 	public void turnLightOn()
 	{
-		this.isLightOn = true;
-		this.attrachedSwitch.GetComponent<RailroadSwitchController>().activateIndicators(true);
+		if(!this.isLightOn)
+		{
+			this.isLightOn = true;
+			this.attrachedSwitch.GetComponent<RailroadSwitchController>().activateIndicators(true);
+		}
 	}
 
 	public void turnLightOff()
 	{
-		this.isLightOn = false;
-		this.attrachedSwitch.GetComponent<RailroadSwitchController>().activateIndicators(false);
+		if(this.isLightOn)
+		{
+			this.isLightOn = false;
+			this.attrachedSwitch.GetComponent<RailroadSwitchController>().activateIndicators(false);
+		}
 	}
 
 	private void setLight()
@@ -61,7 +67,7 @@ public class SwitchButtonController : MonoBehaviour {
 	#endregion
 	private void buttonAction()
 	{
-		
+		this.attrachedSwitch.GetComponent<RailroadSwitchController>().changeDirectionIndex();
 	}
 
 	private void buttonPressed ()
@@ -74,7 +80,7 @@ public class SwitchButtonController : MonoBehaviour {
 		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
 		{
 			this.isPressed = false;
-		}
+		}		
 	}
 
 	#region Script
@@ -102,65 +108,13 @@ public class SwitchButtonController : MonoBehaviour {
 			this.GetComponent<SpringJoint>().connectedAnchor = this.transform.position;
 		}
 	}
-	#endregion
 
-//	public float spring;
-//	public float triggerDistance;
-//	public float max_distance;
-//	public float min_distance;
-//	public GameObject pressedAddon;
-//	
-//	private bool is_pressed;
-//	private Vector3 resting_position;
-//	private Material childMaterial;
-//
-//	private void constraintMovement()
-//	{
-//		Vector3 _local_position = transform.localPosition;
-//		_local_position.y = Mathf.Clamp (_local_position.y, this.min_distance, this.max_distance);
-//		transform.localPosition = _local_position;
-//	}
-//	
-//	private void appliySpring()
-//	{
-//		transform.GetComponent<Rigidbody> ().AddRelativeForce (-this.spring * (transform.localPosition - this.resting_position));
-//	}
-//	
-//	private void checkTrigger()
-//	{
-//		if (!this.is_pressed) {
-//			if (transform.localPosition.y < this.triggerDistance) {
-//				this.buttonPressedBlur(1);
-//				this.is_pressed = true;
-//				transform.parent.GetComponent<BoundingBoxButtonController> ().changeDirectionIndex ();
-//			}
-//		} else if (this.is_pressed) {
-//			if (transform.localPosition.y > this.triggerDistance) {
-//				this.buttonPressedBlur(0);
-//				this.is_pressed = false;
-//			}
-//		}
-//	}
-//	
-//	private void buttonPressedBlur(float alpha)
-//	{
-//		childMaterial.color = new Color(childMaterial.color.r,childMaterial.color.g, childMaterial.color.b, alpha);
-//	}
-//
-//
-//	#region Script
-//	void Start()
-//	{
-//		this.resting_position = transform.localPosition;
-//		this.is_pressed = false;
-//		childMaterial = pressedAddon.GetComponent<MeshRenderer>().material;
-//	}
-//	
-//	void Update()
-//	{
-//		this.constraintMovement();
-//		this.appliySpring ();
-//		this.checkTrigger ();
-//	}
-//	#endregion
+	void OnCollisionEnter(Collision other)
+	{
+		if(!other.collider.tag.Equals("IndexUI") && !other.collider.tag.Equals("IndexRight"))
+		{
+			Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), other.collider);
+		}
+	}
+	#endregion
 }

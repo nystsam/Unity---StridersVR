@@ -10,8 +10,8 @@ public class SwitchesPanelController : MonoBehaviour {
 
 	private List<GameObject> switchList = new List<GameObject>();
 
-	private bool isActive = false;
-	[SerializeField]private bool isMoving = false;
+	[SerializeField] private bool isMoving = false;
+
 
 	public SwitchesPanelController()
 	{
@@ -45,6 +45,21 @@ public class SwitchesPanelController : MonoBehaviour {
 			}
 			_switchNumber++;
 		}
+	}
+
+	public Vector3 GetPanelPosition()
+	{
+		return this.transform.position;
+	}
+
+	public void SetPanelPosition(Vector3 newPosition)
+	{
+		this.transform.position = newPosition;
+	}
+
+	public void AllowToMove(bool val)
+	{
+		this.isMoving = val;
 	}
 
 	public bool IsControlMoving()
