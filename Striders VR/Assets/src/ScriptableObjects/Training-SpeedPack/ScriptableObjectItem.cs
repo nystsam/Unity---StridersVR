@@ -7,7 +7,7 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 	public class ScriptableObjectItem : ScriptableObject
 	{
 		[SerializeField]
-		private GameObject myCellphone;
+		private GameObject cellphonePrefab;
 
 		[SerializeField]
 		private GameObject keyringPrefab;
@@ -36,6 +36,9 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 		[SerializeField]
 		private GameObject shoesPrefab;
 
+		[SerializeField]
+		private GameObject rubikPrefab;
+
 
 		public List<Item> items()
 		{
@@ -50,13 +53,14 @@ namespace StridersVR.ScriptableObjects.SpeedPack
 			_myItemList.Add (new Item (this.headphonesPrefab));
 			_myItemList.Add (new Item (this.capPrefab));
 			_myItemList.Add (new Item (this.shoesPrefab));
+			_myItemList.Add (new Item (this.cellphonePrefab));
 
 			return _myItemList;
 		}
 
 		public Item playerItem()
 		{
-			return new Item (this.myCellphone);
+			return new Item (this.rubikPrefab);
 		}
 
 	}

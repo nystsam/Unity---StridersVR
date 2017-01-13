@@ -11,7 +11,7 @@ public class MenuButtonController : MonoBehaviour {
 	public ScriptableObjectMenuButtons buttonData;
 
 
-	private float triggerDistance = 0.075f;
+	private float triggerDistance = 0.1f;
 
 	private bool isPressed = false;
 
@@ -43,7 +43,7 @@ public class MenuButtonController : MonoBehaviour {
 
 	void Update () 
 	{
-		this.transform.localPosition = this.virtualButton.ConstraintMovement (this.transform.localPosition, 0f, 0.1f);
+		this.transform.localPosition = this.virtualButton.ConstraintMovement (this.transform.localPosition, 0f, 0.15f);
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.virtualButton.ApplyRelativeSpring (this.transform.localPosition));
 		
 		this.buttonPressed ();

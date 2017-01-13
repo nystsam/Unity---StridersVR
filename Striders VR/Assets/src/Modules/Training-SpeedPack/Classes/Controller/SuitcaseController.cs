@@ -100,14 +100,14 @@ public class SuitcaseController : MonoBehaviour {
 		this.createParts ();
 	}
 	
-	public void placePlayerItem(Spot currentSpot)
+	public void placePlayerItem(Spot currentSpot, GameObject draggableItem)
 	{
-		GameObject _draggableItem = GameObject.FindGameObjectWithTag ("DraggableItem");
+		//GameObject _draggableItem = GameObject.FindGameObjectWithTag ("DraggableItem");
 
-		_draggableItem.GetComponent<ItemDraggableController> ().stopDragging ();
-		_draggableItem.GetComponent<BoxCollider> ().enabled = false;
-		_draggableItem.transform.parent = this.transform.GetChild(0).Find ("SuitcasePart").Find ("Items");
-		_draggableItem.transform.localPosition = currentSpot.SpotPosition;
+		draggableItem.GetComponent<ItemDraggableController> ().IsDraggable = false;
+		draggableItem.GetComponent<BoxCollider> ().enabled = false;
+		draggableItem.transform.parent = this.transform.GetChild(0).Find ("SuitcasePart").Find ("Items");
+		draggableItem.transform.localPosition = currentSpot.SpotPosition;
 
 		this.currentPartIndex = this.transform.childCount - 1;
 		this.allowStartAnimation = true;

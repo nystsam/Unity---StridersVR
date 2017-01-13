@@ -24,13 +24,14 @@ public class FingerIndexRayController : MonoBehaviour {
 	private bool placingItem = false;
 	private bool isRayRangeIncreased = false;
 
+
 	private void outHit()
 	{
 		if (hit.collider.tag.Equals ("SuitcaseSpot") && hit.distance < 0.35f && this.handModel.GetLeapHand ().IsLeft) 
 		{
 			this.hitting = true;
 			hit.collider.GetComponent<SpotController> ().hoverColor (true);
-			if(this.GetComponentInParent<GrabController>().IsTouching && hit.collider.GetComponent<SpotController> ().IsActive)
+			if(this.GetComponentInParent<GrabController>().IsGrabbingObject() && hit.collider.GetComponent<SpotController> ().IsActive)
 			{
 				this.hittingSpot = hit.collider.GetComponent<SpotController>().LocalSpot;
 				this.touchBoard.startAction();
@@ -107,28 +108,30 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	void Update () 
 	{
-		if (this.handModel.GetLeapHand ().IsLeft) 
-		{
-			if(this.GetComponentInParent<GrabController>().IsTouching && !this.isRayRangeIncreased)
+//		if (this.handModel.GetLeapHand ().IsLeft) 
+//		{
+			if(this.GetComponentInParent<GrabController>().IsGrabbingObject() && !this.isRayRangeIncreased)
 			{
 				hitRange += 0.25f;
 				this.isRayRangeIncreased = true;
 			}
-			else if(!this.GetComponentInParent<GrabController>().IsTouching && this.isRayRangeIncreased)
+			else if(!this.GetComponentInParent<GrabController>().IsGrabbingObject() && this.isRayRangeIncreased)
 			{
 				hitRange -= 0.25f;
 				this.isRayRangeIncreased = false;
 			}
 			Debug.DrawRay (transform.position, -Vector3.forward * hitRange);
 			this.createRay (-Vector3.forward);
-		}
+//		}
 
 		if (this.placingItem) 
 		{
 			if(this.touchBoard.actionComplete())
 			{
 				this.placingItem = false;
-				this.suitcaseContainer.GetComponent<SuitcaseController>().placePlayerItem(this.hittingSpot);
+
+				GameObject _draggableItem = this.GetComponentInParent<GrabController>().GetDraggableItem();
+				this.suitcaseContainer.GetComponent<SuitcaseController>().placePlayerItem(this.hittingSpot, _draggableItem);
 			}
 		}
 

@@ -9,16 +9,26 @@ public class UIMenuOptions : MonoBehaviour {
 	public GameObject doActionButton;
 	public GameObject actionName;
 
-	private bool isActive;
+	public static UIMenuOptions Current;
 
-//	private UIButtonActions buttonReset;
-//	private UIButtonActions buttonExit;
-//	private UIButtonActions buttonClose;
+	private bool isActive;
+	private bool disableHandActions = false;
+	public bool DisableHandActions
+	{
+		get { return disableHandActions; }
+	}
+
+
+	public UIMenuOptions()
+	{
+		Current = this;
+	}
 
 	public bool activeMenu()
 	{
 		if (!this.isActive) 
 		{
+			this.disableHandActions = true;
 			this.isActive = true;
 			this.gameObject.SetActive(true);
 			this.confirmation.SetActive(false);
@@ -31,6 +41,7 @@ public class UIMenuOptions : MonoBehaviour {
 
 	public void desactiveMenu()
 	{
+		this.disableHandActions = false;
 		this.isActive = false;
 		this.gameObject.SetActive (false);
 	}
