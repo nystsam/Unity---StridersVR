@@ -1,5 +1,42 @@
-CREATE  TABLE "main"."User" ("us_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "us_name" TEXT NOT NULL  UNIQUE )
+CREATE  TABLE "main"."User" ("us_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "us_name" TEXT NOT NULL  UNIQUE );
 
-CREATE  TABLE "main"."Training" ("tr_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "tr_nombre" TEXT NOT NULL )
+CREATE TABLE "Training" ("tr_id" INTEGER PRIMARY KEY  NOT NULL ,"tr_name" TEXT NOT NULL  DEFAULT (null) ,"tr_tutorial" text DEFAULT (null) );
 
-CREATE TABLE "Statistics" ("st_id" INTEGER NOT NULL , "st_analysis" TEXT, "fk_user" INTEGER NOT NULL , "fk_training" INTEGER NOT NULL , PRIMARY KEY ("st_id", "fk_user", "fk_training"), FOREIGN KEY("fk_user") REFERENCES User("us_id"), FOREIGN KEY("fk_training") REFERENCES Training("tr_id"))
+CREATE TABLE Statistic(
+st_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+st_date DATETIME NOT NULL, 
+st_correct INTEGER NOT NULL,
+st_incorrectINTEGER NOT NULL,  
+fk_training INTEGER NOT NULL,
+fk_user INTEGER NOT NULL,
+FOREIGN KEY(fk_training) REFERENCES Training(tr_id)
+FOREIGN KEY(fk_user ) REFERENCES User(us_id)
+);
+
+
+CREATE TABLE Activity(
+ac_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+ac_name TEXT NOT NULL, 
+ac_description TEXT NOT NULL, 
+fk_training INTEGER NOT NULL,
+FOREIGN KEY(fk_training) REFERENCES Training(tr_id)
+);
+
+
+CREATE TABLE Criterion(
+cr_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+cr_attempts INTEGER,
+cr_time TEXT, 
+cr_description TEXT NOT NULL,
+fk_statistic INTEGER NOT NULL,
+FOREIGN KEY(fk_statistic ) REFERENCES Statistic(st_id)
+);
+
+
+CREATE TABLE Result(
+re_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+re_description TEXT NOT NULL,
+fk_statistic INTEGER NOT NULL,
+UNIQUE (fk_statistic),
+FOREIGN KEY(fk_statistic ) REFERENCES Statistic(st_id)
+);

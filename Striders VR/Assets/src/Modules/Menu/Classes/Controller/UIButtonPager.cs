@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using StridersVR.Domain;
 using StridersVR.Modules.Menu.Logic;
 
 public class UIButtonPager : MonoBehaviour {
 
-	public Image buttonImage;
+	public GameObject buttonImage;
 
 	public bool isNext;
 
@@ -15,7 +14,7 @@ public class UIButtonPager : MonoBehaviour {
 	private bool isPressed = false;
 	//private bool colorChanged = false;
 
-	private float triggerDistance = 0.15f;
+	private float triggerDistance = 0.22f;
 
 	private VirtualButton virtualButton;
 
@@ -44,15 +43,22 @@ public class UIButtonPager : MonoBehaviour {
 	#region Script
 	void Awake () 
 	{
-		this.virtualButton = new VirtualButton (this.transform.localPosition, 300, Vector3.forward);
+		this.virtualButton = new VirtualButton (this.transform.localPosition, 200, Vector3.forward);
 	}
 
 	void Update () 
 	{
-		this.transform.localPosition = this.virtualButton.ConstraintMovement (this.transform.localPosition, 0f, 0.2f);
+		this.transform.localPosition = this.virtualButton.ConstraintMovement (this.transform.localPosition, 0, 0.25f);
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.virtualButton.ApplyRelativeSpring (this.transform.localPosition));
 		
 		this.buttonPressed ();
+	}
+
+	void OnDisable()
+	{
+		this.transform.localPosition = this.virtualButton.RestingPosition;
+		this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 	}
 
 //	void OnCollisionEnter(Collision other)
