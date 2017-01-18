@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine;
 using System.Collections.Generic;
 using StridersVR.Modules.Menu.Logic;
 using StridersVR.Domain;

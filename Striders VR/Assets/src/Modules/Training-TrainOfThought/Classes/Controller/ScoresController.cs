@@ -18,6 +18,7 @@ public class ScoresController : MonoBehaviour {
 	private RepresentativeTrainScore trainScore;
 	private bool gameBegin = false;
 	private bool gameTimerEnd = false;
+	private bool isDone = false;
 
 	private void getReady()
 	{
@@ -65,9 +66,14 @@ public class ScoresController : MonoBehaviour {
 		}
 		else if (this.gameTimerEnd) 
 		{
-			if(this.trainScore.remainingTrains())
+			if(this.trainScore.remainingTrains() && !this.isDone)
 			{
-				
+				this.isDone = true;
+				int success = int.Parse(this.countingCurrent.text);
+				int total = int.Parse(this.countingTotal.text);
+
+				StatisticsFocusRouteController.Current.calculateResults();
+				StatisticsFocusRouteController.Current.SetResults(success, total);
 			}
 		}
 	}

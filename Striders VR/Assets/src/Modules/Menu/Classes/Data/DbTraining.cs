@@ -31,6 +31,7 @@ namespace StridersVR.Modules.Menu.Data
 						_newTraining.Image = this.dbCmdReader.GetString(3);
 						_trainingList.Add(_newTraining);
 					}
+					this.closeConnection();
 					return _trainingList;
 				}
 			}

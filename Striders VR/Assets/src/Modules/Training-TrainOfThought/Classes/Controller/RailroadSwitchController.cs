@@ -26,7 +26,26 @@ public class RailroadSwitchController : MonoBehaviour {
 	private bool firstSwitchOpen = false;
 	private bool secondSwitchOpen = false;
 	private bool checkOrientation = false;
+	private bool isFirstChange = false;
 
+	private int directionChanged = 0;
+
+
+	public void newTrainApproaching()
+	{
+		this.directionChanged = 0;
+		this.isFirstChange = false;
+	}
+
+	public int GetDirectionChangedCount()
+	{
+		return this.directionChanged;
+	}
+
+	public bool FirstChanged()
+	{
+		return this.isFirstChange;
+	}
 
 	public void setSwitchNumber(int number)
 	{
@@ -59,10 +78,15 @@ public class RailroadSwitchController : MonoBehaviour {
 
 	public void changeDirectionIndex()
 	{
+		if(!this.isFirstChange)
+			this.isFirstChange = true;
+
 		if (this.selectedDirectionIndex == 1)
 			this.selectedDirectionIndex = 0;
 		else
 			this.selectedDirectionIndex = 1;
+
+		this.directionChanged ++;
 	}
 
 

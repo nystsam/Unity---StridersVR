@@ -5,6 +5,8 @@ using StridersVR.Modules.TrainOfThought.Logic.Representatives;
 
 public class TrainController : MonoBehaviour {
 
+	public GameObject frontTrain;
+
 	public float speed = 2f;
 	public float rotationSpeed = 9;
 	public float railroadSwitchInView;
@@ -14,30 +16,83 @@ public class TrainController : MonoBehaviour {
 	private RepresentativeTrainScore trainScore;
 	private ColorTrain colorTrain;
 
+	private ActivityFocusRoute currentActivity;
+
+	private bool countBegin = false;
+
+	private float hitRange = 4.6f;
+	private float timing = 0;
+
+	private int trainCount = 0;
+	private int buttonCount = 0;
+
+	private GameObject nearierSwitch;
+
+	private void setRayCast()
+	{
+		RaycastHit hit;
+		Vector3 myDirection = this.frontTrain.transform.right;
+		Ray myRay = new Ray (this.frontTrain.transform.position, myDirection * this.hitRange);
+		Debug.DrawRay (this.frontTrain.transform.position, myDirection * this.hitRange);
+		if(!this.countBegin && this.nearierSwitch == null)
+		{
+			if (Physics.Raycast (myRay, out hit, this.hitRange) && hit.collider.tag.Equals ("RailroadSwitch")) 
+			{
+				this.nearierSwitch = hit.collider.gameObject;
+				this.nearierSwitch.GetComponent<RailroadSwitchController>().newTrainApproaching();
+				this.countBegin = true;			
+			}
+		}
+	}
+
+	private IEnumerator waitToRotate(Collider other)
+	{
+		this.trainActions.ColliderEnter = true;
+		yield return new WaitForSeconds(0.5f);
+		this.trainActions.colliderDetector (other);
+		this.direction = this.trainActions.changeDirection ();
+		if(this.nearierSwitch != null)
+		{
+			this.trainCount = PlatformController.Current.TrainsInPlatform();
+			this.buttonCount = this.nearierSwitch.GetComponent<RailroadSwitchController>().GetDirectionChangedCount();
+			this.countBegin = false;
+			this.nearierSwitch = null;
+
+			this.currentActivity.AddResult(this.timing, this.trainCount, this.buttonCount);
+			this.timing = 0;
+			this.trainCount = 0;
+			this.buttonCount = 0;
+		}
+	}
 
 	#region Script
-	void Awake () {
+	void Awake () 
+	{
 		this.direction = new Vector3 (1, 0, 0);
 		this.trainActions = new RepresentativeTrainActions (this.direction);
 		this.trainActions.CurrentYAngle = transform.rotation.eulerAngles.y;
 		this.trainActions.RotationSpeed = this.rotationSpeed;
 		this.trainScore = GameObject.FindGameObjectWithTag ("TrainScore").GetComponent<ScoresController> ().TrainScore;
+		this.currentActivity = new ActivityFocusRoute();
 	}
 
-	void Update () {
-		/*
-		RaycastHit hit;
-		Ray detectionRay = new Ray (transform.position + transform.right, transform.right);
-		Debug.DrawRay (transform.position + transform.right, transform.right * this.curveDetectionDistance);
+	void Update () 
+	{
+		this.setRayCast();
 
-		if (Physics.Raycast (detectionRay, out hit, this.curveDetectionDistance)) 
+		if(this.countBegin)
 		{
-			if (hit.collider.tag.Equals ("Curve")) 
+			this.timing += Time.deltaTime;
+		}
+
+		if(this.countBegin && this.nearierSwitch != null)
+		{
+			if(this.nearierSwitch.GetComponent<RailroadSwitchController>().FirstChanged())
 			{
-				this.changeDirection (hit.collider);
+				this.countBegin = false;
 			}
 		}
-		*/
+
 		if (this.trainActions.AllowToRotate) 
 		{
 			transform.RotateAround (transform.position, Vector3.up, 9 * this.trainActions.NewRotation);
@@ -50,14 +105,15 @@ public class TrainController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) 
 	{
-		if (other.tag.Equals ("Curve") || other.tag.Equals ("RailroadSwitch")) 
+		if (other.tag.Equals ("Curve")) 
 		{
-			if (!this.trainActions.ColliderEnter) 
-			{
-				this.trainActions.ColliderEnter = true;
-				this.trainActions.colliderDetector (other);
-				this.direction = this.trainActions.changeDirection ();
-			}
+			this.trainActions.ColliderEnter = true;
+			this.trainActions.colliderDetector (other);
+			this.direction = this.trainActions.changeDirection ();
+		}
+		else if(other.tag.Equals ("RailroadSwitch") && !this.trainActions.ColliderEnter)
+		{
+			StartCoroutine(this.waitToRotate(other));
 		} 
 	}
 
@@ -75,6 +131,12 @@ public class TrainController : MonoBehaviour {
 		{
 			this.trainScore.trainArrival (other, this.transform.gameObject, this.colorTrain);
 		}
+	}
+
+	void OnDestroy()
+	{
+		this.currentActivity.IsTrainSucceeded = this.trainScore.IsSucceeded;
+		StatisticsFocusRouteController.Current.addNewResult(this.currentActivity);
 	}
 	#endregion
 

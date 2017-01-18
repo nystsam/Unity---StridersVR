@@ -10,6 +10,10 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 		private Text currentHit = null;
 		private Text totalHits = null;
 		private GameObject colorTrainContainer;
+		private bool isSucceeded = false;
+		public bool IsSucceeded {
+			get { return isSucceeded; }
+		}
 
 		public RepresentativeTrainScore (ref Text currentHit, ref Text totalHits, GameObject platform)
 		{
@@ -25,6 +29,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 
 			if (inGameStationColor.GetComponent<StationController> ().ColorStation.StationName == currentColorTrain.TrainDestination.StationName) 
 			{
+				this.isSucceeded = true;
 				_score++;
 			}
 
@@ -36,7 +41,6 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 		{
 			if (this.colorTrainContainer.transform.childCount <= 0) 
 			{
-				Debug.Log ("No hay mas trenes");
 				return true;
 			}
 			return false;

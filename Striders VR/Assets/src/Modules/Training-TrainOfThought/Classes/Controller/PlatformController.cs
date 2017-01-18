@@ -5,6 +5,8 @@ using StridersVR.ScriptableObjects.TrainOfThought;
 
 public class PlatformController : MonoBehaviour {
 
+	public static PlatformController Current;
+
 	public ScriptableObjectColorStation gameColorStationsData;
 	public ScriptableObjectCurveDirection gameCurvesDirectionData;
 	public ScriptableObjectRailroadSwitch gameRailroadSwitchData;
@@ -15,6 +17,16 @@ public class PlatformController : MonoBehaviour {
 	private bool allowToSpawn = false;
 	private float timeToSpawnTrain = 0;
 
+
+	public PlatformController()
+	{
+		Current = this;
+	}
+
+	public int TrainsInPlatform()
+	{
+		return this.transform.GetChild(2).childCount;
+	}
 
 	#region script
 	void Awake () 
