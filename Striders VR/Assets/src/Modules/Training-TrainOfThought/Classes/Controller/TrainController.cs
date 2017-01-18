@@ -19,7 +19,9 @@ public class TrainController : MonoBehaviour {
 	private ActivityFocusRoute currentActivity;
 
 	private bool countBegin = false;
+	private bool alloToDetect = true;
 
+	private float waitTime = 0.5f;
 	private float hitRange = 4.6f;
 	private float timing = 0;
 
@@ -47,9 +49,7 @@ public class TrainController : MonoBehaviour {
 
 	private IEnumerator waitToRotate(Collider other)
 	{
-		this.trainActions.ColliderEnter = true;
 		yield return new WaitForSeconds(0.5f);
-		this.trainActions.colliderDetector (other);
 		this.direction = this.trainActions.changeDirection ();
 		if(this.nearierSwitch != null)
 		{
@@ -63,6 +63,9 @@ public class TrainController : MonoBehaviour {
 			this.trainCount = 0;
 			this.buttonCount = 0;
 		}
+
+		yield return new WaitForSeconds(0.4f);
+		this.alloToDetect = true;
 	}
 
 	#region Script
@@ -98,7 +101,17 @@ public class TrainController : MonoBehaviour {
 			transform.RotateAround (transform.position, Vector3.up, 9 * this.trainActions.NewRotation);
 			this.trainActions.rotationValues (transform.rotation.eulerAngles.y);
 		}
-			
+
+//		if(this.waitSeconds)
+//		{
+//			this.waitSeconds -= Time.deltaTime;
+//			if(this.waitSeconds <= 0)
+//			{
+//				this.waitSeconds = false;
+//
+//			}
+//		}
+
 		transform.Translate(speed * direction.x * Time.deltaTime, speed * direction.y * Time.deltaTime , speed * direction.z * Time.deltaTime, Space.World);
 
 	}
@@ -111,18 +124,25 @@ public class TrainController : MonoBehaviour {
 			this.trainActions.colliderDetector (other);
 			this.direction = this.trainActions.changeDirection ();
 		}
-		else if(other.tag.Equals ("RailroadSwitch") && !this.trainActions.ColliderEnter)
+		else if(other.tag.Equals ("RailroadSwitch") && !this.trainActions.ColliderEnter && this.alloToDetect)
 		{
+			this.alloToDetect = false;
+			this.trainActions.ColliderEnter = true;
+			this.trainActions.colliderDetector (other);
 			StartCoroutine(this.waitToRotate(other));
 		} 
 	}
 
 	void OnTriggerExit(Collider other)
 	{
-		if (other.tag.Equals ("Curve") || other.tag.Equals ("RailroadSwitch")) 
+		if (other.tag.Equals ("Curve")) 
 		{
 			this.trainActions.ColliderEnter = false;
-		}	
+		}
+		else if(other.tag.Equals ("RailroadSwitch") && this.alloToDetect)
+		{
+			this.trainActions.ColliderEnter = false;
+		}
 	}
 
 	void OnTriggerStay(Collider other)

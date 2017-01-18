@@ -72,7 +72,8 @@ public class ScoresController : MonoBehaviour {
 				int success = int.Parse(this.countingCurrent.text);
 				int total = int.Parse(this.countingTotal.text);
 
-				StatisticsFocusRouteController.Current.calculateResults();
+				CameraUITools.Current.ChangePosition(true);
+				StatisticsFocusRouteController.Current.gameObject.SetActive(true);
 				StatisticsFocusRouteController.Current.SetResults(success, total);
 			}
 		}

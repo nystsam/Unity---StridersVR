@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using StridersVR.Modules.TrainOfThought.Data;
 
 namespace StridersVR.Domain.TrainOfThought
 {
 	public class StatisticsFocusRoute
 	{
 		private float focusedAttention = 0;
-		private float sustainedAttention = 0;
 		private float averageReactionTime = 0;
 
 		private float minTime = 0;		
@@ -14,16 +14,16 @@ namespace StridersVR.Domain.TrainOfThought
 		
 		private int totalTrains = 0;
 
-		public StatisticsFocusRoute ()
+		private List<string> activities;
+		public List<string> Activities 
 		{
-
+			get { return activities; }
 		}
 
-		public float GetFocusedAttention()
+		public StatisticsFocusRoute ()
 		{
-			float _fa = focusedAttention/totalTrains;
-
-			return (Mathf.Abs(_fa - this.maxTime))/(Mathf.Abs(this.minTime - this.maxTime)) * 100;
+			this.activities = new List<string>();
+			this.trainActivities();
 		}
 
 		public float GetAverageReactionTime()
@@ -31,9 +31,16 @@ namespace StridersVR.Domain.TrainOfThought
 			return averageReactionTime/totalTrains;
 		}
 
-		public float GetSustainedAttention(int 	success, int total)
+		public float GetAttention(int success, int total)
 		{
 			return (success * 100) / total;
+		}
+		
+		public float GetConcentration()
+		{
+			float _fa = focusedAttention/totalTrains;
+			
+			return (Mathf.Abs(_fa - this.maxTime))/(Mathf.Abs(this.minTime - this.maxTime)) * 100;
 		}
 
 		public void SetDataPerTrain (ActivityFocusRoute currentActivity)
@@ -72,6 +79,15 @@ namespace StridersVR.Domain.TrainOfThought
 			averageReactionTime += _averageTimePerTrain;
 			focusedAttention += _localFocusedAttetion;
 		}
+
+		private void trainActivities()
+		{
+			DbFocusRoute _dbFocusRoute = new DbFocusRoute();
+			int _id = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Id;
+
+			this.activities = _dbFocusRoute.getActivityList(_id);
+		}
+		
 	}
 }
 
