@@ -37,6 +37,15 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 			GameObject.Destroy (inGameTrainColor);
 		}
 
+		public void destroyTrain(GameObject inGameTrainColor, ActivityFocusRoute currentActivity)
+		{
+			currentActivity.IsTrainSucceeded = this.isSucceeded;
+			StatisticsFocusRouteController.Current.addNewResult(currentActivity);
+			GameObject.Destroy (inGameTrainColor);
+
+			this.isSucceeded = false;
+		}
+
 		public bool remainingTrains()
 		{
 			if (this.colorTrainContainer.transform.childCount <= 0) 

@@ -35,16 +35,17 @@ public class StatisticsFocusRouteController : MonoBehaviour {
 		this.Hits.text = success.ToString();
 		this.Errors.text = (total - success).ToString();
 
+		this.statistics.calculateResults(success, total);
 		_art = this.statistics.GetAverageReactionTime();
 		if(_art <= 0)
 			this.AverageTime.text = "Óptimo";
 		else
 			this.AverageTime.text = _art.ToString("F2") + " seg.";
 
-		this.activityBars[0].GetComponent<UIActivityBarController>().begin(this.statistics.GetAttention(success, total));
+		this.activityBars[0].GetComponent<UIActivityBarController>().begin(this.statistics.GetAttention());
 		this.activityBars[1].GetComponent<UIActivityBarController>().begin(this.statistics.GetConcentration());
 
-		// insertar a base de datos...
+		this.statistics.saveStatistics();
 	}
 
 	private void calculateResults()

@@ -4,7 +4,7 @@ using StridersVR.Domain;
 
 public class StaticUserController : MonoBehaviour {
 
-	private string userName;
+	private User user;
 
 	private Training training;
 
@@ -39,7 +39,7 @@ public class StaticUserController : MonoBehaviour {
 	{
 		this.training = null;
 		//FIXME Descomentar para hacer las pruebas en los mapas o juegos
-		this.userName = "dsam";
+		this.user = new User(12, "dsam");
 		this.training = new Training (1,Application.loadedLevelName);
 		this.training.Difficulty = "Medium";
 		GameObject.DontDestroyOnLoad (this);
@@ -47,10 +47,10 @@ public class StaticUserController : MonoBehaviour {
 	#endregion
 
 	#region Properties
-	public string UserName
+	public User User
 	{
-		get { return this.userName; }
-		set { this.userName = value; }
+		get { return this.user; }
+		set { this.user = value; }
 	}
 
 	public Training Training

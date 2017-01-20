@@ -30,12 +30,12 @@ namespace StridersVR.Modules.Menu.Logic
 			{
 				GameObject _clone;
 
-				_clone = (GameObject)GameObject.Instantiate(_buttonPrefab, Vector3.zero, Quaternion.identity);
+				_clone = (GameObject)GameObject.Instantiate(_buttonPrefab);
 				_clone.transform.parent = container.transform;
-				_clone.transform.localPosition = new Vector3(_posX, 0, -0.5f);
+				_clone.transform.localPosition = new Vector3(_posX, 0, -0.6f);
 				_clone.transform.localRotation = Quaternion.Euler(Vector3.zero);
 
-				//Agregar al script del boton datos del entrenamiento...
+				_clone.GetComponentInChildren<UiButtonSelectStatistic>().SetTraining(t);
 				_posX += 2.5f;
 			}
 		}

@@ -19,7 +19,7 @@ namespace StridersVR.Domain.Menu
 
 		public override string getActionName()
 		{
-			return "resetear";
+			return "reiniciar";
 		}
 	}
 }

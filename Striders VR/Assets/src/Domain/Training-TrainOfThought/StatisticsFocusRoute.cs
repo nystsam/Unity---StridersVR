@@ -1,13 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
-using StridersVR.Modules.TrainOfThought.Data;
+using StridersVR.Modules.Menu.Data;
 
 namespace StridersVR.Domain.TrainOfThought
 {
 	public class StatisticsFocusRoute
 	{
-		private float focusedAttention = 0;
-		private float averageReactionTime = 0;
+		private float attentionValue;
+		private float concentrationValue;
+		private float averageRactionTimeValue;
+
+		private float acumConcentration = 0;
+		private float acumAverageTime = 0;
 
 		private float minTime = 0;		
 		private float maxTime = 3.0f;
@@ -20,27 +24,45 @@ namespace StridersVR.Domain.TrainOfThought
 			get { return activities; }
 		}
 
+		private Statistic trainingStatistics;
+
+
 		public StatisticsFocusRoute ()
 		{
 			this.activities = new List<string>();
-			this.trainActivities();
+
+			int _idUser = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().User.Id;
+			int _idTraining = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Id;
+			
+			this.trainingStatistics = new Statistic(_idUser, _idTraining);
+			this.activities = this.trainingStatistics.GetTrainingActivities(_idTraining);
 		}
 
 		public float GetAverageReactionTime()
 		{
-			return averageReactionTime/totalTrains;
+			return this.averageRactionTimeValue;
 		}
 
-		public float GetAttention(int success, int total)
+		public float GetAttention()
 		{
-			return (success * 100) / total;
+			return this.attentionValue;
 		}
 		
 		public float GetConcentration()
 		{
-			float _fa = focusedAttention/totalTrains;
-			
-			return (Mathf.Abs(_fa - this.maxTime))/(Mathf.Abs(this.minTime - this.maxTime)) * 100;
+			return this.concentrationValue;
+		}
+
+		public void calculateResults(int success, int total)
+		{
+			float _fa = acumConcentration/totalTrains;
+			string _difficulty = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Difficulty;
+
+			this.concentrationValue = (Mathf.Abs(_fa - this.maxTime))/(Mathf.Abs(this.minTime - this.maxTime)) * 100;
+			this.averageRactionTimeValue = acumAverageTime/totalTrains;
+			this.attentionValue = (success * 100) / total;
+
+			this.trainingStatistics.SetValues(success, total - success, _difficulty);
 		}
 
 		public void SetDataPerTrain (ActivityFocusRoute currentActivity)
@@ -69,25 +91,35 @@ namespace StridersVR.Domain.TrainOfThought
 			}
 			else
 			{
-				_localFocusedAttetion += maxTime * _totalActibityPerTrain;
-				_averageTimePerTrain += maxTime * _totalActibityPerTrain;
+				_localFocusedAttetion += 2 * (_totalActibityPerTrain + maxTime);
+				_averageTimePerTrain += maxTime * (_totalActibityPerTrain + maxTime);
 			}
 			
 			_localFocusedAttetion = _localFocusedAttetion / _totalActibityPerTrain;
 			_averageTimePerTrain = _averageTimePerTrain/_totalActibityPerTrain;
 			
-			averageReactionTime += _averageTimePerTrain;
-			focusedAttention += _localFocusedAttetion;
+			acumAverageTime += _averageTimePerTrain;
+			acumConcentration += _localFocusedAttetion;
 		}
 
-		private void trainActivities()
+		public void saveStatistics()
 		{
-			DbFocusRoute _dbFocusRoute = new DbFocusRoute();
-			int _id = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().Training.Id;
+			string _timeDescription = "";
 
-			this.activities = _dbFocusRoute.getActivityList(_id);
+			this.trainingStatistics.SaveStatistics();
+			this.trainingStatistics.SaveLevel(this.attentionValue, this.activities[0]);
+			this.trainingStatistics.SaveLevel(this.concentrationValue, this.activities[1]);
+
+			if(this.averageRactionTimeValue <= this.minTime + 0.1f)
+				_timeDescription = "Óptimo tiempo de reacción para cada tren.";
+			else if(this.averageRactionTimeValue > this.minTime + 0.1f && this.averageRactionTimeValue <= this.minTime + 1.3f)
+				_timeDescription = "Buena reacción con respecto a cada tren, mejorable.";
+			else
+				_timeDescription = "Se recomienda seguir practicando.";
+
+			this.trainingStatistics.SaveReaction(this.averageRactionTimeValue, _timeDescription);
+
 		}
-		
 	}
 }
 

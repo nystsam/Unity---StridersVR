@@ -21,7 +21,6 @@ public class TrainController : MonoBehaviour {
 	private bool countBegin = false;
 	private bool alloToDetect = true;
 
-	private float waitTime = 0.5f;
 	private float hitRange = 4.6f;
 	private float timing = 0;
 
@@ -149,15 +148,19 @@ public class TrainController : MonoBehaviour {
 	{
 		if (other.tag.Equals ("ColorStation")) 
 		{
-			this.trainScore.trainArrival (other, this.transform.gameObject, this.colorTrain);
+			this.trainScore.trainArrival (other, this.gameObject, this.colorTrain);
+			this.trainScore.destroyTrain(this.gameObject, this.currentActivity);
 		}
 	}
 
-	void OnDestroy()
-	{
-		this.currentActivity.IsTrainSucceeded = this.trainScore.IsSucceeded;
-		StatisticsFocusRouteController.Current.addNewResult(this.currentActivity);
-	}
+//	void OnDestroy()
+//	{
+//		if(StatisticsFocusRouteController.Current != null)
+//		{
+//			this.currentActivity.IsTrainSucceeded = this.trainScore.IsSucceeded;
+//			StatisticsFocusRouteController.Current.addNewResult(this.currentActivity);
+//		}
+//	}
 	#endregion
 
 	#region Properties
