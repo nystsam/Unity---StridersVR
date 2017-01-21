@@ -4,10 +4,17 @@ using StridersVR.Domain.Menu;
 
 public class DifficultySelectionController : MonoBehaviour {
 
-	private DifficultyButton currentButton;
+	public static DifficultySelectionController Current;
+
+	private DifficultySelection currentButton;
 
 
-	public void selectDifficulty(DifficultyButton newDifficulty)
+	public DifficultySelectionController()
+	{
+		Current = this;
+	}
+
+	public void selectDifficulty(DifficultySelection newDifficulty)
 	{
 		if(this.currentButton != newDifficulty)
 		{

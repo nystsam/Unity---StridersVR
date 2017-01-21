@@ -35,7 +35,7 @@ namespace StridersVR.Modules.Menu.Logic
 				_clone.transform.localPosition = new Vector3(_posX, 0, -0.6f);
 				_clone.transform.localRotation = Quaternion.Euler(Vector3.zero);
 
-				_clone.GetComponentInChildren<UiButtonSelectStatistic>().SetTraining(t);
+				//_clone.GetComponentInChildren<UiButtonSelectStatistic>().SetTraining(t);
 				_posX += 2.5f;
 			}
 		}
