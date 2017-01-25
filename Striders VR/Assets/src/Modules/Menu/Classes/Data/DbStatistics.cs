@@ -114,6 +114,43 @@ namespace StridersVR.Modules.Menu.Data
 			this.closeConnection();
 		}
 		#endregion
+
+		#region Get Statistics
+		public List<Statistic> GetLastPlays(int userId, int trainingId)
+		{
+			List<Statistic> _statisticsList = new List<Statistic>();
+			
+			this.openConnection ();
+			using (this.dbCommand = this.dbConnection.CreateCommand()) 
+			{
+				this.sqlQuery = "SELECT st_id, st_date, st_difficulty, st_correct, st_incorrect FROM Statistic " +
+						"WHERE fk_training="+trainingId+" and fk_user="+userId+" ORDER BY datetime(st_date) DESC LIMIT 10";
+				this.dbCommand.CommandText = this.sqlQuery;
+				using(this.dbCmdReader = this.dbCommand.ExecuteReader())
+				{
+					while(this.dbCmdReader.Read())
+					{
+						Statistic _newStatistic = new Statistic(userId, trainingId);
+
+						int _id = this.dbCmdReader.GetInt32(0);
+						string _date = this.dbCmdReader.GetDateTime(1).ToString("dd/MM/yy - hh:mm tt").ToLower();
+						string _difficulty = this.dbCmdReader.GetString(2);
+						int _correct = this.dbCmdReader.GetInt32(3);
+						int _incorrect = this.dbCmdReader.GetInt32(4);
+
+						_newStatistic.Id = _id;
+						_newStatistic.CurrentDate = _date;
+						_newStatistic.SetValues(_correct, _incorrect, _difficulty);
+
+						_statisticsList.Add(_newStatistic);
+
+					}
+					this.closeConnection();
+					return _statisticsList;
+				}
+			}
+		}
+		#endregion
 	}
 }
 

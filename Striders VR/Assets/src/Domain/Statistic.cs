@@ -25,6 +25,7 @@ namespace StridersVR.Domain
 		public string Difficulty { get { return difficulty; } }
 
 		private string currentDate;
+		public string CurrentDate { set { currentDate = value; } get { return currentDate; } }
 
 		DbStatistics dbStatistics;
 
