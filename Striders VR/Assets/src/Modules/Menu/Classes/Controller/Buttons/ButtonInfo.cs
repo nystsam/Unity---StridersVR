@@ -45,7 +45,7 @@ namespace StridersVR.Buttons
 
 		protected override void ButtonAction ()
 		{
-			Debug.Log ("Muestra");
+			MenuStatisticsController.Current.ShowDetails(this.currentStatistic);
 		}
 
 		private void SetValues()

@@ -31,6 +31,16 @@ namespace StridersVR.Modules.Menu.Logic
 			this.statisticsList = this.dbStats.GetLastPlays(userId, trainingId);
 		}
 
+		public void GetTodayPlays(int userId, int trainingId)
+		{
+			this.statisticsList = this.dbStats.GetTodayPlays(userId, trainingId);
+		}
+
+		public void GetYesterdayPlays(int userId, int trainingId)
+		{
+			this.statisticsList = this.dbStats.GetYesterdayPlays(userId, trainingId);
+		}
+
 		public void RemovePanelInfo(GameObject panelContainer)
 		{
 			foreach(Transform child in panelContainer.transform)
@@ -42,18 +52,31 @@ namespace StridersVR.Modules.Menu.Logic
 		public void InstantiateButtons(GameObject panelContainer)
 		{
 			GameObject _buttonPrefab = Resources.Load ("Prefabs/Menu/InfoButton", typeof(GameObject)) as GameObject;
-			float _posY = 3f;
+			float _posY = 2.8f;
 
-			foreach(Statistic s in this.statisticsList)
+			if(this.statisticsList.Count > 0)
 			{
+				foreach(Statistic s in this.statisticsList)
+				{
+					GameObject _clone;
+					
+					_clone = (GameObject)GameObject.Instantiate(_buttonPrefab);
+					_clone.transform.parent = panelContainer.transform;
+					_clone.transform.localPosition = new Vector3(1.85f, _posY, -0.25f);
+					
+					_clone.GetComponentInChildren<ButtonInfo>().SetStatistic(s);
+					_posY -= 0.6f;
+				}
+			}
+			else
+			{
+				GameObject _textPrefab = Resources.Load("Prefabs/Menu/NoResult", typeof(GameObject)) as GameObject;
 				GameObject _clone;
 
-				_clone = (GameObject)GameObject.Instantiate(_buttonPrefab);
+				_clone = (GameObject)GameObject.Instantiate(_textPrefab);
 				_clone.transform.parent = panelContainer.transform;
-				_clone.transform.localPosition = new Vector3(1.65f, _posY, -0.25f);
+				_clone.transform.localPosition = new Vector3(-2.1f, _posY, -0.25f);
 
-				_clone.GetComponentInChildren<ButtonInfo>().SetStatistic(s);
-				_posY -= 0.6f;
 			}
 		}
 

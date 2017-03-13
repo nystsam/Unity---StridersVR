@@ -34,6 +34,18 @@ namespace StridersVR.Buttons
 			}
 		}
 
+		protected void ResetVirtualButton()
+		{
+			this.virtualButton = new VirtualButton (this.transform.localPosition, spring, direction);
+		}
+
+		protected void CancelForce()
+		{
+			this.transform.localPosition = this.virtualButton.RestingPosition;
+			this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+			this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+		}
+
 		#region Script
 		void Awake () 
 		{

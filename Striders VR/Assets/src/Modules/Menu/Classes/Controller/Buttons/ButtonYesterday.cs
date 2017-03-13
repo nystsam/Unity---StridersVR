@@ -10,6 +10,7 @@ namespace StridersVR.Buttons
 			if(!this.isSelected)
 			{
 				MenuStatisticsController.Current.NewButtonActive(this);
+				MenuStatisticsController.Current.GetYesterdayPlays();
 			}
 		}
 		

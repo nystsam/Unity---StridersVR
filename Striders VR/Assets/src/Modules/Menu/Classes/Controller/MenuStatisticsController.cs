@@ -13,6 +13,8 @@ public class MenuStatisticsController : MonoBehaviour {
 	public GameObject ButtonsContainer;
 	public GameObject PanelInfoContainer;
 
+	[SerializeField] private MenuResultController ResultMenu;
+
 	private StatisticManager localManager;
 
 	private int userId;
@@ -27,6 +29,15 @@ public class MenuStatisticsController : MonoBehaviour {
 	{
 		Current = this;
 	}
+
+	public void ShowDetails(Statistic newStatistic)
+	{
+		this.StatisticsSelectionMenu.SetActive(false);
+		this.ResultMenu.transform.position = new Vector3(2,7.5f,6.5f);
+		this.ResultMenu.gameObject.SetActive(true);
+		this.ResultMenu.SetStatistic(newStatistic);
+		this.ResultMenu.SetData();
+			}
 
 	public void SelectTraining(Training newTraining)
 	{
@@ -51,7 +62,19 @@ public class MenuStatisticsController : MonoBehaviour {
 	public void GetLastPlays()
 	{
 		this.localManager.GetLastPlays(this.userId, this.currentTraining.Id);
-		this.SetPanelInfo();
+		this.setPanelInfo();
+	}
+
+	public void GetTodayPlays()
+	{
+		this.localManager.GetTodayPlays(this.userId, this.currentTraining.Id);
+		this.setPanelInfo();
+	}
+
+	public void GetYesterdayPlays()
+	{
+		this.localManager.GetYesterdayPlays(this.userId, this.currentTraining.Id);
+		this.setPanelInfo();
 	}
 
 	public void SetDefaultButton(StatisticsPanelButton defaultButton)
@@ -59,7 +82,7 @@ public class MenuStatisticsController : MonoBehaviour {
 		this.defaultButton = defaultButton;
 	}
 
-	private void SetPanelInfo()
+	private void setPanelInfo()
 	{
 		this.localManager.RemovePanelInfo(this.PanelInfoContainer);
 		this.localManager.InstantiateButtons(this.PanelInfoContainer);
@@ -74,6 +97,7 @@ public class MenuStatisticsController : MonoBehaviour {
 		this.userId = GameObject.FindGameObjectWithTag("StaticUser").GetComponent<StaticUserController>().User.Id;
 
 		this.StatisticsSelectionMenu.SetActive(false);
+		this.ResultMenu.gameObject.SetActive(false);
 	}
 	#endregion
 	

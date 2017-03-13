@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StridersVR.Domain;
+using UnityEngine;
 
 namespace StridersVR.Modules.Menu.Data
 {
@@ -119,7 +120,8 @@ namespace StridersVR.Modules.Menu.Data
 		public List<Statistic> GetLastPlays(int userId, int trainingId)
 		{
 			List<Statistic> _statisticsList = new List<Statistic>();
-			
+			DbCriterion _dbCriterion = new DbCriterion();
+
 			this.openConnection ();
 			using (this.dbCommand = this.dbConnection.CreateCommand()) 
 			{
@@ -142,8 +144,85 @@ namespace StridersVR.Modules.Menu.Data
 						_newStatistic.CurrentDate = _date;
 						_newStatistic.SetValues(_correct, _incorrect, _difficulty);
 
+						_newStatistic.CriterionList = _dbCriterion.GetCriterions(_id); 
 						_statisticsList.Add(_newStatistic);
 
+					}
+					this.closeConnection();
+					return _statisticsList;
+				}
+			}
+		}
+
+		public List<Statistic> GetTodayPlays(int userId, int trainingId)
+		{
+			List<Statistic> _statisticsList = new List<Statistic>();
+			DbCriterion _dbCriterion = new DbCriterion();
+
+			this.openConnection ();
+			using (this.dbCommand = this.dbConnection.CreateCommand()) 
+			{
+				this.sqlQuery = "SELECT st_id, st_date, st_difficulty, st_correct, st_incorrect FROM Statistic " +
+						"WHERE fk_training="+trainingId+" and fk_user="+userId+" and date(st_date)BETWEEN date('now') and date('now', '+1 day') " +
+						"ORDER BY datetime(st_date) DESC LIMIT 10";
+				this.dbCommand.CommandText = this.sqlQuery;
+				using(this.dbCmdReader = this.dbCommand.ExecuteReader())
+				{
+					while(this.dbCmdReader.Read())
+					{
+						Statistic _newStatistic = new Statistic(userId, trainingId);
+						
+						int _id = this.dbCmdReader.GetInt32(0);
+						string _date = this.dbCmdReader.GetDateTime(1).ToString("dd/MM/yy - hh:mm tt").ToLower();
+						string _difficulty = this.dbCmdReader.GetString(2);
+						int _correct = this.dbCmdReader.GetInt32(3);
+						int _incorrect = this.dbCmdReader.GetInt32(4);
+						
+						_newStatistic.Id = _id;
+						_newStatistic.CurrentDate = _date;
+						_newStatistic.SetValues(_correct, _incorrect, _difficulty);
+						
+						_newStatistic.CriterionList = _dbCriterion.GetCriterions(_id); 
+						_statisticsList.Add(_newStatistic);
+						
+					}
+					this.closeConnection();
+					return _statisticsList;
+				}
+			}
+		}
+
+		public List<Statistic> GetYesterdayPlays(int userId, int trainingId)
+		{
+			List<Statistic> _statisticsList = new List<Statistic>();
+			DbCriterion _dbCriterion = new DbCriterion();
+			
+			this.openConnection ();
+			using (this.dbCommand = this.dbConnection.CreateCommand()) 
+			{
+				this.sqlQuery = "SELECT st_id, st_date, st_difficulty, st_correct, st_incorrect FROM Statistic " +
+					"WHERE fk_training="+trainingId+" and fk_user="+userId+" and date(st_date)=date('now', '-1 day', 'localtime')  " +
+						"ORDER BY datetime(st_date) DESC LIMIT 10";
+				this.dbCommand.CommandText = this.sqlQuery;
+				using(this.dbCmdReader = this.dbCommand.ExecuteReader())
+				{
+					while(this.dbCmdReader.Read())
+					{
+						Statistic _newStatistic = new Statistic(userId, trainingId);
+						
+						int _id = this.dbCmdReader.GetInt32(0);
+						string _date = this.dbCmdReader.GetDateTime(1).ToString("dd/MM/yy - hh:mm tt").ToLower();
+						string _difficulty = this.dbCmdReader.GetString(2);
+						int _correct = this.dbCmdReader.GetInt32(3);
+						int _incorrect = this.dbCmdReader.GetInt32(4);
+						
+						_newStatistic.Id = _id;
+						_newStatistic.CurrentDate = _date;
+						_newStatistic.SetValues(_correct, _incorrect, _difficulty);
+						
+						_newStatistic.CriterionList = _dbCriterion.GetCriterions(_id); 
+						_statisticsList.Add(_newStatistic);
+						
 					}
 					this.closeConnection();
 					return _statisticsList;

@@ -30,12 +30,27 @@ public class MenuFingerRayController : MonoBehaviour {
 				this.currentObject = hit.collider.gameObject;
 				this.currentObject.GetComponent<ButtonInfo>().EnableButton();
 			}
+			else if(hit.collider.GetComponent<KeyboardButton>() != null)
+			{
+				if(this.currentObject != null && this.currentObject != hit.collider.gameObject)
+				{
+					this.currentObject.GetComponent<KeyboardButton>().DisableButton();
+				}
+				this.currentObject = hit.collider.gameObject;
+				this.currentObject.GetComponent<KeyboardButton>().EnableButton();
+			}
 		}
 		else if(this.currentObject != null)
 		{
 			if(this.isInfoButton)
 			{
 				this.currentObject.GetComponent<ButtonInfo>().DisableButton();
+				this.currentObject = null;
+				this.isInfoButton = false;
+			}
+			else
+			{
+				this.currentObject.GetComponent<KeyboardButton>().DisableButton();
 				this.currentObject = null;
 				this.isInfoButton = false;
 			}

@@ -27,6 +27,9 @@ namespace StridersVR.Domain
 		private string currentDate;
 		public string CurrentDate { set { currentDate = value; } get { return currentDate; } }
 
+		private List<Criterion> criterionList;
+		public List<Criterion> CriterionList { set { criterionList = value; } get { return criterionList; } }
+
 		DbStatistics dbStatistics;
 
 
@@ -34,6 +37,9 @@ namespace StridersVR.Domain
 		{
 			this.userId = userId;
 			this.trainingId = trainingId;
+			this.id = 0;
+
+			this.criterionList = new List<Criterion>();
 			this.dbStatistics = new DbStatistics();
 		}
 
@@ -47,6 +53,11 @@ namespace StridersVR.Domain
 		public List<string> GetTrainingActivities(int trainingId)
 		{
 			return this.dbStatistics.getActivityList(trainingId);
+		}
+
+		public int GetTotal()
+		{
+			return this.hits + this.errors;
 		}
 
 		public void SaveStatistics()
