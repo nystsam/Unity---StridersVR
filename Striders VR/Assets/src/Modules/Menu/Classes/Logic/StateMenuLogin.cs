@@ -25,6 +25,7 @@ namespace StridersVR.Modules.Menu.Logic
 
 		public Boolean menuFeatures()
 		{
+			/*
 			DbUserLogin _userLogin;
 			if(Regex.IsMatch(this.menuCamera.ActualUser, @"^[a-zA-Z0-9_-]{3,15}$"))
 			{
@@ -35,6 +36,7 @@ namespace StridersVR.Modules.Menu.Logic
 					return true;
 				}
 			}
+			*/
 			return false;
 		}
 

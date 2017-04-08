@@ -63,9 +63,13 @@ namespace StridersVR.Buttons
 
 		void OnDisable()
 		{
-			this.transform.localPosition = this.virtualButton.RestingPosition;
-			this.GetComponent<Rigidbody>().velocity = Vector3.zero;
-			this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			if(this.virtualButton != null)
+			{
+				this.transform.localPosition = this.virtualButton.RestingPosition;
+				this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+				this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			}
+
 		}
 		#endregion
 	}

@@ -17,7 +17,11 @@ public class MenuStatisticsController : MonoBehaviour {
 
 	private StatisticManager localManager;
 
-	private int userId;
+	private User currentUser;
+	public User CurrentUser {
+		get { return currentUser; }
+		set { currentUser = value; }
+	}
 
 	private Training currentTraining;
 
@@ -33,11 +37,11 @@ public class MenuStatisticsController : MonoBehaviour {
 	public void ShowDetails(Statistic newStatistic)
 	{
 		this.StatisticsSelectionMenu.SetActive(false);
-		this.ResultMenu.transform.position = new Vector3(2,7.5f,6.5f);
+		this.ResultMenu.transform.position = new Vector3(2,7.5f,10.5f);
 		this.ResultMenu.gameObject.SetActive(true);
 		this.ResultMenu.SetStatistic(newStatistic);
 		this.ResultMenu.SetData();
-			}
+	}
 
 	public void SelectTraining(Training newTraining)
 	{
@@ -61,20 +65,29 @@ public class MenuStatisticsController : MonoBehaviour {
 
 	public void GetLastPlays()
 	{
-		this.localManager.GetLastPlays(this.userId, this.currentTraining.Id);
-		this.setPanelInfo();
+		if(this.currentUser != null)
+		{
+			this.localManager.GetLastPlays(this.currentUser.Id, this.currentTraining.Id);
+			this.setPanelInfo();
+		}
 	}
 
 	public void GetTodayPlays()
 	{
-		this.localManager.GetTodayPlays(this.userId, this.currentTraining.Id);
-		this.setPanelInfo();
+		if(this.currentUser != null)
+		{
+			this.localManager.GetTodayPlays(this.currentUser.Id, this.currentTraining.Id);
+			this.setPanelInfo();
+		}
 	}
 
 	public void GetYesterdayPlays()
 	{
-		this.localManager.GetYesterdayPlays(this.userId, this.currentTraining.Id);
-		this.setPanelInfo();
+		if(this.currentUser != null)
+		{
+			this.localManager.GetYesterdayPlays(this.currentUser.Id, this.currentTraining.Id);
+			this.setPanelInfo();
+		}
 	}
 
 	public void SetDefaultButton(StatisticsPanelButton defaultButton)
@@ -93,8 +106,6 @@ public class MenuStatisticsController : MonoBehaviour {
 	{
 		this.localManager = new StatisticManager();
 		this.localManager.InstantiateButtons(this.ButtonsContainer, this.StatisticsMenu, this.StatisticsSelectionMenu);
-
-		this.userId = GameObject.FindGameObjectWithTag("StaticUser").GetComponent<StaticUserController>().User.Id;
 
 		this.StatisticsSelectionMenu.SetActive(false);
 		this.ResultMenu.gameObject.SetActive(false);

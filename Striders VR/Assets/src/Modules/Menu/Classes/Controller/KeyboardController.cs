@@ -51,6 +51,16 @@ public class KeyboardController : MonoBehaviour {
 			this.isFirstLeter = false;
 	}
 
+	public string GetText()
+	{
+		return this.inputText.text;
+	}
+
+	public void ClearText()
+	{
+		this.inputText.text = "";
+	}
+
 	#region Script
 	void Start () 
 	{
