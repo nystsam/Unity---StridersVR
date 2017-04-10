@@ -6,8 +6,15 @@ using StridersVR.Domain;
 [RequireComponent(typeof (SpringJoint))]
 public class SwitchButtonController : MonoBehaviour {
 
+	/*
 	public Light buttonLight;
 	public TextMesh buttonNumber;
+	*/
+	public TextMesh buttonNumber;
+	public Material current;
+	public Material hover;
+
+	public MeshRenderer background;
 
 	public float triggerDistance;
 	public float spring;
@@ -17,7 +24,6 @@ public class SwitchButtonController : MonoBehaviour {
 	private GameObject attrachedSwitch;
 
 	private bool isPressed = false;
-	private bool isLightOn = false;
 
 	private VirtualButton buttonVr;
 
@@ -26,15 +32,40 @@ public class SwitchButtonController : MonoBehaviour {
 	private float startingZ;
 	private float startingX;
 
+	private AudioSource buttonSound;
 
-	public void setAttachedSwitch(GameObject newSwitch, int switchNumber)
+	public void setAttachedSwitch(GameObject newSwitch, int number)
 	{
 		this.attrachedSwitch = newSwitch;
-		this.buttonNumber.text = switchNumber.ToString();
+		this.buttonNumber.text = number.ToString();
+		Vector3 _currentRotation, _newRotation;
+		_currentRotation = this.attrachedSwitch.GetComponent<RailroadSwitchController>().switchDirection.transform.localRotation.eulerAngles;
+		_newRotation = new Vector3(0,_currentRotation.y, 0);
+		this.transform.localRotation = Quaternion.Euler(_newRotation);
 	}
 
 
 	#region Decoration
+	public void EnableButton()
+	{
+		this.GetComponent<Rigidbody>().isKinematic = false;
+		this.background.material = this.hover;
+	}
+	
+	public void DisableButton()
+	{
+		this.GetComponent<Rigidbody>().isKinematic = true;
+		this.background.material = this.current;
+		this.CancelForce();
+	}
+
+	private void CancelForce()
+	{
+		this.transform.localPosition = this.buttonVr.RestingPosition;
+		this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+	}
+	/*
 	public void turnLightOn()
 	{
 		if(!this.isLightOn)
@@ -64,9 +95,14 @@ public class SwitchButtonController : MonoBehaviour {
 			if(this.buttonLight.intensity > 0)
 				this.buttonLight.intensity -= 0.4f;
 	}
+	*/
 	#endregion
 	private void buttonAction()
 	{
+		if(this.buttonSound != null)
+		{
+			this.buttonSound.Play();
+		}
 		this.attrachedSwitch.GetComponent<RailroadSwitchController>().changeDirectionIndex();
 	}
 
@@ -90,6 +126,8 @@ public class SwitchButtonController : MonoBehaviour {
 		this.startingZ = this.transform.localPosition.z;
 		this.startingX = this.transform.localPosition.x;
 		this.GetComponent<SpringJoint>().connectedAnchor = this.transform.position;
+		this.GetComponent<Rigidbody>().isKinematic = true;
+		this.buttonSound = this.GetComponent<AudioSource>();
 	}
 
 	void Update()
@@ -101,12 +139,20 @@ public class SwitchButtonController : MonoBehaviour {
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
 
 		this.buttonPressed ();
-		this.setLight();
+		if(attrachedSwitch != null)
+		{
+			Vector3 _currentRotation, _newRotation;
+			_currentRotation = this.attrachedSwitch.GetComponent<RailroadSwitchController>().switchDirection.transform.localRotation.eulerAngles;
+			_newRotation = new Vector3(0,_currentRotation.y, 0);
+			this.transform.localRotation = Quaternion.Euler(_newRotation);
+		}
 
+		/*
 		if(SwitchesPanelController.Current.IsControlMoving())
 		{
 			this.GetComponent<SpringJoint>().connectedAnchor = this.transform.position;
 		}
+		*/
 	}
 
 	void OnCollisionEnter(Collision other)
@@ -114,6 +160,19 @@ public class SwitchButtonController : MonoBehaviour {
 		if(!other.collider.tag.Equals("IndexUI") && !other.collider.tag.Equals("IndexRight"))
 		{
 			Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), other.collider);
+		}
+
+		if(other.collider.tag.Equals("IndexUI") || other.collider.tag.Equals("IndexLeft"))
+		{
+			this.EnableButton();
+		}
+	}
+
+	void OnCollisionExit(Collision other)
+	{	
+		if(other.collider.tag.Equals("IndexUI") || other.collider.tag.Equals("IndexLeft"))
+		{
+			this.DisableButton();
 		}
 	}
 	#endregion

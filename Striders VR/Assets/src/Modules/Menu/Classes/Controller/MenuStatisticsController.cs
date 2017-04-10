@@ -106,7 +106,10 @@ public class MenuStatisticsController : MonoBehaviour {
 	{
 		this.localManager = new StatisticManager();
 		this.localManager.InstantiateButtons(this.ButtonsContainer, this.StatisticsMenu, this.StatisticsSelectionMenu);
-
+		if(GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().User != null)
+		{
+			this.currentUser = GameObject.FindGameObjectWithTag ("StaticUser").GetComponent<StaticUserController> ().User;
+		}
 		this.StatisticsSelectionMenu.SetActive(false);
 		this.ResultMenu.gameObject.SetActive(false);
 	}

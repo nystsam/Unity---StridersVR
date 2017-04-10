@@ -20,17 +20,18 @@ public class HandFingerRayController : MonoBehaviour {
 		{
 			if(this.button != null && this.button != hit.collider.gameObject)
 			{
-				this.button.GetComponent<SwitchButtonController>().turnLightOff();
+				this.button.GetComponent<SwitchButtonController>().DisableButton();
 			}
 
 			this.button = hit.collider.gameObject;
-			this.button.GetComponent<SwitchButtonController>().turnLightOn();
+			this.button.GetComponent<SwitchButtonController>().EnableButton();
 		}
 		else if(this.button != null)
 		{
-			this.button.GetComponent<SwitchButtonController>().turnLightOff();
+			this.button.GetComponent<SwitchButtonController>().DisableButton();
 			this.button = null;
 		}
+
 	}
 
 	#region Script

@@ -38,6 +38,11 @@ public class PlatformController : MonoBehaviour {
 		this.timeToSpawnTrain = this.trainPlatform.SpawnTrainTimer;
 	}
 
+	void Start()
+	{
+		SwitchesPanelController.Current.SetButtons();
+	}
+
 	void Update () 
 	{
 		if (this.allowToSpawn)

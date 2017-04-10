@@ -52,6 +52,7 @@ public class RailroadSwitchController : MonoBehaviour {
 		string _text = number.ToString();
 
 		this.switchNumber.text = _text;
+		this.switchNumber.gameObject.SetActive(false);
 		this.switchPointer.transform.GetChild(0).GetComponent<TextMesh>().text = _text;
 	}
 

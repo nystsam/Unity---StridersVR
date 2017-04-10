@@ -70,6 +70,7 @@ namespace StridersVR.Modules.Menu.Logic
 			}
 			else
 			{
+
 				GameObject _textPrefab = Resources.Load("Prefabs/Menu/NoResult", typeof(GameObject)) as GameObject;
 				GameObject _clone;
 
@@ -97,7 +98,7 @@ namespace StridersVR.Modules.Menu.Logic
 
 				_clone.GetComponentInChildren<ButtonStatisticsTraining>().SetTraining(t);
 				_clone.GetComponentInChildren<ButtonStatisticsTraining>().SetContainerTransition(current, target);
-				_posY -= 1.2f;
+				_posY -= 1.4f;
 			}
 			container.transform.parent = current.transform.GetChild(0);
 			container.transform.localPosition = Vector3.zero;

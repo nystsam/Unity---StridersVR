@@ -64,7 +64,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Representatives
 			this.contextGenerateObjects.generateStations (this.gameColorStationsData);
 			this.contextGenerateObjects.generateCurvesDirection (this.gameCurvesDirectionData);
 			this.contextGenerateObjects.generateSwitchs (this.gameRailroadSwitchData);
-			SwitchesPanelController.Current.CreateButtons();
+
 		}
 
 		/// <summary>

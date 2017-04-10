@@ -16,11 +16,11 @@ namespace StridersVR.Modules.Menu.Logic
 	public class StateMenuLogin : IStateMenu
 	{
 
-		private ContextMenuCamera menuCamera;
+		//private ContextMenuCamera menuCamera;
 
 		public StateMenuLogin (ContextMenuCamera menuCamera)
 		{
-			this.menuCamera = menuCamera;
+			//this.menuCamera = menuCamera;
 		}
 
 		public Boolean menuFeatures()

@@ -17,7 +17,7 @@ namespace StridersVR.Domain
 	public abstract class DbAccess
 	{
 
-		private String dbConnectionString = "URI=file:" + Application.dataPath + "/StridersVR_BD.sqlite";
+		private String dbConnectionString = "URI=file:" + Application.dataPath + "/Plugins/StridersVR_BD.sqlite";
 		protected IDbConnection dbConnection;
 		protected IDbCommand  dbCommand;
 		protected IDataReader dbCmdReader;

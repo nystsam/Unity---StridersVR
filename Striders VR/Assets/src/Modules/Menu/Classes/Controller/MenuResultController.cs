@@ -85,14 +85,5 @@ public class MenuResultController : MonoBehaviour {
 	}
 
 	#region Script
-	void Start () 
-	{
-	
-	}
-
-	void Update () 
-	{
-	
-	}
 	#endregion
 }

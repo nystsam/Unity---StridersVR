@@ -63,7 +63,7 @@ public class TrainController : MonoBehaviour {
 			this.buttonCount = 0;
 		}
 
-		yield return new WaitForSeconds(0.4f);
+		yield return new WaitForSeconds(0.6f);
 		this.alloToDetect = true;
 	}
 
