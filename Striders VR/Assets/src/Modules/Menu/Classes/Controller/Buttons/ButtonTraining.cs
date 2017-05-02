@@ -13,7 +13,6 @@ namespace StridersVR.Buttons
 			this.CurrentMenu.transform.localPosition = this.targetPosition;
 			this.TargetMenu.transform.localPosition = Vector3.zero;
 			this.TargetMenu.SetActive(true);
-
 		}
 
 		void Start()

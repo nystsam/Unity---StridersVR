@@ -24,6 +24,7 @@ public class SwitchButtonController : MonoBehaviour {
 	private GameObject attrachedSwitch;
 
 	private bool isPressed = false;
+	private bool collisionDetected = false;
 
 	private VirtualButton buttonVr;
 
@@ -162,16 +163,22 @@ public class SwitchButtonController : MonoBehaviour {
 			Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), other.collider);
 		}
 
-		if(other.collider.tag.Equals("IndexUI") || other.collider.tag.Equals("IndexLeft"))
+		if(other.collider.tag.Equals("IndexUI") || other.collider.tag.Equals("IndexRight"))
 		{
 			this.EnableButton();
+			this.collisionDetected = true;
 		}
 	}
 
 	void OnCollisionExit(Collision other)
 	{	
-		if(other.collider.tag.Equals("IndexUI") || other.collider.tag.Equals("IndexLeft"))
+		if(other.collider.tag.Equals("IndexUI") || other.collider.tag.Equals("IndexRight"))
 		{
+			this.DisableButton();
+		}
+		else if(this.collisionDetected)
+		{
+			this.collisionDetected = false;
 			this.DisableButton();
 		}
 	}

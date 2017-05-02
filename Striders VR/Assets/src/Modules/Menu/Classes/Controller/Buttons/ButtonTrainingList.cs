@@ -7,6 +7,8 @@ namespace StridersVR.Buttons
 {
 	public class ButtonTrainingList : MenuButton
 	{
+		public static ButtonTrainingList Current;
+
 		[SerializeField] private TextMesh trainingName;
 		[SerializeField] private MeshRenderer trainingImage;
 
@@ -15,7 +17,15 @@ namespace StridersVR.Buttons
 		private MenuTrainingList trainingList;
 
 		private Training currentTrain;
+		public Training CurrentTrain
+		{
+			get { return this.currentTrain; }
+		}
 
+		public ButtonTrainingList()
+		{
+			Current = this;
+		}
 
 		public void NextTraining()
 		{

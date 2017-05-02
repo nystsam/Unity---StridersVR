@@ -14,7 +14,6 @@ namespace StridersVR.Modules.Menu.Data
 		public User LoginRequest(string username)
 		{
 			User _newUser;
-
 			this.openConnection ();
 			_newUser = this.login(username);
 			if(_newUser == null)
@@ -22,7 +21,6 @@ namespace StridersVR.Modules.Menu.Data
 				this.createUser(username);
 				_newUser = this.login(username);
 			}
-
 			this.closeConnection();
 			return _newUser;
 		}
