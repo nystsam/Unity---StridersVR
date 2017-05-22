@@ -89,6 +89,12 @@ public class ScoreDotsController : MonoBehaviour {
 		if(this.isGameBegin && this.gameTimeInSeconds <= 0)
 		{
 			this.isGameTimerEnd = true;
+			int _current = int.Parse(this.countingCurrent.GetComponent<Text>().text);
+			int _total = int.Parse(this.countingTotal.GetComponent<Text>().text);
+
+			CameraUITools.Current.ChangePosition(true);
+			StatisticsDotToDotController.Current.gameObject.SetActive(true);
+			StatisticsDotToDotController.Current.SetResults(_current, _total);
 		}	
 		else if (this.isGameBegin) 
 		{

@@ -61,7 +61,7 @@ public class MenuInstructionsController : MonoBehaviour {
 
 	private void instantiateInstrucctions(List<string> _textList)
 	{
-		float _y = 1.3f;
+		float _y = 1.9f;
 
 		foreach(Transform child in this.instructionContainer.transform)
 		{
@@ -74,7 +74,8 @@ public class MenuInstructionsController : MonoBehaviour {
 			_clone.transform.parent = this.instructionContainer.transform;
 			_clone.GetComponent<InstructionController>().SetInfo(_text);
 			_clone.transform.localPosition = new Vector3(-0.45f, _y, -0.2f);
-			_y -= 1.5f;
+			_clone.transform.localScale = new Vector3(1,1,1);
+			_y -= 2.2f;
 		}
 	}
 

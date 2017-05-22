@@ -88,7 +88,7 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 			float _xAxis, _yAxis, _zAxis;
 			
 			_xAxis = 1f;
-			_yAxis = 21.5f;
+			_yAxis = 1f;
 			_zAxis = 0.5f;
 			
 			foreach(Point point in this.currentModel.Points.Values)
@@ -99,10 +99,10 @@ namespace StridersVR.Modules.DotToDot.Logic.Strategies
 				{
 					_xAxis = 1f;
 					_yAxis -= 1.5f;
-					if(_yAxis < 20f)
+					if(_yAxis < -0.5f)
 					{
-						_yAxis = 21.5f;
-						_zAxis -= 1f;
+						_yAxis = 1f;
+						_zAxis -= 1.5f;
 					}
 				}
 				

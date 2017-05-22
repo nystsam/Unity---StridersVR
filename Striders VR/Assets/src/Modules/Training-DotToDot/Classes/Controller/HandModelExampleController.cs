@@ -23,9 +23,10 @@ public class HandModelExampleController : MonoBehaviour {
 	{
 		this.showingModel = false;
 		this.gameController.GetComponent<PointManagerController>().showingModel(false);
+		this.gameController.GetComponent<PointManagerController>().showPointsCointainer();
 		this.model.transform.position = new Vector3(0,-10,0);
 		this.model.transform.localScale = new Vector3(1,1,1);
-		this.activateAnimation(false);
+		//this.activateAnimation(false);
 	}
 
 	private void activateAnimation(bool val)
@@ -44,10 +45,11 @@ public class HandModelExampleController : MonoBehaviour {
 		{
 			this.showingModel = true;
 			this.model.transform.position = this.leftHand.palm.position + new Vector3(0,0.75f,0);
-			this.model.transform.localScale = new Vector3(0.5f,0.5f,0.5f);
-			this.activateAnimation(true);
+			this.model.transform.localScale = new Vector3(0.6f,0.6f,0.6f);
+			//this.activateAnimation(true);
 			this.gameController.GetComponent<PointManagerController>().showingModel(true);
 			this.gameController.GetComponent<PointManagerController>().resetCurrentStripe();
+			this.gameController.GetComponent<PointManagerController>().hidePointsCointainer();
 			this.gameController.GetComponent<PointManagerController>().addRevealCount();
 		}
 		else if(this.leftHand.palm.up.y > -0.6f && this.showingModel)
@@ -61,6 +63,13 @@ public class HandModelExampleController : MonoBehaviour {
 			                                                   this.leftHand.palm.position + new Vector3(0,0.75f,0), 
 			                                                   ref this.velocity, 
 			                                                   0.3f);
+
+			Vector3 _direction = (CameraUITools.Current.transform.position - this.model.transform.position).normalized;
+			Quaternion _lookDirection = Quaternion.LookRotation(_direction);
+			Quaternion _newRotationValue = Quaternion.Slerp(this.model.transform.rotation, _lookDirection, 
+			                                                 Time.deltaTime * 5);
+			Vector3 _newRotation = new Vector3(0,_newRotationValue.eulerAngles.y, 0);
+			this.model.transform.rotation = Quaternion.Euler(_newRotation);
 		}
 	}
 
@@ -106,7 +115,8 @@ public class HandModelExampleController : MonoBehaviour {
 			if(this.gameController != null)
 			{
 				this.gameController.GetComponent<PointManagerController>().resetCurrentStripe();
-				this.resetModel();	
+				if(this.showingModel)
+					this.resetModel();	
 			}
 
 		}

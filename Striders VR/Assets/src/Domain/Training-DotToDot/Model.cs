@@ -53,7 +53,6 @@ namespace StridersVR.Domain.DotToDot
 			_newStripe.transform.GetChild(0).GetComponent<StripeController>().setUndraggable();
 
 			_modelPosition = startPoint.Position;
-			_modelPosition.y = _modelPosition.y - 20f;
 
 			_newStripe.transform.localPosition = _modelPosition;
 			_newStripe.transform.localRotation = Quaternion.LookRotation (_stripeDirection);
@@ -62,7 +61,6 @@ namespace StridersVR.Domain.DotToDot
 			_newEndStripe.transform.parent = container.transform;
 
 			_modelPosition = endPoint.Position;
-			_modelPosition.y = _modelPosition.y - 20f;
 
 			_newEndStripe.transform.localPosition = _modelPosition;
 
@@ -81,17 +79,17 @@ namespace StridersVR.Domain.DotToDot
 			_newPoint.transform.parent = container.transform;
 
 			_pointPosition = point.Position;
-			_pointPosition.y -= 20f;
+			//_pointPosition.y -= 20f;
 
 			_newPoint.transform.localPosition = _pointPosition;
 			_newPoint.GetComponent<PointController>().pointNumber.GetComponent<TextMesh>().text = point.PointId.ToString();
 			_newPoint.GetComponent<SphereCollider>().radius = 0;
 
-			if(point.Position.y == 20f)
+			if(point.Position.y <= 0f)
 			{
 				_newPoint.GetComponent<PointController>().pointNumber.transform.localPosition = new Vector3(0,-0.25f,0);
 			}
-			else if(point.Position.y > 20f)
+			else if(point.Position.y > 0f)
 			{
 				_newPoint.GetComponent<PointController>().pointNumber.transform.localPosition = new Vector3(0,0.25f,0);
 			}

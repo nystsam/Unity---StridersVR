@@ -18,11 +18,11 @@ public class StripeController : MonoBehaviour {
 	private GameObject parentObject;
 
 
-	public void placeStripe(Vector3 endPosition)
+	public void placeStripe(Vector3 endPosition, Vector3 containerPosition)
 	{
 
 		Vector3 _resize = this.parentObject.transform.localScale;
-		
+		endPosition.y += containerPosition.y;
 		_resize.z = Vector3.Distance(endPosition, this.parentObject.transform.position)*25;
 		this.parentObject.transform.localScale = _resize;
 		

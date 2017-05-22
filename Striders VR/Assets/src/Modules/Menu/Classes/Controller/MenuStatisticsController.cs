@@ -39,6 +39,7 @@ public class MenuStatisticsController : MonoBehaviour {
 		this.StatisticsSelectionMenu.SetActive(false);
 		this.ResultMenu.transform.position = new Vector3(2,7.5f,10.5f);
 		this.ResultMenu.gameObject.SetActive(true);
+		this.ResultMenu.TrainingName.text = this.currentTraining.Name;
 		this.ResultMenu.SetStatistic(newStatistic);
 		this.ResultMenu.SetData();
 	}

@@ -16,7 +16,11 @@ public class UIButtonCloseResultController : MonoBehaviour {
 	
 	private void buttonAction()
 	{	
-		StatisticsFocusRouteController.Current.gameObject.SetActive(false);
+		if(StatisticsFocusRouteController.Current != null)
+			StatisticsFocusRouteController.Current.gameObject.SetActive(false);
+		else if(StatisticsDotToDotController.Current != null)
+			StatisticsDotToDotController.Current.gameObject.SetActive(false);
+
 		UIMenuOptions.Current.activeMenu();			
 	}
 	

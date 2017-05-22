@@ -17,12 +17,19 @@ public class PointManagerController : MonoBehaviour {
 	private bool verificationStarted = false;
 	private bool allowShowFinishButton = true;
 	private bool allowShowModel = false;
-
+	private bool isFinishinModel = false;
 	// Solo para Hard
 	private bool exampleConstraint = true;
 
+	private Vector3 containerPostion;
+
 	private ITouchBoard touchBoard;
 
+	private float timeShowing = 0;
+
+	private float timeComplete = 0;
+
+	private ActivityDotToDot currentActivity;
 
 	#region Point & Stripe controller
 	public bool setPoint(Point newPoint)
@@ -81,6 +88,7 @@ public class PointManagerController : MonoBehaviour {
 	public void gameOver()
 	{
 		this.clearChilds();
+		this.allowShowModel = false;
 		this.localPointManager = null;
 	}
 
@@ -88,10 +96,10 @@ public class PointManagerController : MonoBehaviour {
 	{
 		GameObject _modelController = GameObject.FindGameObjectWithTag("Respawn");
 
-		if(_modelController.transform.GetChild(0).GetComponent<ModelController>() != null)
+		if(_modelController.transform.GetChild(0).GetComponent<ModelController>() != null && !this.isFinishinModel)
 		{
 			this.allowShowModel = false;
-			
+			this.isFinishinModel = true;
 			_modelController.transform.GetChild(0).GetComponent<ModelController>().revealOriginalModel();
 		}
 	}
@@ -100,12 +108,17 @@ public class PointManagerController : MonoBehaviour {
 	{
 		bool _result = this.localPointManager.finishModel();
 
+		this.localPointManager.StartTiming = false;
+		this.currentActivity.setTimeComplete(this.timeComplete);
+		this.currentActivity.IsCorrect = _result;
+		this.currentActivity.Revelations = this.localPointManager.ModelRevealCount;
 		this.verificationStarted = true;
 		this.verifer.GetComponent<VerifierController>().setAnimation(_result);
 		this.clearChilds();
 
 		this.scoreController.GetComponent<ScoreDotsController>().setScore(_result);
 		this.localPointManager = new PointManager(this.pointsContainer);
+		this.currentActivity = new ActivityDotToDot();
 	}
 	
 	public void setModel(Model newModel)
@@ -136,12 +149,22 @@ public class PointManagerController : MonoBehaviour {
 
 	public void showingModel(bool val)
 	{
-		this.localPointManager.IsShowingExample = val;
+		if(this.localPointManager != null)
+		{
+			this.localPointManager.IsShowingExample = val;
+			
+			if(!val)
+			{
+				this.currentActivity.addTimeRevelation(this.timeShowing);
+				this.timeShowing = 0;
+			}
+		}
 	}
 
 	public void resetCurrentStripe()
 	{
-		this.localPointManager.resetCurrentStripe();
+		if(!this.scoreController.GetComponent<ScoreDotsController>().IsGameTimerEnd)
+			this.localPointManager.resetCurrentStripe();
 	}
 
 	public void addRevealCount()
@@ -167,6 +190,16 @@ public class PointManagerController : MonoBehaviour {
 	public bool getExampleStatus()
 	{
 		return this.exampleConstraint;
+	}
+
+	public void hidePointsCointainer()
+	{
+		this.pointsContainer.transform.localPosition = new Vector3(0,-100,0);
+	}
+
+	public void showPointsCointainer()
+	{
+		this.pointsContainer.transform.localPosition = this.containerPostion;
 	}
 	#endregion
 
@@ -199,6 +232,7 @@ public class PointManagerController : MonoBehaviour {
 		
 		if(_modelController.transform.GetChild(0).GetComponent<ModelController>() != null)
 		{
+			this.isFinishinModel = false;
 			_modelController.transform.GetChild(0).GetComponent<ModelController>().clearCurrentModel();
 		}
 		
@@ -209,14 +243,29 @@ public class PointManagerController : MonoBehaviour {
 	void Awake () 
 	{
 		this.localPointManager = new PointManager (this.pointsContainer);
+		this.currentActivity = new ActivityDotToDot();
 		this.touchBoard = GameObject.FindGameObjectWithTag ("TouchBoard").GetComponent<TouchBoardIndexController> ();
 		this.scoreController = GameObject.FindGameObjectWithTag("Finish");
+		this.containerPostion = this.pointsContainer.transform.localPosition;
 	}
 
 	void Update()
 	{
-		this.placePoint ();
-		this.verification();
+		if(!this.scoreController.GetComponent<ScoreDotsController>().IsGameTimerEnd)
+		{
+			this.placePoint ();
+			this.verification();
+			
+			if(this.localPointManager.IsShowingExample)
+			{
+				this.timeShowing += Time.deltaTime;
+			}
+			
+			if(this.localPointManager.StartTiming)
+			{
+				this.timeComplete += Time.deltaTime;
+			}		
+		}
 	}
 	#endregion
 

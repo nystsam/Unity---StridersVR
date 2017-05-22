@@ -12,13 +12,15 @@ public class FinishModelButtonController : MonoBehaviour {
 
 	private VirtualButton buttonVr;
 
-	private float triggerDistance = 0.35f;
+	private float triggerDistance = 0.15f;
 	private float timer = 0f;
+	private float currentZ = 0f;
 
 	private bool isPressed;
 	private bool isFinger;
 	private bool timerStart = false;
 	private bool timerDone = false;
+	private bool isInit = false;
 
 	private TextMesh textMesh;
 
@@ -41,7 +43,9 @@ public class FinishModelButtonController : MonoBehaviour {
 
 	private void buttonPressed ()
 	{
-		if (!this.isPressed && this.buttonVr.IsButtonPressed (-this.transform.localPosition, this.triggerDistance)) 
+		Vector3 _currentPostion = this.transform.localPosition;
+		_currentPostion.z -= this.currentZ;
+		if (!this.isPressed && this.buttonVr.IsButtonPressed (-_currentPostion, this.triggerDistance)) 
 		{
 			if(this.isFinger)
 			{
@@ -49,7 +53,7 @@ public class FinishModelButtonController : MonoBehaviour {
 				this.buttonAction();
 			}
 		} 
-		else if (this.isPressed && this.buttonVr.IsButtonReleased (-this.transform.localPosition, this.triggerDistance)) 
+		else if (this.isPressed && this.buttonVr.IsButtonReleased (-_currentPostion, this.triggerDistance)) 
 		{	
 			this.isPressed = false;
 		}
@@ -59,6 +63,15 @@ public class FinishModelButtonController : MonoBehaviour {
 	public void activeTimer()
 	{
 		this.timerStart = true;
+	}
+
+	public void initButton(Vector3 newPosition)
+	{
+		this.transform.position = newPosition;
+		this.buttonVr = new VirtualButton (this.transform.position, 500, Vector3.forward);
+		this.GetComponent<SpringJoint> ().connectedAnchor = newPosition;
+		this.currentZ = newPosition.z;
+		this.isInit = true;
 	}
 
 	private void destroyButton()
@@ -117,24 +130,23 @@ public class FinishModelButtonController : MonoBehaviour {
 	#endregion
 
 	#region Script
-	void Awake () 
+	void Start () 
 	{
-		this.buttonVr = new VirtualButton (this.transform.localPosition, 500, Vector3.forward);
 		this.gameController = GameObject.FindGameObjectWithTag("GameController");
-
 		this.setChildComponents();
-
-		this.GetComponent<SpringJoint> ().connectedAnchor = this.gameButton.position;
 		this.isPressed = false;
 		this.isFinger = false;
 	}
 
 	void Update () 
 	{
-		this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.localPosition, -0.5f, 0);
-		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
-
-		this.buttonPressed ();
+		if(this.isInit)
+		{
+			this.transform.localPosition = this.buttonVr.ConstraintMovement (this.transform.position, this.currentZ - 0.5f, this.currentZ);
+			this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.position));
+			
+			this.buttonPressed ();
+		}
 	}
 
 	void LateUpdate()

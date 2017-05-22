@@ -11,6 +11,7 @@ public class MenuResultController : MonoBehaviour {
 	public TextMesh Hits;
 	public TextMesh Errors;
 	public TextMesh AverageTime;
+	public TextMesh ExtraCriterion;
 
 	public Transform ActivitiesContainer;
 
@@ -28,6 +29,9 @@ public class MenuResultController : MonoBehaviour {
 		{
 			string _difficulty;
 			float _yPos = 0.5f;
+
+			this.AverageTime.transform.parent.localPosition = new Vector3(-1.4f, -0.4f, 0);
+			this.ExtraCriterion.transform.parent.gameObject.SetActive(false);
 
 			if(this.currentStatistic.Difficulty.Equals("Easy"))
 				_difficulty = "Fácil";
@@ -62,11 +66,17 @@ public class MenuResultController : MonoBehaviour {
 				}
 				else if(c.IsScore)
 				{
-					Debug.Log ("Puntos");
+					this.AverageTime.transform.parent.localPosition = new Vector3(-1.4f, -0.6f, 0);
+					this.ExtraCriterion.transform.parent.gameObject.SetActive(true);
+					this.ExtraCriterion.transform.parent.GetComponent<TextMesh>().text = "Punctuación";
+					this.ExtraCriterion.text = c.CriterionValue.ToString("F2");
 				}
 				else if(c.IsAttempt)
 				{
-					Debug.Log ("Intentos");
+					this.AverageTime.transform.parent.localPosition = new Vector3(-1.4f, -0.6f, 0);
+					this.ExtraCriterion.transform.parent.gameObject.SetActive(true);
+					this.ExtraCriterion.transform.parent.GetComponent<TextMesh>().text = "Revelaciones";
+					this.ExtraCriterion.text = c.CriterionValue.ToString("F2");
 				}
 				else
 				{

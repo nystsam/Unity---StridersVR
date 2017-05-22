@@ -18,8 +18,9 @@ public class HandFinishButtonController : MonoBehaviour {
 		{
 			this.gameController.GetComponent<PointManagerController>().setFinishButtonStatus(false);
 		
-			this.finishButton = (GameObject)GameObject.Instantiate(this.finishButtonPrefab, Vector3.zero, Quaternion.Euler(Vector3.zero));
-			this.finishButton.transform.position = this.rightHand.palm.position + new Vector3(0,0.85f,0);
+			this.finishButton = (GameObject)GameObject.Instantiate(this.finishButtonPrefab);
+			Vector3 _newPosition = this.rightHand.palm.position + new Vector3(0,0.85f,-1f);
+			this.finishButton.GetComponent<FinishModelButtonController>().initButton(_newPosition);
 			this.finishButton.GetComponent<FinishModelButtonController>().activeTimer();
 		}
 	}

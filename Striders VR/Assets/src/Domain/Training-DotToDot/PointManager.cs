@@ -20,6 +20,7 @@ namespace StridersVR.Domain.DotToDot
 
 		private bool isFirstPoint;
 		private bool isShowingExample = false;
+		private bool startTiming = false;
 
 		private int errorCount;
 		private int stripesPlaced;
@@ -73,6 +74,7 @@ namespace StridersVR.Domain.DotToDot
 			{
 				if(point != null)
 				{
+					this.startTiming = true;
 					this.isFirstPoint = false;
 					this.collector = new RedoCollector ();
 					this.currentPoint = point;
@@ -116,7 +118,7 @@ namespace StridersVR.Domain.DotToDot
 				//
 				//			Debug.Log (Vector3.Distance (asd, this.nextPoint.Position));
 				this.collector.addCurrentPoint (this.currentPoint);
-				this.currentStripe.transform.GetChild(0).GetComponent<StripeController> ().placeStripe (this.nextPoint.Position);
+				this.currentStripe.transform.GetChild(0).GetComponent<StripeController> ().placeStripe (this.nextPoint.Position, this.pointsContainer.transform.position);
 				this.nextPoint.IsSelectedPoint = false;
 				this.currentPoint.turnOff ();
 				_endStripe = (GameObject)GameObject.Instantiate(this.endStripePrefab, 
@@ -190,8 +192,7 @@ namespace StridersVR.Domain.DotToDot
 
 		private void createNewStripe(Vector3 position)
 		{
-			this.currentStripe = (GameObject)GameObject.Instantiate(this.stripePrefab, position, 
-			                                                        Quaternion.Euler(Vector3.zero));
+			this.currentStripe = (GameObject)GameObject.Instantiate(this.stripePrefab);
 			this.currentStripe.transform.parent = this.pointsContainer.transform;
 			this.currentStripe.transform.localPosition = position;
 
@@ -221,7 +222,14 @@ namespace StridersVR.Domain.DotToDot
 
 		public bool IsShowingExample
 		{
+			get { return this.isShowingExample; }
 			set { this.isShowingExample = value; }
+		}
+
+		public bool StartTiming
+		{
+			get { return this.startTiming; }
+			set { this.startTiming = value; }
 		}
 		#endregion
 	}
