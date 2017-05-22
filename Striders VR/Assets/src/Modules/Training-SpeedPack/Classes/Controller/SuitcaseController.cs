@@ -18,6 +18,7 @@ public class SuitcaseController : MonoBehaviour {
 	private bool partSelected = false;
 	private bool allowToCreate = false;
 	private bool gameStarted = false;
+	private bool gameEnd = false;
 
 	private int currentPartIndex;
 
@@ -97,7 +98,8 @@ public class SuitcaseController : MonoBehaviour {
 			GameObject.Destroy(child.gameObject);
 		}
 
-		this.createParts ();
+		if(!this.gameEnd)
+			this.createParts ();
 	}
 	
 	public void placePlayerItem(Spot currentSpot, GameObject draggableItem)
@@ -144,7 +146,18 @@ public class SuitcaseController : MonoBehaviour {
 			this.allowToCreate = false;
 			StartCoroutine(this.resetTableboard());
 		}
-		// Acomodar el final del juego... Y las estadisticas
+		else if(!this.gameEnd && this.scoreContainer.GetComponent<ScorePackController>().IsGameTimerEnd)
+		{
+			this.gameEnd = true;
+			StartCoroutine(this.resetTableboard());
+		}
+	}
+	#endregion
+
+	#region Property
+	public bool GameEnd
+	{
+		get { return this.gameEnd; }
 	}
 	#endregion
 }

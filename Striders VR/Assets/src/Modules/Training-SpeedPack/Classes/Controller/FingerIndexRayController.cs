@@ -15,7 +15,7 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	private ITouchBoard touchBoard;
 
-	private float hitRange = 0.45f;
+	private float hitRange = 0.65f;
 	private float currentRayDistance;
 
 	private RaycastHit hit;
@@ -27,7 +27,7 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	private void outHit()
 	{
-		if (hit.collider.tag.Equals ("SuitcaseSpot") && hit.distance < 0.35f && this.handModel.GetLeapHand ().IsLeft) 
+		if (hit.collider.tag.Equals ("SuitcaseSpot") && hit.distance < 0.45f && this.handModel.GetLeapHand ().IsLeft) 
 		{
 			this.hitting = true;
 			hit.collider.GetComponent<SpotController> ().hoverColor (true);
@@ -50,7 +50,9 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	private void createRay(Vector3 direction)
 	{
-		Ray myRay = new Ray (transform.position, direction * hitRange);
+		Vector3 _rayPosition = transform.position;
+		_rayPosition.x += 0.05f;
+		Ray myRay = new Ray (_rayPosition, direction * hitRange);
 		if (!this.hitting) 
 		{
 			if (Physics.Raycast (myRay, out hit, hitRange)) 
@@ -120,7 +122,9 @@ public class FingerIndexRayController : MonoBehaviour {
 				hitRange -= 0.25f;
 				this.isRayRangeIncreased = false;
 			}
-			Debug.DrawRay (transform.position, -Vector3.forward * hitRange);
+//			Vector3 _rayPosition = transform.position;
+//			_rayPosition.x += 0.05f;
+//			Debug.DrawRay (_rayPosition, -Vector3.forward * hitRange);
 			this.createRay (-Vector3.forward);
 //		}
 
@@ -129,9 +133,12 @@ public class FingerIndexRayController : MonoBehaviour {
 			if(this.touchBoard.actionComplete())
 			{
 				this.placingItem = false;
-
 				GameObject _draggableItem = this.GetComponentInParent<GrabController>().GetDraggableItem();
-				this.suitcaseContainer.GetComponent<SuitcaseController>().placePlayerItem(this.hittingSpot, _draggableItem);
+				if(_draggableItem != null && !this.suitcaseContainer.GetComponent<SuitcaseController>().GameEnd)
+				{
+					this.GetComponentInParent<GrabController>().placingObject();
+					this.suitcaseContainer.GetComponent<SuitcaseController>().placePlayerItem(this.hittingSpot, _draggableItem);
+				}
 			}
 		}
 

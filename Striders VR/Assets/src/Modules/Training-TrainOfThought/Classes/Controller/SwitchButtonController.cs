@@ -26,6 +26,8 @@ public class SwitchButtonController : MonoBehaviour {
 	private bool isPressed = false;
 	private bool collisionDetected = false;
 
+	private bool alreadyPressed = false;
+
 	private VirtualButton buttonVr;
 
 	private Vector3 currentPosition;
@@ -100,11 +102,15 @@ public class SwitchButtonController : MonoBehaviour {
 	#endregion
 	private void buttonAction()
 	{
-		if(this.buttonSound != null)
+		if(!this.alreadyPressed)
 		{
-			this.buttonSound.Play();
+			this.alreadyPressed = true;
+			if(this.buttonSound != null)
+			{
+				this.buttonSound.Play();
+			}
+			this.attrachedSwitch.GetComponent<RailroadSwitchController>().changeDirectionIndex();
 		}
-		this.attrachedSwitch.GetComponent<RailroadSwitchController>().changeDirectionIndex();
 	}
 
 	private void buttonPressed ()
@@ -140,6 +146,15 @@ public class SwitchButtonController : MonoBehaviour {
 		this.GetComponent<Rigidbody> ().AddRelativeForce(this.buttonVr.ApplyRelativeSpring (this.transform.localPosition));
 
 		this.buttonPressed ();
+
+		if(this.alreadyPressed)
+		{
+			if(this.transform.localPosition == this.buttonVr.RestingPosition)
+			{
+				this.alreadyPressed = false;
+			}
+		}
+
 		if(attrachedSwitch != null)
 		{
 			Vector3 _currentRotation, _newRotation;

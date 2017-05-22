@@ -21,7 +21,7 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			else if (_gameDifficulty.Equals ("Medium"))
 				this.instantiateTrainTimer = 5;
 			else if (_gameDifficulty.Equals ("Hard"))
-				this.instantiateTrainTimer = 4;
+				this.instantiateTrainTimer = 5;
 		}
 
 

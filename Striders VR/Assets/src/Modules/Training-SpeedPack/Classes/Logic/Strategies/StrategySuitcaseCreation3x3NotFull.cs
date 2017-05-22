@@ -117,7 +117,7 @@ namespace StridersVR.Modules.SpeedPack.Logic.Strategies
 			Spot _newSpot;
 			Vector3 _currentPosition = Vector3.zero;
 			GameObject _clone;
-			
+
 			if (currentPart.AttachedPart != null) 
 			{
 				currentPart.AttachedPart.getOppositeIndex (currentPart.AttachedOrientation, ref currentX, ref currentY);

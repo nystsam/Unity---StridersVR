@@ -10,9 +10,9 @@ public class InstructionController : MonoBehaviour {
 
 	private MovieTexture videoClip;
 
-	public void SetInfo(string _text)
+	public void SetInfo(string _text, string _matPath)
 	{
-		Material _customMaterial = Resources.Load("Images/Materials/aOmpexN_460sv", typeof(Material)) as Material;
+		Material _customMaterial = Resources.Load(_matPath, typeof(Material)) as Material;
 		this.videoRenderer.material = _customMaterial;
 		this.videoClip = (MovieTexture)videoRenderer.material.mainTexture;
 		this.infoText.text = "- " + _text;

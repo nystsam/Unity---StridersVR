@@ -27,12 +27,12 @@ namespace StridersVR.Modules.TrainOfThought.Logic.Strategies
 			else if (_gameDifficulty.Equals ("Medium"))
 			{
 				this.minIndexTimer = 4;
-				this.maxIndexTimer = 6;
+				this.maxIndexTimer = 7;
 			}
 			else if (_gameDifficulty.Equals ("Hard"))
 			{
-				this.minIndexTimer = 3;
-				this.maxIndexTimer = 5;
+				this.minIndexTimer = 4;
+				this.maxIndexTimer = 6;
 			}
 		}
 
