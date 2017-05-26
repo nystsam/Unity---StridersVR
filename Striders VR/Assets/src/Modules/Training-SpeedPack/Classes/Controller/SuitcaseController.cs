@@ -19,6 +19,7 @@ public class SuitcaseController : MonoBehaviour {
 	private bool allowToCreate = false;
 	private bool gameStarted = false;
 	private bool gameEnd = false;
+	private bool startTiming = false;
 
 	private int currentPartIndex;
 
@@ -29,6 +30,10 @@ public class SuitcaseController : MonoBehaviour {
 	private Spot playerSpot;
 
 	private RepresentativeSuitcase suitcaseLogic;
+
+	private ActivityVelocityPack currentActivity;
+
+	private float timeComplete = 0;
 
 	private void instatiateVerifier(bool isCorrect)
 	{
@@ -63,14 +68,21 @@ public class SuitcaseController : MonoBehaviour {
 				if(this.playerSpot.IsAvailableSpot)
 				{
 					this.instatiateVerifier(true);
+					this.currentActivity.IsCorrect = true;
+					this.currentActivity.Score = this.currentSuitcase.SuitcaseScore;
 					this.scoreContainer.GetComponent<ScorePackController>().setScore(true, this.currentSuitcase.SuitcaseScore);
 				}
 				else
 				{
 					this.instatiateVerifier(false);
+					this.currentActivity.IsCorrect = false;
 					this.scoreContainer.GetComponent<ScorePackController>().setScore(false, 0);
 				}
 
+				this.currentActivity.setTimeComplete(this.timeComplete);
+				StatisticsVelocityPackController.Current.addNewResult(this.currentActivity);
+				this.timeComplete = 0;
+				this.currentActivity = null;
 				this.currentSuitcase = null;
 			}
 
@@ -88,6 +100,8 @@ public class SuitcaseController : MonoBehaviour {
 		this.currentSuitcase = this.suitcaseLogic.getSuitcase ();
 		this.suitcaseLogic.spawnItems (this.currentSuitcase);
 		this.suitcaseLogic.spawnPlayerItem ();
+		this.currentActivity = new ActivityVelocityPack();
+		this.startTiming = true;
 	}
 
 	private IEnumerator resetTableboard()
@@ -105,7 +119,7 @@ public class SuitcaseController : MonoBehaviour {
 	public void placePlayerItem(Spot currentSpot, GameObject draggableItem)
 	{
 		//GameObject _draggableItem = GameObject.FindGameObjectWithTag ("DraggableItem");
-
+		this.startTiming = false;
 		draggableItem.GetComponent<ItemDraggableController> ().IsDraggable = false;
 		draggableItem.GetComponent<BoxCollider> ().enabled = false;
 		draggableItem.transform.parent = this.transform.GetChild(0).Find ("SuitcasePart").Find ("Items");
@@ -135,6 +149,11 @@ public class SuitcaseController : MonoBehaviour {
 				this.gameStarted = true;
 				this.createParts();
 			}
+		}
+
+		if(this.startTiming)
+		{
+			this.timeComplete += Time.deltaTime;
 		}
 
 		if (this.allowStartAnimation) 

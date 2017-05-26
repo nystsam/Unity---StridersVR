@@ -55,7 +55,7 @@ public class ScorePackController : MonoBehaviour {
 
 			CameraUITools.Current.ChangePosition(true);
 			StatisticsVelocityPackController.Current.gameObject.SetActive(true);
-			StatisticsFocusRouteController.Current.SetResults(_current, _total);
+			StatisticsVelocityPackController.Current.SetResults(_current, _total);
 		}	
 		else if (this.isGameBegin) 
 		{
