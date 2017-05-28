@@ -112,6 +112,7 @@ public class PointManagerController : MonoBehaviour {
 		this.currentActivity.setTimeComplete(this.timeComplete);
 		this.currentActivity.IsCorrect = _result;
 		this.currentActivity.Revelations = this.localPointManager.ModelRevealCount;
+		StatisticsDotToDotController.Current.addNewResult(this.currentActivity);
 		this.verificationStarted = true;
 		this.verifer.GetComponent<VerifierController>().setAnimation(_result);
 		this.clearChilds();

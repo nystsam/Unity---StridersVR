@@ -66,9 +66,10 @@ namespace StridersVR.Domain.SpeedPack
 			{
 				if((this.averageTimeValue/this.totalPackage) < 5)
 					_customValue = Random.Range(84,96);
+				else if((this.averageTimeValue/this.totalPackage) > 10)
+					_customValue = Random.Range(35,43);
 				else
-					_customValue = Random.Range(64,76);
-
+					_customValue = Random.Range(55,71);
 			}
 			else if(this.errors > 0 && this.errors <= 2)
 			{

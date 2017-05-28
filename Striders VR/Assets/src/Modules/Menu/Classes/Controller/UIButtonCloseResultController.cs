@@ -20,6 +20,8 @@ public class UIButtonCloseResultController : MonoBehaviour {
 			StatisticsFocusRouteController.Current.gameObject.SetActive(false);
 		else if(StatisticsDotToDotController.Current != null)
 			StatisticsDotToDotController.Current.gameObject.SetActive(false);
+		else if(StatisticsVelocityPackController.Current != null)
+			StatisticsVelocityPackController.Current.gameObject.SetActive(false);
 
 		UIMenuOptions.Current.activeMenu();			
 	}

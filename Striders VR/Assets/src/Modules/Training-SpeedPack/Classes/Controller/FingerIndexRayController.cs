@@ -5,11 +5,13 @@ using StridersVR.Domain.SpeedPack;
 
 public class FingerIndexRayController : MonoBehaviour {
 
+	//public GameObject palmObject;
+
 	private GameObject progressBar;
 	private GameObject suitcaseContainer;
 //	private GameObject placeButton;
 
-	private HandModel handModel;
+	//private HandModel handModel;
 
 	private Spot hittingSpot;
 
@@ -27,7 +29,7 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	private void outHit()
 	{
-		if (hit.collider.tag.Equals ("SuitcaseSpot") && hit.distance < 0.45f && this.handModel.GetLeapHand ().IsLeft) 
+		if (hit.collider.tag.Equals ("SuitcaseSpot") && hit.distance < 0.45f) 
 		{
 			this.hitting = true;
 			hit.collider.GetComponent<SpotController> ().hoverColor (true);
@@ -98,14 +100,14 @@ public class FingerIndexRayController : MonoBehaviour {
 
 	void Start () 
 	{
-		this.handModel = this.GetComponentInParent<HandModel> ();
+		//this.handModel = this.GetComponentInParent<HandModel> ();
 		this.hitting = false;
 //		this.placeButton = GameObject.FindGameObjectWithTag ("PlayerPanelButtons");
 
-		if (this.handModel.GetLeapHand ().IsLeft) 
-		{
+		//if (this.handModel.GetLeapHand ().IsLeft) 
+		//{
 			this.touchBoard = GameObject.FindGameObjectWithTag("TouchBoard").GetComponent<TouchBoardController>();
-		}
+		//}
 	}
 
 	void Update () 
@@ -124,7 +126,7 @@ public class FingerIndexRayController : MonoBehaviour {
 			}
 //			Vector3 _rayPosition = transform.position;
 //			_rayPosition.x += 0.05f;
-//			Debug.DrawRay (_rayPosition, -Vector3.forward * hitRange);
+			Debug.DrawRay (transform.position, -Vector3.forward * hitRange);
 			this.createRay (-Vector3.forward);
 //		}
 
